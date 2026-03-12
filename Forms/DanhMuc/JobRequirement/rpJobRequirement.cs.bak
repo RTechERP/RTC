@@ -1,0 +1,22 @@
+﻿using DevExpress.XtraPrinting;
+using DevExpress.XtraReports.UI;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Drawing;
+
+namespace BMS
+{
+    public partial class rpJobRequirement : DevExpress.XtraReports.UI.XtraReport
+    {
+        public rpJobRequirement()
+        {
+            InitializeComponent();
+        }
+
+        private void rpJobRequirement_BeforePrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            
+        }
+    }
+}

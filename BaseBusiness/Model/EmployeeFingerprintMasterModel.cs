@@ -1,0 +1,19 @@
+
+using System;
+namespace BMS.Model
+{
+	public partial class EmployeeFingerprintMasterModel : BaseModel
+	{
+		public int ID {get; set;}
+		
+		public int Year {get; set;}
+		
+		public int Month {get; set;}
+		
+		public bool IsBrowser {get; set;}
+		
+		public string Note {get; set;}
+		
+	}
+}
+	

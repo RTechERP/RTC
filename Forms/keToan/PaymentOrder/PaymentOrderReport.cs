@@ -1,0 +1,178 @@
+﻿using BMS.Model;
+using DevExpress.XtraReports.UI;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+
+namespace BMS
+{
+    public partial class PaymentOrderReport : DevExpress.XtraReports.UI.XtraReport
+    {
+        int id = 0;
+        List<PaymentOrderDetailModel> details = new List<PaymentOrderDetailModel>();
+        public PaymentOrderReport()
+        {
+            InitializeComponent();
+        }
+
+        void LoadData()
+        {
+            DataSet dataSet = TextUtils.LoadDataSetFromSP("spGetPaymentOrderByID", new string[] { "@ID" }, new object[] { id });
+            DataTable dtOrder = dataSet.Tables[0];
+            //DataTable dtDetail = dataSet.Tables[1];
+            DataTable dtSign = dataSet.Tables[2];
+
+            if (dtOrder.Rows.Count <= 0) return;
+
+            int typeOrder = TextUtils.ToInt(dtOrder.Rows[0]["TypeOrder"]);
+
+            GroupFooter1.Visible = typeOrder == 1;
+            lblDatePaymentTitle.Visible = typeOrder == 1;
+            lblDatePayment.Visible = typeOrder == 1;
+            LoadLable();
+
+            lblTitle.Text = $"GIẤY {TextUtils.ToString(dtOrder.Rows[0]["TypeOrderText"]).ToUpper()}";
+            lblDate.Text = $"Ngày {TextUtils.ToDate5(dtOrder.Rows[0]["DateOrder"]).Day} tháng {TextUtils.ToDate5(dtOrder.Rows[0]["DateOrder"]).Month} năm {TextUtils.ToDate5(dtOrder.Rows[0]["DateOrder"]).Year}";
+            lblFullName.Text = $": {TextUtils.ToString(dtOrder.Rows[0]["FullName"])}";
+            lblDepartment.Text = $": {TextUtils.ToString(dtOrder.Rows[0]["DepartmentName"])}"; ;
+            lblReasonOrder.Text = $": {TextUtils.ToString(dtOrder.Rows[0]["ReasonOrder"])}"; ;
+            lblReceiverInfo.Text = $": {TextUtils.ToString(dtOrder.Rows[0]["ReceiverInfo"])}";
+            lblDatePayment.Text = $"Ngày {TextUtils.ToDate5(dtOrder.Rows[0]["DatePayment"]).Day} tháng {TextUtils.ToDate5(dtOrder.Rows[0]["DatePayment"]).Month} năm {TextUtils.ToDate5(dtOrder.Rows[0]["DatePayment"]).Year}";
+            chkTypePayment1.Checked = TextUtils.ToInt(dtOrder.Rows[0]["TypePayment"]) == 1;
+            chkTypePayment2.Checked = TextUtils.ToInt(dtOrder.Rows[0]["TypePayment"]) == 2;
+            lblAccountNumber.Text = $": {TextUtils.ToString(dtOrder.Rows[0]["AccountNumber"])}";
+            lblBank.Text = $": {TextUtils.ToString(dtOrder.Rows[0]["Bank"])}";
+            lblUnit.Text = $"ĐVT: {TextUtils.ToString(dtOrder.Rows[0]["Unit"])}";
+            lblTotalMoneyText.Text = $"Số tiền bằng chữ: {TextUtils.ToString(dtOrder.Rows[0]["TotalMoneyText"])}";
+
+
+            bool isIgnoreHR = TextUtils.ToBoolean(dtOrder.Rows[0]["IsIgnoreHR"]);
+            var signEmployee = dtSign.Select("Step = 1 and IsApproved = 1");
+            var signTBP = dtSign.Select("Step = 2 and IsApproved = 1");
+            var signHR = isIgnoreHR ? null : dtSign.Select("Step = 3 and IsApproved = 1");
+            var signKT = isIgnoreHR ? dtSign.Select("Step = 4 and IsApproved = 1") : dtSign.Select("Step = 5 and IsApproved = 1");
+            var signBGĐ = isIgnoreHR ? dtSign.Select("Step = 5 and IsApproved = 1") : dtSign.Select("Step = 6 and IsApproved = 1");
+
+            lblEmployeeSign.Text = signEmployee.Length <= 0 ? "" : $"{TextUtils.ToString(signEmployee[0]["FullName"])}\n{TextUtils.ToDate5(signEmployee[0]["DateApproved"]).ToString("dd/MM/yyyy HH:mm")}";
+            lblTBPSign.Text = signTBP.Length <= 0 ? "" : $"{TextUtils.ToString(signTBP[0]["FullName"])}\n{TextUtils.ToDate5(signTBP[0]["DateApproved"]).ToString("dd/MM/yyyy HH:mm")}";
+            lblKTSign.Text = signKT.Length <= 0 ? "" : $"{TextUtils.ToString(signKT[0]["FullName"])}\n{TextUtils.ToDate5(signKT[0]["DateApproved"]).ToString("dd/MM/yyyy HH:mm")}";
+            lblBGĐSign.Text = signBGĐ.Length <= 0 ? "" : $"{TextUtils.ToString(signBGĐ[0]["FullName"])}\n{TextUtils.ToDate5(signBGĐ[0]["DateApproved"]).ToString("dd/MM/yyyy HH:mm")}";
+
+            lblHRSignTitle.Visible = !isIgnoreHR;
+            lblHRSign.Visible = !isIgnoreHR;
+            if (signHR == null || signHR.Length <= 0)
+            {
+                lblHRSign.Text = "";
+            }
+            else
+            {
+                lblHRSign.Text = $"{TextUtils.ToString(signHR[0]["FullName"])}\n{TextUtils.ToDate5(signHR[0]["DateApproved"]).ToString("dd/MM/yyyy HH:mm")}";
+            }
+
+            details = SQLHelper<PaymentOrderDetailModel>.FindByAttribute("PaymentOrderID", id);
+            DataSource = details;
+        }
+
+
+        public void LoadLable()
+        {
+            //label.TopF = lblReceiverInfo.Visible ? lblReceiverInfo.TopF + lblReceiverInfo.HeightF : lblReasonOrder.TopF + lblReasonOrder.HeightF;
+
+            //if (!GroupHeader3.Visible)
+            //{
+            //    lblReceiverInfoTitle.Text = "3. Thông tin người nhận tiền";
+            //    lblDetailTitle.Text = "4. Số tiền đề nghị được ghi theo bảng kê dưới đây:";
+            //}
+            //else
+            //{
+            //    lblReceiverInfoTitle.Text = "4. Thông tin người nhận tiền";
+            //    lblDetailTitle.Text = "5. Số tiền đề nghị được ghi theo bảng kê dưới đây:";
+            //}
+            if (GroupHeader6.Visible == true && GroupHeader3.Visible == true)
+            {
+                lblDatePaymentTitle.Text = "4. Thời gian thanh quyết toán";
+                lblReceiverInfoTitle.Text = "5. Thông tin người nhận tiền";
+                lblDetailTitle.Text = "6. Số tiền đề nghị được ghi theo bảng kê dưới đây:";
+            }
+            if (GroupHeader6.Visible == false && GroupHeader3.Visible == false)
+            {
+                lblReceiverInfoTitle.Text = "3. Thông tin người nhận tiền";
+                lblDetailTitle.Text = "4. Số tiền đề nghị được ghi theo bảng kê dưới đây:";
+            }
+
+        }
+
+        private void PaymentOrderReport_DesignerLoaded(object sender, DevExpress.XtraReports.UserDesigner.DesignerLoadedEventArgs e)
+        {
+            //LoadData();
+
+            //var report = (XtraReport)sender;
+            //var withReport = report.PageWidth;
+
+
+        }
+
+        private void PaymentOrderReport_DataSourceDemanded(object sender, EventArgs e)
+        {
+            //List<PaymentOrderDetailModel> list = 
+            //DataSource = details;
+        }
+
+        private void PaymentOrderReport_ParametersRequestSubmit(object sender, DevExpress.XtraReports.Parameters.ParametersRequestEventArgs e)
+        {
+            //id = TextUtils.ToInt(idOrder.Value);
+            //LoadData();
+        }
+
+        private void xrLabel7_BeforePrint(object sender, CancelEventArgs e)
+        {
+            //xrLabel7.TopF = xrLabel16.Visible ? xrLabel16.TopF + xrLabel16.HeightF : xrLabel3.TopF + xrLabel3.HeightF;
+        }
+
+        private void lblReceiverInfoTitle_BeforePrint(object sender, CancelEventArgs e)
+        {
+            //LoadLable((XRLabel)sender);
+        }
+
+        private void lblReceiverInfo_BeforePrint(object sender, CancelEventArgs e)
+        {
+            //LoadLable((XRLabel)sender);
+        }
+
+        private void lblTypePaymentTitle_BeforePrint(object sender, CancelEventArgs e)
+        {
+            //LoadLable((XRLabel)sender);1
+        }
+
+        private void PaymentOrderReport_ParametersRequestBeforeShow(object sender, DevExpress.XtraReports.Parameters.ParametersRequestEventArgs e)
+        {
+            id = TextUtils.ToInt(FullName.Value);
+        }
+
+        private void lblTBPSign_BeforePrint(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void lblAccountingNoteTitle_BeforePrint(object sender, CancelEventArgs e)
+        {
+            lblAccountingNoteTitle.HeightF = lblAccountingNote.HeightF;
+        }
+
+        private void tableCell13_BeforePrint(object sender, CancelEventArgs e)
+        {
+            //decimal value = TextUtils.ToDecimal(tableCell13.Value);
+            //if (value <= 0)
+            //{
+            //    tableCell13.Text = "";
+            //}
+            //else
+            //{
+            //    //this.Parameters["Unit"].Value;
+            //}
+        }
+    }
+}

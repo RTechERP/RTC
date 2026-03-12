@@ -1,0 +1,675 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6778AAFE-5838-40CB-ACF0-A09BB550241D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RTC</RootNamespace>
+    <AssemblyName>RTC</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationIcon>icon-logo-RTC-2023.ico</ApplicationIcon>
+    <TargetFrameworkProfile />
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>C:\Users\Admin\Desktop\CS\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>279378AED93DEDCE136CFF8E8EA1A306E111A23D</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>BMS_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BitMiracle.LibTiff.NET, Version=2.4.649.0, Culture=neutral, PublicKeyToken=53879b3e20e7a7d6, processorArchitecture=MSIL">
+      <HintPath>..\packages\BitMiracle.LibTiff.NET.2.4.649\lib\net40\BitMiracle.LibTiff.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.105.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d5f7376574c51ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.Parser.2.0.0\lib\netstandard2.0\ClosedXML.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CredentialManagement.1.0.2\lib\net35\CredentialManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Drawing.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Data.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.DataAccess.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataAccess.v24.2.UI, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataVisualization.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Design.v24.2">
+    </Reference>
+    <Reference Include="DevExpress.Images.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Pdf.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Office.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v24.2.Export, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Data.Desktop.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Spreadsheet.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.ExpressionEditor.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.ReportDesigner.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.2.UI, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraLayout.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.2.Wizard, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.PivotGrid.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v24.2.UI, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v24.2.Extensions, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.CodeParser.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraRichEdit.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v24.2.Core.Desktop, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraSpreadsheet.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.1.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.1.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.7.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.MSScriptControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\Sumitomo\PM\SumitomoBackup-26-11-2020\BMS\bin\x86\Debug\Interop.MSScriptControl.dll</HintPath>
+    </Reference>
+    <Reference Include="IronSoftware.Drawing.Common, Version=2023.2.0.12, Culture=neutral, PublicKeyToken=8d7e55c97b3e9835, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronSoftware.System.Drawing.2023.2.12\lib\netstandard2.0\IronSoftware.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="IronXL, Version=2023.2.5.0, Culture=neutral, PublicKeyToken=0f5804b6690bad1e, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronXL.Excel.2023.2.5\lib\netstandard2.0\IronXL.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.1\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.2.1.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\14.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook">
+      <HintPath>..\..\..\..\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NotificationWindow, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\x86\Debug\NotificationWindow.dll</HintPath>
+    </Reference>
+    <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
+      <HintPath>..\packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.3\lib\net472\SixLabors.ImageSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp.Drawing, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronSoftware.System.Drawing.2023.2.12\lib\netstandard2.0\SixLabors.ImageSharp.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLServerLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Admin\Documents\SQLServerLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="ZaloDotNetSDK, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\vng.zalo.ZaloDotNetSDK.2.1.2\lib\net452\ZaloDotNetSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="clsSingleInstance.cs" />
+    <Compile Include="EasyLocalizer.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMainNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMainNew.Designer.cs">
+      <DependentUpon>frmMainNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources1.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="SingleInstance .cs" />
+    <Compile Include="ucShowNotity.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucShowNotity.Designer.cs">
+      <DependentUpon>ucShowNotity.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMainNew.resx">
+      <DependentUpon>frmMainNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucShowNotity.resx">
+      <DependentUpon>ucShowNotity.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="BMS_TemporaryKey.pfx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\meeting2.svg" />
+    <None Include="Resources\protectworkbook.svg" />
+    <Content Include="icon-logo-RTC-2023.ico" />
+    <Content Include="icon-logo-RTC-2023.png" />
+    <None Include="Resources\refresh_32x32.png" />
+    <None Include="Resources\refresh_16x16.png" />
+    <None Include="Resources\insertfield.svg" />
+    <None Include="Resources\ganttview.svg" />
+    <None Include="Resources\subtotal.svg" />
+    <None Include="Resources\grandtotalspivottable_32x32.png" />
+    <None Include="Resources\grandtotalspivottable_16x16.png" />
+    <None Include="Resources\bo_document.svg" />
+    <None Include="Resources\openhyperlink_32x32.png" />
+    <None Include="Resources\openhyperlink_16x16.png" />
+    <None Include="Resources\bo_invoice.svg" />
+    <None Include="Resources\switchtimescalesto_32x323.png" />
+    <None Include="Resources\switchtimescalesto_16x16.png" />
+    <None Include="Resources\buy_32x321.png" />
+    <None Include="Resources\buy_16x161.png" />
+    <None Include="Resources\clearformatting_32x32.png" />
+    <None Include="Resources\clearformatting_16x16.png" />
+    <None Include="Resources\newitem_32x32.png" />
+    <None Include="Resources\newitem_16x16.png" />
+    <None Include="Resources\buynow.svg" />
+    <None Include="Resources\bo_price_item.svg" />
+    <None Include="Resources\lookup&amp;reference_32x32.png" />
+    <None Include="Resources\lookup&amp;reference_16x16.png" />
+    <None Include="Resources\inserttableofcaptions_32x32.png" />
+    <None Include="Resources\inserttableofcaptions_16x16.png" />
+    <None Include="Resources\deletetablerows_32x32.png" />
+    <None Include="Resources\deletetablerows_16x16.png" />
+    <None Include="Resources\salesperiodlifetime_32x32.png" />
+    <None Include="Resources\salesperiodlifetime_16x16.png" />
+    <None Include="Resources\bosaleitem_32x32.png" />
+    <None Include="Resources\bosaleitem_16x16.png" />
+    <None Include="Resources\historyitem_32x32.png" />
+    <None Include="Resources\historyitem_16x16.png" />
+    <None Include="Resources\bo_sale.svg" />
+    <None Include="Resources\listbullets.svg" />
+    <None Include="Resources\lookup&amp;reference_32x321.png" />
+    <None Include="Resources\lookup&amp;reference_16x161.png" />
+    <None Include="Resources\customer_32x32.png" />
+    <None Include="Resources\customer_16x16.png" />
+    <None Include="Resources\walking_32x32.png" />
+    <None Include="Resources\walking_16x16.png" />
+    <None Include="Resources\currency2_32x32.png" />
+    <None Include="Resources\currency2_16x16.png" />
+    <None Include="Resources\multipledocuments.svg" />
+    <None Include="Resources\documentstatistics.svg" />
+    <None Include="Resources\groupbydate.svg" />
+    <None Include="Resources\icons8-unit-32.png" />
+    <None Include="Resources\icons8-stapler-32.png" />
+    <None Include="Resources\icons8-marker-pen-32.png" />
+    <None Include="Resources\pivottable1.svg" />
+    <None Include="Resources\bo_category.svg" />
+    <None Include="Resources\icons8-suv-32.png" />
+    <None Include="Resources\icons8-taxi-32.png" />
+    <None Include="Resources\newtablestyle.svg" />
+    <None Include="Resources\home_32x321.png" />
+    <None Include="Resources\home_16x161.png" />
+    <None Include="Resources\boposition2_32x321.png" />
+    <None Include="Resources\boposition2_16x161.png" />
+    <None Include="Resources\usergroup_32x321.png" />
+    <None Include="Resources\usergroup_16x161.png" />
+    <None Include="Resources\project_32x321.png" />
+    <None Include="Resources\project_16x161.png" />
+    <None Include="Resources\showworktimeonly_32x32.png" />
+    <None Include="Resources\showworktimeonly_16x16.png" />
+    <None Include="Resources\showworktimeonly_32x321.png" />
+    <None Include="Resources\showworktimeonly_16x161.png" />
+    <None Include="Resources\calculatesheet_32x32.png" />
+    <None Include="Resources\calculatesheet_16x16.png" />
+    <None Include="Resources\refreshallpivottable_32x32.png" />
+    <None Include="Resources\refreshallpivottable_16x16.png" />
+    <None Include="Resources\listbullets_32x322.png" />
+    <None Include="Resources\listbullets_16x162.png" />
+    <None Include="Resources\pivottable2.svg" />
+    <None Include="Resources\usergroup_32x322.png" />
+    <None Include="Resources\usergroup_16x162.png" />
+    <None Include="Resources\historyitem_32x321.png" />
+    <None Include="Resources\historyitem_16x161.png" />
+    <None Include="Resources\cleartablestyle.svg" />
+    <None Include="Resources\costanalysis_32x32.png" />
+    <None Include="Resources\costanalysis_16x16.png" />
+    <None Include="Resources\contact_32x32.png" />
+    <None Include="Resources\contact_16x16.png" />
+    <None Include="Resources\editcontact_32x321.png" />
+    <None Include="Resources\editcontact_16x161.png" />
+    <None Include="Resources\listnumbers_32x32.png" />
+    <None Include="Resources\listnumbers_16x16.png" />
+    <None Include="Resources\editcontact_32x322.png" />
+    <None Include="Resources\editcontact_16x162.png" />
+    <Content Include="Resources\logo-RTC-2023-1200-banchuan.png" />
+    <None Include="Resources\showallfieldresults1.svg" />
+    <None Include="Resources\suggestion_32x32.png" />
+    <None Include="Resources\suggestion_16x16.png" />
+    <None Include="Resources\pencolor_32x32.png" />
+    <None Include="Resources\pencolor_16x16.png" />
+    <Content Include="rtc_logo.jpg" />
+    <None Include="Resources\switchtimescalesto_32x32.png" />
+    <None Include="Resources\switchtimescalesto_32x321.png" />
+    <None Include="Resources\switchtimescalesto_32x322.png" />
+    <None Include="Resources\newgroup_32x32.png" />
+    <None Include="Resources\newgroup_16x16.png" />
+    <None Include="Resources\newopportunities_32x32.png" />
+    <None Include="Resources\newopportunities_16x16.png" />
+    <None Include="Resources\stackedbar2_32x32.png" />
+    <None Include="Resources\stackedbar2_16x16.png" />
+    <None Include="Resources\changechartseriestype_32x32.png" />
+    <None Include="Resources\changechartseriestype_16x16.png" />
+    <None Include="Resources\currency_32x32.png" />
+    <None Include="Resources\currency_16x16.png" />
+    <None Include="Resources\kpi.png" />
+    <None Include="Resources\reading_32x32.png" />
+    <None Include="Resources\reading_16x16.png" />
+    <None Include="Resources\today_32x32.png" />
+    <None Include="Resources\today_16x16.png" />
+    <None Include="Resources\boposition2_32x32.png" />
+    <None Include="Resources\boposition2_16x16.png" />
+    <None Include="Resources\paste_32x32.png" />
+    <None Include="Resources\paste_16x16.png" />
+    <None Include="Resources\project_32x32.png" />
+    <None Include="Resources\project_16x16.png" />
+    <None Include="Resources\icons8-rice-bowl-32.png" />
+    <None Include="Resources\buy_16x16.png" />
+    <None Include="Resources\buy_32x32.png" />
+    <None Include="Resources\charttype_scatterpolarline.svg" />
+    <None Include="Resources\icons8-asset-32.png" />
+    <None Include="Resources\icons8-property-32.png" />
+    <None Include="Resources\icons8-categories-32.png" />
+    <None Include="Resources\icons8-cutlery-20.png" />
+    <None Include="Resources\bodetails_32x32.png" />
+    <None Include="Resources\bodetails_16x16.png" />
+    <None Include="Resources\meeting.svg" />
+    <None Include="Resources\knowledgebasearticle_32x32.png" />
+    <None Include="Resources\knowledgebasearticle_16x16.png" />
+    <None Include="Resources\showtestreport_32x32.png" />
+    <None Include="Resources\showtestreport_16x16.png" />
+    <None Include="Resources\boorderitem_32x32.png" />
+    <None Include="Resources\boorderitem_16x16.png" />
+    <None Include="Resources\icons8-payroll-32.png" />
+    <None Include="Resources\knowledgebasearticle_32x321.png" />
+    <None Include="Resources\knowledgebasearticle_16x161.png" />
+    <None Include="Resources\exporttoxlsx_32x32.png" />
+    <None Include="Resources\exporttoxlsx_16x16.png" />
+    <None Include="Resources\paste_32x321.png" />
+    <None Include="Resources\paste_16x161.png" />
+    <None Include="Resources\usergroup_32x32.png" />
+    <None Include="Resources\usergroup_16x16.png" />
+    <None Include="Resources\readinglayoutview_32x32.png" />
+    <None Include="Resources\readinglayoutview_16x16.png" />
+    <None Include="Resources\home_32x32.png" />
+    <None Include="Resources\home_16x16.png" />
+    <None Include="Resources\boproductgroup_32x32.png" />
+    <None Include="Resources\boproductgroup_16x16.png" />
+    <None Include="Resources\boproduct_32x32.png" />
+    <None Include="Resources\boproduct_16x16.png" />
+    <None Include="Resources\listbullets_32x32.png" />
+    <None Include="Resources\listbullets_16x16.png" />
+    <None Include="Resources\listbullets_32x321.png" />
+    <None Include="Resources\listbullets_16x161.png" />
+    <None Include="Resources\indentdecrease_righttoleft_32x32.png" />
+    <None Include="Resources\indentdecrease_righttoleft_16x16.png" />
+    <None Include="Resources\knowledgebasearticle_32x322.png" />
+    <None Include="Resources\knowledgebasearticle_16x162.png" />
+    <None Include="Resources\today_32x321.png" />
+    <None Include="Resources\today_16x161.png" />
+    <None Include="Resources\showallfieldcodes.svg" />
+    <None Include="Resources\date&amp;time_32x32.png" />
+    <None Include="Resources\date&amp;time_16x16.png" />
+    <None Include="Resources\icons8-finger-print-scan-on-smartphone-with-error-logotype-layout-32.png" />
+    <None Include="Resources\time_32x32.png" />
+    <None Include="Resources\time_16x16.png" />
+    <None Include="Resources\next7days.svg" />
+    <None Include="Resources\bo_scheduler.svg" />
+    <None Include="Resources\find_32x32.png" />
+    <None Include="Resources\find_16x16.png" />
+    <None Include="Resources\applychanges.svg" />
+    <None Include="Resources\find_32x321.png" />
+    <None Include="Resources\find_16x161.png" />
+    <None Include="Resources\bochangehistory_32x32.png" />
+    <None Include="Resources\bochangehistory_16x16.png" />
+    <None Include="Resources\bo_audit_changehistory.svg" />
+    <None Include="Resources\documentpdf.svg" />
+    <None Include="Resources\inserttablerowsabove_16x16.png" />
+    <None Include="Resources\inserttablerowsabove_32x32.png" />
+    <None Include="Resources\selecttablerow_16x16.png" />
+    <None Include="Resources\selecttablerow_32x32.png" />
+    <None Include="Resources\pivotgriddesigner.svg" />
+    <None Include="Resources\customerquicklocations.svg" />
+    <None Include="Resources\reportlayoutpivottable_32x32.png" />
+    <None Include="Resources\reportlayoutpivottable_16x16.png" />
+    <None Include="Resources\insertpagecount.svg" />
+    <None Include="Resources\customerquicklocations1.svg" />
+    <None Include="Resources\pivottable.svg" />
+    <None Include="Resources\replace.svg" />
+    <None Include="Resources\knowledgebasearticle_32x323.png" />
+    <None Include="Resources\knowledgebasearticle_16x163.png" />
+    <None Include="Resources\kpi_32x32.png" />
+    <None Include="Resources\kpi_16x16.png" />
+    <None Include="Resources\chartchangestyle_32x32.png" />
+    <None Include="Resources\chartchangestyle_16x16.png" />
+    <None Include="Resources\chart_32x32.png" />
+    <None Include="Resources\chart_16x16.png" />
+    <None Include="Resources\listviewappointmentdeletedoccurrence.svg" />
+    <None Include="Resources\meeting1.svg" />
+    <None Include="Resources\bo_report.svg" />
+    <None Include="Resources\tasks.svg" />
+    <None Include="Resources\nightshift.png" />
+    <None Include="Resources\nightshift1.png" />
+    <None Include="Resources\showallfieldresults.svg" />
+    <None Include="Resources\up2_32x32.png" />
+    <None Include="Resources\up2_16x16.png" />
+    <None Include="Resources\fill_32x32.png" />
+    <None Include="Resources\fill_16x16.png" />
+    <None Include="Resources\financial.svg" />
+    <None Include="Resources\textwrapbehind.svg" />
+    <None Include="Resources\team_32x32.png" />
+    <None Include="Resources\team_16x16.png" />
+    <None Include="Resources\editcontact_32x32.png" />
+    <None Include="Resources\editcontact_16x16.png" />
+    <Content Include="RtcIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BaseBusiness\BaseBusiness.csproj">
+      <Project>{059ae159-539c-41c2-b62b-5c246731bd48}</Project>
+      <Name>BaseBusiness</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Forms\Forms.csproj">
+      <Project>{B9622161-59BF-420D-A676-8CEFC7A14EB1}</Project>
+      <Name>Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GenConn\GenConn.csproj">
+      <Project>{42894b13-735b-499a-80f6-20c52661df15}</Project>
+      <Name>GenConn</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GenLicense\GenLicense.csproj">
+      <Project>{42edfdd0-699c-4694-b8f7-89b849248645}</Project>
+      <Name>GenLicense</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UpdateVersion\UpdateVersion.csproj">
+      <Project>{095d310d-c5b7-4b73-93c8-5a86a5b812c4}</Project>
+      <Name>UpdateVersion</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UpLoadFile\UpLoadFile.csproj">
+      <Project>{760e0aeb-7751-4013-94a6-c1b7111b4bcd}</Project>
+      <Name>UpLoadFile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{696afdd3-6160-42fa-93ac-cbdbfe97233f}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

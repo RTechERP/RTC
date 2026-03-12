@@ -1,0 +1,30 @@
+
+using System;
+namespace BMS.Model
+{
+	public partial class ProjectItemLogModel : BaseModel
+	{
+		public int ID {get; set;}
+		public int ProjectItemID { get; set;}
+		
+		public int Status {get; set;}
+		
+		public string ContentLog {get; set;}
+		
+		public string Note {get; set;}
+		
+		public DateTime? DateStart {get; set;}
+		
+		public DateTime? DateEnd {get; set;}
+		
+		public DateTime? CreatedDate {get; set;}
+		
+		public string CreatedBy {get; set;}
+		
+		public DateTime? UpdatedDate {get; set;}
+		
+		public string UpdatedBy {get; set;}
+		
+	}
+}
+	

@@ -1,0 +1,3011 @@
+﻿using BaseBusiness.DTO;
+using BMS.Model;
+using BMS.Utils;
+using DevExpress.Utils;
+using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraPrinting;
+using DevExpress.XtraPrintingLinks;
+using DevExpress.XtraTab;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Windows.Forms;
+namespace BMS
+{
+    public partial class frmProjectPartlistPurchaseRequest_New : _Forms
+    {
+        public bool isSelectedPO = false;
+        public int supplierSaleId = 0;
+
+
+        public int poKHID = 0;
+        public bool listRequestBuySelect = false;
+
+        public bool isYCMH = false;
+        public bool isApprovedTBP = false;//PQ.Chien - UPDATE - 17 / 04 / 2025
+
+        public List<string> lstYCMHCode = new List<string>();
+        public List<int> lstYCMH = new List<int>();
+
+        List<GridColumn> columnFixeds = new List<GridColumn>();
+
+
+        public bool isPurchaseRequestDemo = false;
+        public string productCode = "";
+        public frmProjectPartlistPurchaseRequest_New()
+        {
+            InitializeComponent();
+        }
+
+        private void frmProjectPartlistPurchaseRequest_New_Load(object sender, EventArgs e)
+        {
+            Lib.LockEvents = true;
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            LoadPOCode();
+            List<GridColumn> columnEdits = gridView.Columns.Where(x => x.OptionsColumn.AllowEdit == true && x.Visible == true).ToList();
+            gridView.OptionsBehavior.Editable = poKHID == 0;
+            gridView.OptionsBehavior.ReadOnly = poKHID == 0;
+            //chkIsCommercialProduct.Checked = poKHID > 0;
+            if (poKHID > 0)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                foreach (ToolStripItem item in toolStrip2.Items)
+                {
+                    //if (item == btnDelete) continue;
+                    item.Visible = false;
+                }
+
+                btnDelete.Visible = true;
+            }
+            else if (TextUtils.ToInt(gridControl.Tag) == 3)
+            {
+                //xtraTabPage1.PageVisible = xtraTabPage2.PageVisible = !isPurchaseRequestDemo;
+                foreach (ToolStripItem item in toolStrip2.Items)
+                {
+                    item.Visible = false;
+                }
+                btnDelete.Visible = true;
+                txtKeyword.Text = productCode;
+            }
+            else
+            {
+                btnAddUnitPrice.Visible = btnBGDApproved.Visible = btnBGDUnApproved.Visible = !isSelectedPO;
+                gridView.OptionsBehavior.Editable = !isSelectedPO;
+                gridView.OptionsBehavior.ReadOnly = isSelectedPO;
+            }
+
+
+            dtpDateStart.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtpDateEnd.Value = dtpDateStart.Value.AddMonths(+2).AddDays(-1);
+            cboStatusRequest.SelectedIndex = 1;
+
+            cboIsApprovedTBP.SelectedIndex = isSelectedPO ? 2 : 0;
+            cboIsApprovedBGD.SelectedIndex = isSelectedPO ? 2 : 0;
+            cboIsDeleted.SelectedIndex = 1;
+
+
+            if (listRequestBuySelect == true)
+            {
+                gridView.Columns[$"{colPOKHCode.FieldName}"].GroupIndex = 1;
+                gridView.OptionsView.GroupFooterShowMode = DevExpress.XtraGrid.Views.Grid.GroupFooterShowMode.Hidden;
+            }
+
+
+            //PQ.Chien - UPDATE - 17 / 04 / 2025
+            if (isApprovedTBP)
+            {
+                foreach (ToolStripItem item in toolStrip2.Items)
+                {
+                    item.Visible = !isApprovedTBP;
+                }
+
+                btnPurchaseUnApproved.Visible = isApprovedTBP;
+                btnPurchaseApproved.Visible = isApprovedTBP;
+
+                //xtraTabPage1.PageVisible = !isApprovedTBP;
+                //xtraTabPage2.PageVisible = !isApprovedTBP;
+
+            }
+
+            LoadProject();
+            LoadSupplierSale();
+            LoadProductGroup();
+            LoadCurrency();
+            LoadData();
+            grdData.ContextMenuStrip = contextMenuStrip;
+
+            if (isYCMH)
+            {
+                //lee min khooi update 27/09/2024
+                foreach (ToolStripItem item in toolStrip2.Items)
+                {
+                    if (item == btnAddPONCC) continue;
+                    item.Visible = !isYCMH;
+                }
+                btnAddPONCC.Text = !isYCMH ? btnAddPONCC.Text : "Chọn YCMH";
+            }
+            else if (poKHID > 0)
+            {
+                foreach (ToolStripItem item in toolStrip2.Items)
+                {
+                    if (item == btnDelete) continue;
+                    item.Visible = !(poKHID > 0);
+                }
+            }
+
+            columnFixeds = gridView.Columns.Where(x => x.Fixed == FixedStyle.Left).ToList();
+            colCurrencyRate.OptionsColumn.AllowEdit = (Global.IsAdmin && Global.EmployeeID <= 0);
+            colCurrencyRate.OptionsColumn.ReadOnly = !(Global.IsAdmin && Global.EmployeeID <= 0);
+
+
+            colQuantity.OptionsColumn.AllowEdit = (Global.IsAdmin && Global.EmployeeID <= 0);
+            colQuantity.OptionsColumn.ReadOnly = !(Global.IsAdmin && Global.EmployeeID <= 0);
+            Lib.LockEvents = false;
+        }
+
+        void LoadProject()
+        {
+            List<ProjectModel> list = SQLHelper<ProjectModel>.FindAll().OrderByDescending(x => x.ID).ToList();
+            cboProject.Properties.ValueMember = "ID";
+            cboProject.Properties.DisplayMember = "ProjectCode";
+            cboProject.Properties.DataSource = list;
+        }
+        void LoadSupplierSale()
+        {
+            List<SupplierSaleModel> list = SQLHelper<SupplierSaleModel>.FindAll().OrderByDescending(x => x.ID).ToList();
+            cboSupplierSale.ValueMember = "ID";
+            cboSupplierSale.DisplayMember = "NameNCC";
+            cboSupplierSale.DataSource = list;
+
+            cboSupplier.Properties.ValueMember = "ID";
+            cboSupplier.Properties.DisplayMember = "NameNCC";
+            cboSupplier.Properties.DataSource = list;
+            cboSupplier.EditValue = supplierSaleId;
+
+        }
+
+        void LoadProductGroup()
+        {
+            List<ProductGroupModel> list = SQLHelper<ProductGroupModel>.FindByAttribute("IsVisible", 1);
+            cboProductGroup.ValueMember = "ID";
+            cboProductGroup.DisplayMember = "ProductGroupName";
+            cboProductGroup.DataSource = list;
+        }
+
+        void LoadCurrency()
+        {
+            List<CurrencyModel> list = SQLHelper<CurrencyModel>.FindAll();
+            cboCurrency.ValueMember = "ID";
+            cboCurrency.DisplayMember = "Code";
+            cboCurrency.DataSource = list;
+
+
+        }
+
+        void LoadPOCode()
+        {
+            List<POKHModel> dt = SQLHelper<POKHModel>.FindAll();
+            cboPOCode.Properties.DisplayMember = "POCode";
+            cboPOCode.Properties.ValueMember = "ID";
+            cboPOCode.Properties.DataSource = dt;
+            cboPOCode.EditValue = poKHID;
+        }
+
+
+        void LoadProductRTC()
+        {
+            List<ProductRTCModel> dt = SQLHelper<ProductRTCModel>.FindAll();
+            cboProductRTC.Properties.DisplayMember = "ProductCode";
+            cboProductRTC.Properties.ValueMember = "ID";
+            cboProductRTC.Properties.DataSource = dt;
+        }
+
+
+
+        void LoadData()
+        {
+            using (WaitDialogForm fWait = new WaitDialogForm("Vui lòng chờ trong giây lát...", "Đang load dữ liệu"))
+            {
+                try
+                {
+                    Lib.LockEvents = true;
+                    //if (!SaveData($"Bạn có muốn lưu lại thay đổi không?")) return;
+
+                    DateTime dateStart = new DateTime(dtpDateStart.Value.Year, dtpDateStart.Value.Month, dtpDateStart.Value.Day, 0, 0, 0);
+                    DateTime dateEnd = new DateTime(dtpDateEnd.Value.Year, dtpDateEnd.Value.Month, dtpDateEnd.Value.Day, 23, 59, 59);
+                    int statusRequest = cboStatusRequest.SelectedIndex;
+                    int projectId = TextUtils.ToInt(cboProject.EditValue);
+                    int productrtcId = TextUtils.ToInt(cboProductRTC.EditValue);
+                    string keyword = txtKeyword.Text.Trim();
+                    int supplierSaleId = TextUtils.ToInt(cboSupplier.EditValue);
+                    int isApprovedTBP = cboIsApprovedTBP.SelectedIndex - 1;
+                    int isApprovedBGD = cboIsApprovedBGD.SelectedIndex - 1;
+                    poKHID = TextUtils.ToInt(cboPOCode.EditValue);
+                    int isDeleted = 0;
+
+                    // Load toàn bộ dữ liệu
+                    DataTable dtAll = TextUtils.LoadDataFromSP("spGetProjectPartlistPurchaseRequest_New_Khanh", "spGetProjectPartlistPurchaseRequest_New_Khanh",
+                        new string[] { "@DateStart", "@DateEnd", "@StatusRequest", "@ProjectID", "@Keyword", "@SupplierSaleID", "@IsApprovedTBP", "@IsApprovedBGD", "@IsCommercialProduct", "@POKHID", "@ProductRTCID", "@IsDeleted", "@IsTechBought", "@IsJobRequirement", "@EmployeeID", "@IsRequestApproved" },
+                        new object[] { dateStart, dateEnd, statusRequest, projectId, keyword, supplierSaleId, isApprovedTBP, isApprovedBGD, -1, poKHID, -1, isDeleted, -1, -1, 0, -1 });
+
+                    // Clear tab trước khi add lại
+                    if (dtAll.Rows.Count <= 0)
+                    {
+                        //xtraTabControl1.TabPages.Clear();
+                        //return;
+                    }
+                    xtraTabControl1.TabPages.Clear();
+                    List<ProjectPartlistPurchaseRequestTypeModel> requestTypes = SQLHelper<ProjectPartlistPurchaseRequestTypeModel>.FindAll();
+                    foreach (ProjectPartlistPurchaseRequestTypeModel type in requestTypes)
+                    {
+                        DataRow[] rows = dtAll.Select($"{ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID} = {type.ID}");
+                        DataTable dtType;
+                        if (rows.Length > 0)
+                        {
+                            dtType = rows.CopyToDataTable();
+                        }
+                        else
+                        {
+                            dtType = dtAll.Clone();
+
+                        }
+                        XtraTabPage tabPage = new XtraTabPage();
+                        int count = rows.Length;
+                        string countText = count > 0 ? count.ToString("N0") : "0";
+                        tabPage.Text = type.RequestTypeName.ToUpper() + $" ({countText})";
+
+                        GridControl grid = CloneGridControl(grdData, dtType, type);
+                        AddWarehouseColumns(grid);
+                        GridView gridView = grid.MainView as GridView;
+                        tabPage.Controls.Add(grid);
+                        xtraTabControl1.TabPages.Add(tabPage);
+                    }
+                    // chọn lại tab cũ
+                    if (xtraTabControl1.TabPages.Count > 0)
+                        xtraTabControl1.SelectedTabPageIndex = 0;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex.Message}\r\n{ex.ToString()}", "Thông báo");
+                }
+                finally
+                {
+                    Lib.LockEvents = false;
+                }
+            }
+        }
+        GridControl CloneGridControl(GridControl template, DataTable dataSource, ProjectPartlistPurchaseRequestTypeModel type)
+        {
+            GridControl gridControl = new GridControl();
+            GridView gridView = new GridView(gridControl);
+
+            gridView.OptionsBehavior.Editable = false;
+            gridView.OptionsBehavior.ReadOnly = true;
+
+            gridControl.MainView = gridView;
+            gridControl.Dock = template.Dock;
+            gridControl.DataSource = dataSource;
+            gridView.Name = $"grvData{type.RequestTypeCode}";
+            gridControl.MainView = gridView;
+            gridControl.Dock = DockStyle.Fill;
+            gridControl.Name = $"grdData{type.RequestTypeCode}";
+            gridControl.Tag = $"{type.ID}";
+            gridControl.ContextMenuStrip = contextMenuStrip;
+            gridView.Assign(template.MainView as GridView, true);
+
+            //gridView.KeyDown += grvData_KeyDown;
+            ////gridView.FocusedRowChanged += grvData_FocusedRowChanged;
+            //gridView.RowStyle += grvData_RowStyle;
+
+            return gridControl;
+        }
+        private void AddWarehouseColumns(GridControl grid)
+        {
+            GridView view = grid.MainView as GridView;
+            if (view == null) return;
+
+            string[] codes = SQLHelper<WarehouseModel>.FindAll().Select(x => x.WarehouseCode).ToArray();
+
+            foreach (string wh in codes)
+            {
+                string colName = "Total" + wh;
+
+                if (view.Columns[colName] == null)
+                {
+                    GridColumn col = new GridColumn
+                    {
+                        FieldName = colName,
+                        Caption = "Tồn được sử dụng " + wh,
+                        Visible = true,
+                        VisibleIndex = view.Columns.Count,
+                        DisplayFormat = { FormatType = DevExpress.Utils.FormatType.Numeric, FormatString = "n2" },
+                        Width = 100,
+                        MinWidth = 80,
+                        OptionsColumn = { AllowEdit = false, ReadOnly = true }
+                    };
+
+                    view.Columns.Add(col);
+
+                    col.SummaryItem.SummaryType = DevExpress.Data.SummaryItemType.Sum;
+                    col.SummaryItem.DisplayFormat = "{0:n2}";
+
+
+                    view.GroupSummary.Add(new GridGroupSummaryItem
+                    {
+                        FieldName = colName,
+                        SummaryType = DevExpress.Data.SummaryItemType.Sum,
+                        DisplayFormat = "{0:n2}",
+                        ShowInGroupColumnFooter = col
+                    });
+                }
+            }
+
+            //Bật hiển thị footer
+            view.OptionsView.ShowFooter = true;
+
+            //Bật hiển thị group footer
+            view.OptionsView.GroupFooterShowMode = GroupFooterShowMode.VisibleAlways;
+        }
+        void Approved(bool isApproved, bool type)
+        {
+            string isApprovedText = isApproved ? "duyệt" : "huỷ duyệt";
+            DialogResult rs = MessageBox.Show($"Bạn có chắc muốn {isApprovedText} những sản phẩm này không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (rs != DialogResult.Yes) return;
+            SaveData();
+            int isApprovedValue = isApproved ? 1 : 0;
+            string typeText = type ? "TBP" : "BGD";
+
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            int[] selectedRows = gridView.GetSelectedRows();
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn {isApprovedText}!", "Thông báo");
+                return;
+            }
+
+            string message = "";
+            //if (type && !isApproved) message = $"Những sản phẩm đã được BGĐ duyệt sẽ không thể {isApprovedText}!";
+            //if (!type && isApproved) message = $"Những sản phẩm chưa được TBP duyệt sẽ không thể {isApprovedText}!";
+            DialogResult dialogResult = MessageBox.Show($"Bạn có chắc muốn {isApprovedText} danh sách sản phẩm đã chọn không?\n{message}", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult != DialogResult.Yes) return;
+
+            //if (isApproved)
+            //{
+            //    if (!SaveData(isApprovedText)) return;
+            //}
+
+            foreach (int row in selectedRows)
+            {
+                int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                if (id <= 0) continue;
+                int productSaleId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductSaleID.FieldName));
+                int productRTCId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductRTCID.FieldName));
+                string productNewCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductNewCode.FieldName));
+                string productCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductCode.FieldName));
+                if (productSaleId <= 0 && isApproved && productNewCode == null)
+                {
+                    MessageBox.Show($"Vui lòng tạo Mã nội bộ cho sản phẩm [{productCode}].\nChọn Loại kho sau đó chọn Lưu thay đổi để tạo Mã nội bộ!", "Thông báo");
+                    return;
+                }
+                ;
+            }
+
+            List<int> listId = new List<int>();
+            foreach (int row in selectedRows)
+            {
+                int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID));
+                bool isAprovedTBP = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedTBP));
+                bool isAprovedBGD = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedBGD));
+                if (id <= 0) continue;
+
+                listId.Add(id);
+            }
+
+            if (listId.Count <= 0) return;
+            string listIdText = string.Join(",", listId);
+
+            var myDict = new Dictionary<string, object>();
+            if (typeText == "TBP")
+            {
+                myDict = new Dictionary<string, object>()
+                {
+                    { ProjectPartlistPurchaseRequestModel_Enum.IsApprovedTBP.ToString(), isApprovedValue},
+                    //{ ProjectPartlistPurchaseRequestModel_Enum.ApprovedTBP.ToString(), Global.EmployeeID},
+                    { ProjectPartlistPurchaseRequestModel_Enum.DateApprovedTBP.ToString(), DateTime.Now},
+                    { ProjectPartlistPurchaseRequestModel_Enum.UpdatedBy.ToString(),Global.LoginName},
+                    { ProjectPartlistPurchaseRequestModel_Enum.UpdatedDate.ToString(), DateTime.Now },
+                };
+            }
+            else
+            {
+                myDict = new Dictionary<string, object>()
+                {
+                    { ProjectPartlistPurchaseRequestModel_Enum.IsApprovedBGD.ToString(), isApprovedValue},
+                    { ProjectPartlistPurchaseRequestModel_Enum.ApprovedBGD.ToString(), Global.EmployeeID},
+                    { ProjectPartlistPurchaseRequestModel_Enum.DateApprovedBGD.ToString(), DateTime.Now},
+                    { ProjectPartlistPurchaseRequestModel_Enum.UpdatedBy.ToString(),Global.LoginName},
+                    { ProjectPartlistPurchaseRequestModel_Enum.UpdatedDate.ToString(), DateTime.Now },
+                };
+            }
+
+
+            var exp = new Expression("ID", listIdText, "IN");
+            SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(myDict, exp);
+            LoadData();
+        }
+
+        void UpdateStatusPurcharRequest(int status)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            string statusText = status == 3 ? "đặt hàng" : (status == 4 ? "đang về" : (status == 5 ? "đã về" : "không đặt hàng"));
+            int[] selectedRows = gridView.GetSelectedRows();
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn [{statusText}]", "Thông báo");
+                return;
+            }
+
+            string question = $"Bạn có chắc muốn cập nhật thành trạng thái {statusText} danh sách sản phẩm đã chọn không?";
+            string lblDate = status == 3 ? "Ngày đặt hàng" : (status == 4 ? "Ngày dự kiến hàng về" : (status == 5 ? "Ngày về" : "Lý do"));
+
+            frmPriceRequestDetail frm = new frmPriceRequestDetail();
+            frm.Text = $"CẬP NHẬT TRẠNG THÁI {statusText.ToUpper()}";
+            frm.lblMessage.Text = question;
+            frm.label1.Text = lblDate;
+            frm.dtpDeadlinePriceRequest.Visible = status != 6;
+            frm.txtNote.Visible = status == 6;
+            frm.statusPurchaseRequest = status;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                foreach (int node in selectedRows)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(node, colID.FieldName));
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    request = request == null ? new ProjectPartlistPurchaseRequestModel() : request;
+                    request.StatusRequest = status;
+                    if (status == 3) request.DateOrder = frm.dtpDeadlinePriceRequest.Value;
+                    else if (status == 4) request.DateEstimate = frm.dtpDeadlinePriceRequest.Value;
+                    else if (status == 5) request.DateReturnActual = frm.dtpDeadlinePriceRequest.Value;
+
+                    if (request.ID > 0)
+                    {
+                        SQLHelper<ProjectPartlistPurchaseRequestModel>.Update(request);
+                    }
+                }
+                LoadData();
+            }
+        }
+        bool SaveData()
+        {
+            try
+            {
+                var tabSelected = xtraTabControl1.SelectedTabPage;
+                if (tabSelected.Controls.Count <= 0)
+                    return true;
+
+                var gridControl = tabSelected.Controls[0] as GridControl;
+                var gridView = gridControl?.MainView as GridView;
+                var dtSource = gridControl?.DataSource as DataTable;
+
+                if (dtSource == null)
+                    return true;
+
+                // Cập nhật dữ liệu đang edit
+                gridView.CloseEditor();
+                gridView.UpdateCurrentRow();
+
+                // Lấy các dòng thay đổi
+                var dataChange = dtSource.GetChanges();
+                int tag = TextUtils.ToInt(gridControl.Tag);
+
+                // Nếu không có thay đổi gì thì bỏ qua
+                if (dataChange == null)
+                    return true;
+
+                // Hỏi người dùng có muốn lưu thay đổi không
+                DialogResult dialog = MessageBox.Show(
+                    "Bạn có muốn lưu lại thay đổi không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua",
+                    "Thông báo",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question
+                );
+
+                if (dialog == DialogResult.Cancel)
+                    return false; // Hủy thao tác (vd: không cho chuyển tab)
+
+                if (dialog == DialogResult.Yes)
+                {
+                    // Tùy theo loại tag mà xử lý dữ liệu
+                    switch (tag)
+                    {
+                        case 1:
+                        case 4:
+                        case 2:
+                        case 5:
+                        case 6:
+                        case 7:
+                            UpdateData(dataChange);
+                            break;
+
+                        case 3: // demo
+                            UpdateData(dtSource);
+                            break;
+                    }
+                }
+                else if (dialog == DialogResult.No)
+                {
+                    // Người dùng chọn "Không" → hoàn tác thay đổi
+                    if (tag == 3)
+                        RollbackChanges(dtSource, dtSource, gridView);
+                    else
+                        RollbackChanges(dtSource, dataChange, gridView);
+                }
+                LoadData();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi lưu dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+        private void RollbackChanges(DataTable dtSource, DataTable dataChange, GridView gridView)
+        {
+            foreach (DataRow row in dataChange.Rows)
+            {
+                var dataRow = dtSource.Select($"ID = {row["ID"]}").FirstOrDefault();
+                if (dataRow == null) continue;
+
+                int index = dtSource.Rows.IndexOf(dataRow);
+                foreach (GridColumn column in gridView.Columns)
+                {
+                    if (!dtSource.Columns.Contains(column.FieldName)) continue;
+                    dtSource.Rows[index][column.FieldName] =
+                        dtSource.Rows[index][column.FieldName, DataRowVersion.Original];
+                }
+            }
+        }
+
+
+        //bool SaveData(string message)
+        //{
+        //    try
+        //    {
+        //        var tabSelected = xtraTabControl1.SelectedTabPage;
+
+        //        if (tabSelected.Controls.Count <= 0) return false;
+        //        GridControl gridControl = (GridControl)tabSelected.Controls[0];
+        //        GridView gridView = gridControl.MainView as GridView;
+        //        DataTable dtSource = gridControl.DataSource as DataTable;
+        //        if (dtSource == null) return false;
+
+        //        gridView.FocusedRowHandle = -1;
+        //        gridView.CloseEditor();
+        //        var dataChange = dtSource.GetChanges();
+
+
+        //        if (dataChange != null && TextUtils.ToInt(gridControl.Tag) == 1)
+        //        {
+        //            if (string.IsNullOrEmpty(message.Trim()))
+        //            {
+        //                UpdateData(dataChange);
+
+        //            }
+        //            else
+        //            {
+        //                DialogResult dialog = MessageBox.Show("Bạn có muốn lưu lại thay đổi không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua", "Thông báo", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+        //                if (dialog == DialogResult.Yes)
+        //                {
+        //                    UpdateData(dataChange);
+        //                }
+        //                else if (dialog == DialogResult.No)
+        //                {
+        //                    foreach (DataRow row in dataChange.Rows)
+        //                    {
+        //                        var dataRow = dtSource.Select($"ID = {row["ID"]}")[0];
+        //                        if (dataRow == null) continue;
+
+        //                        int index = dtSource.Rows.IndexOf(dataRow);
+        //                        foreach (GridColumn column in grvData.Columns)
+        //                        {
+        //                            if (!dtSource.Columns.Contains(column.FieldName)) continue;
+        //                            dtSource.Rows[index][column.FieldName] = dtSource.Rows[index][column.FieldName, DataRowVersion.Original];
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return false;
+        //                }
+        //            }
+
+        //        }
+
+        //        //nếu là demo
+        //        if (dtSource != null && TextUtils.ToInt(gridControl.Tag) == 3)
+        //        {
+        //            if (string.IsNullOrEmpty(message.Trim()))
+        //            {
+        //                UpdateData(dtSource);
+
+        //            }
+        //            else
+        //            {
+        //                DialogResult dialog = MessageBox.Show("Bạn có muốn lưu lại thay đổi không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua", "Thông báo", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+        //                if (dialog == DialogResult.Yes)
+        //                {
+        //                    UpdateData(dataChange);
+        //                }
+        //                else if (dialog == DialogResult.No)
+        //                {
+        //                    foreach (DataRow row in dtSource.Rows)
+        //                    {
+        //                        var dataRow = dtSource.Select($"ID = {row["ID"]}")[0];
+        //                        if (dataRow == null) continue;
+
+        //                        int index = dtSource.Rows.IndexOf(dataRow);
+        //                        foreach (GridColumn column in gridView.Columns)
+        //                        {
+        //                            if (!dtSource.Columns.Contains(column.FieldName)) continue;
+        //                            dtSource.Rows[index][column.FieldName] = dtSource.Rows[index][column.FieldName, DataRowVersion.Original];
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return false;
+        //                }
+        //            }
+
+        //        }
+
+        //        //nếu là demo mượn
+        //        if (dataChange != null && TextUtils.ToInt(gridControl.Tag) == 4)
+        //        {
+        //            if (string.IsNullOrEmpty(message.Trim()))
+        //            {
+        //                UpdateData(dataChange);
+
+        //            }
+        //            else
+        //            {
+        //                DialogResult dialog = MessageBox.Show("Bạn có muốn lưu lại thay đổi không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua", "Thông báo", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+        //                if (dialog == DialogResult.Yes)
+        //                {
+        //                    UpdateData(dataChange);
+        //                }
+        //                else if (dialog == DialogResult.No)
+        //                {
+        //                    foreach (DataRow row in dataChange.Rows)
+        //                    {
+        //                        var dataRow = dtSource.Select($"ID = {row["ID"]}")[0];
+        //                        if (dataRow == null) continue;
+
+        //                        int index = dtSource.Rows.IndexOf(dataRow);
+        //                        foreach (GridColumn column in gridView.Columns)
+        //                        {
+        //                            if (!dtSource.Columns.Contains(column.FieldName)) continue;
+        //                            dtSource.Rows[index][column.FieldName] = dtSource.Rows[index][column.FieldName, DataRowVersion.Original];
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return false;
+        //                }
+        //            }
+
+        //        }
+
+        //        //TODO : HuyNT - Update 14/06/2025
+        //        if (dataChange != null && TextUtils.ToInt(gridControl.Tag) == 4)
+        //        {
+        //            if (string.IsNullOrEmpty(message.Trim()))
+        //            {
+        //                UpdateData(dataChange);
+
+        //            }
+        //            else
+        //            {
+        //                DialogResult dialog = MessageBox.Show("Bạn có muốn lưu lại thay đổi không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua", "Thông báo", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+        //                if (dialog == DialogResult.Yes)
+        //                {
+        //                    UpdateData(dataChange);
+        //                }
+        //                else if (dialog == DialogResult.No)
+        //                {
+        //                    foreach (DataRow row in dataChange.Rows)
+        //                    {
+        //                        var dataRow = dtSource.Select($"ID = {row["ID"]}")[0];
+        //                        if (dataRow == null) continue;
+
+        //                        int index = dtSource.Rows.IndexOf(dataRow);
+        //                        foreach (GridColumn column in grvData.Columns)
+        //                        {
+        //                            if (!dtSource.Columns.Contains(column.FieldName)) continue;
+        //                            dtSource.Rows[index][column.FieldName] = dtSource.Rows[index][column.FieldName, DataRowVersion.Original];
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return false;
+        //                }
+        //            }
+
+        //        }
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return false;
+        //        throw;
+        //    }
+        //}
+
+
+        void UpdateData(DataTable dataSource)
+        {
+            try
+            {
+                var tabSelected = xtraTabControl1.SelectedTabPage;
+
+                if (tabSelected.Controls.Count <= 0) return;
+                GridControl gridControl = (GridControl)tabSelected.Controls[0];
+                GridView gridView = gridControl.MainView as GridView;
+
+                if (!checkValidate()) return;
+
+                List<GridColumn> columnEdits = gridView.Columns.Where(x => x.OptionsColumn.AllowEdit == true && x.Visible == true).ToList();
+
+                //string sql = "";
+                foreach (DataRow row in dataSource.Rows)
+                {
+                    int id = TextUtils.ToInt(row["ID"]);
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                    //decimal currencyRate = TextUtils.ToInt(row["ID"]);
+
+                    //Tính thành tiền
+                    decimal quantity = TextUtils.ToDecimal(row["Quantity"]);
+                    decimal unitPrice = TextUtils.ToDecimal(row["UnitPrice"]);
+                    decimal totalPrice = quantity * unitPrice;
+
+                    //Tính thành tiền quy đổi
+                    decimal currencyRate = TextUtils.ToDecimal(row["CurrencyRate"]);
+                    decimal totalPriceExchange = totalPrice * currencyRate;
+
+                    //Tính thành tiền có VAT
+                    decimal vat = TextUtils.ToDecimal(row["VAT"]);
+                    decimal totalMoneyVAT = totalPrice + ((totalPrice * vat) / 100);
+
+                    int productSaleID = TextUtils.ToInt(row["ProductSaleID"]);
+                    int productRTCID = TextUtils.ToInt(row["ProductRTCID"]);
+
+                    decimal targetPrice = TextUtils.ToDecimal(row["TargetPrice"]);//ndnhat-update 17/08/2025
+                    int duplicateID = TextUtils.ToInt(row["DuplicateID"]);//ndnhat-update 17/08/2025
+                    decimal originQuantity = TextUtils.ToDecimal(row["OriginQuantity"]);//ndnhat-update 17/08/2025
+
+                    //string columnUpdate = "";
+
+                    var myDict = new Dictionary<string, object>()
+                    {
+                        { ProjectPartlistPurchaseRequestModel_Enum.CurrencyRate.ToString(), currencyRate},
+                        { ProjectPartlistPurchaseRequestModel_Enum.TotalPrice.ToString(), totalPrice},
+                        { ProjectPartlistPurchaseRequestModel_Enum.TotalPriceExchange.ToString(), totalPriceExchange},
+                        { ProjectPartlistPurchaseRequestModel_Enum.TotaMoneyVAT.ToString(), totalMoneyVAT},
+                        { ProjectPartlistPurchaseRequestModel_Enum.ProductSaleID.ToString(), productSaleID},
+                        { ProjectPartlistPurchaseRequestModel_Enum.ProductRTCID.ToString(), productRTCID},
+                        { ProjectPartlistPurchaseRequestModel_Enum.UpdatedDate.ToString(), DateTime.Now },
+                        { ProjectPartlistPurchaseRequestModel_Enum.UpdatedBy.ToString(), Global.LoginName },
+                    };
+
+                    //ndnhat-update 17/07/2025
+                    if (duplicateID > 0)
+                    {
+                        myDict.Add(ProjectPartlistPurchaseRequestModel_Enum.Quantity.ToString(), quantity);
+                        myDict.Add(ProjectPartlistPurchaseRequestModel_Enum.OriginQuantity.ToString(), originQuantity);
+                    }
+                    //end ndnhat-update 17/07/2025
+
+                    foreach (GridColumn col in columnEdits)
+                    {
+                        //var format = col.DisplayFormat.Format;
+                        var columnTypeName = col.ColumnType.Name.ToLower();
+                        string value = TextUtils.ToString(row[col.FieldName]).Trim().ToLower();
+
+                        if (columnTypeName == "int32" || columnTypeName == "decimal") value = string.IsNullOrEmpty(value) ? "0" : value;
+                        //else if (columnTypeName == "boolean") value = value == "true" ? "1" : "0";
+                        //else value = value;
+
+                        //columnUpdate += $"{col.FieldName} = {value},";
+
+                        //myDict.Add(col.FieldName, value);
+
+                        myDict[col.FieldName] = value;
+                    }
+
+                    //var exp = new Expression("ID", id);
+
+                    //var result = SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(myDict, exp);
+
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFieldsByID(myDict, id);
+                }
+
+
+
+                dataSource.AcceptChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\r\n{ex.ToString()}", "Thông báo");
+                throw;
+            }
+
+        }
+
+        bool isAdmin = (Global.IsAdmin && Global.EmployeeID <= 0);
+
+        void CreateProduct()
+        {
+
+            try
+            {
+                //grvData.FocusedRowHandle = -1;
+                //grvData.CloseEditor();
+
+                var tabSelected = xtraTabControl1.SelectedTabPage;
+
+                if (tabSelected.Controls.Count <= 0) return;
+                GridControl gridControl = (GridControl)tabSelected.Controls[0];
+                GridView gridView = gridControl.MainView as GridView;
+                gridView.FocusedRowHandle = -1;
+                gridView.CloseEditor();
+                DataTable dt = gridControl.DataSource as DataTable;
+                DataTable datachange = dt.GetChanges();
+
+                if (!validateManufacturer(gridView)) return; //ndnhat update 19/07/2025
+
+                var expf1 = new Expression(FirmModel_Enum.FirmType, 1);
+                var expf2 = new Expression(FirmModel_Enum.IsDelete, 0);
+                var firms = SQLHelper<FirmModel>.FindByExpression(expf1.And(expf2));
+
+                for (int i = 0; i < datachange.Rows.Count; i++)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(i, colID.FieldName));
+                    if (id <= 0) continue;
+
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                    int productGroupId = TextUtils.ToInt(gridView.GetRowCellValue(i, colProductGroupID.FieldName));
+                    int productGroupRTCId = TextUtils.ToInt(gridView.GetRowCellValue(i, colProductGroupRTCID.FieldName));
+
+                    if (productGroupId <= 0 && productGroupRTCId <= 0) continue;
+
+                    string productCode = TextUtils.ToString(gridView.GetRowCellValue(i, colProductCode.FieldName)).Trim();
+                    //if (productCode != "testtttt") continue;
+                    var exp1 = new Expression("ProductGroupID", productGroupId);
+                    var exp2 = new Expression("ProductCode", productCode);
+                    var exp3 = new Expression("IsDeleted", 0);
+
+                    if (productGroupId > 0 && (TextUtils.ToInt(gridControl.Tag) == 1 || TextUtils.ToInt(gridControl.Tag) == 7))//Insert vào kho Sale
+                    {
+                        ProductSaleModel productSale = SQLHelper<ProductSaleModel>.FindByExpression(exp1.And(exp2).And(exp3)).FirstOrDefault();
+
+                        productSale = productSale ?? new ProductSaleModel();
+
+                        if (productSale.ID > 0)
+                        {
+                            //productSale.ProductNewCode = LoadNewCode(productGroupId);
+                            //SQLHelper<ProductSaleModel>.Update(productSale);
+
+                        }
+                        else
+                        {
+                            productSale.ProductCode = productCode;
+                            productSale.ProductName = TextUtils.ToString(gridView.GetRowCellValue(i, colProductName.FieldName)).Trim();
+                            productSale.Unit = TextUtils.ToString(gridView.GetRowCellValue(i, colUnitName.FieldName)).Trim();
+                            productSale.ProductGroupID = productGroupId;
+                            productSale.ProductNewCode = LoadNewCode(productGroupId);
+                            string maker = TextUtils.ToString(gridView.GetRowCellValue(i, colManufacturer.FieldName)).Trim();
+
+                            FirmModel firm = firms.FirstOrDefault(x => x.FirmName.Trim().ToLower() == maker.Trim().ToLower()) ?? new FirmModel();
+                            productSale.Maker = TextUtils.ToString(gridView.GetRowCellValue(i, colManufacturer.FieldName)).Trim();
+                            productSale.FirmID = firm.ID;
+                            productSale.ID = SQLHelper<ProductSaleModel>.Insert(productSale).ID;
+                        }
+
+                        gridView.SetRowCellValue(i, colProductSaleID, productSale.ID);
+                        gridView.SetRowCellValue(i, colProductNewCode, productSale.ProductNewCode);
+
+                        if (request.ProjectPartListID > 0)
+                        {
+                            var expPOKH = new Expression("ProjectPartListID", request.ProjectPartListID);
+                            //var pokhDetails = SQLHelper<POKHDetailModel>.FindByExpression(expPOKH);
+
+                            //foreach (var detail in pokhDetails)
+                            //{
+                            //    detail.ProductID = productSale.ID;
+                            //    SQLHelper<POKHDetailModel>.Update(detail);
+                            //}
+
+                            var myDict = new Dictionary<string, object>()
+                            {
+                                { "ProductID" ,productSale.ID},
+                            };
+                            SQLHelper<RequestInvoiceModel>.UpdateFields(myDict, expPOKH);
+                        }
+                    }
+                    //else //Insert vào kho Demo
+                    //{
+                    //    //exp1 = new Expression(ProductRTCModel_Enum.ProductGroupRTCID, productGroupRTCId);
+
+                    //    ProductRTCModel productRTC = SQLHelper<ProductRTCModel>.FindByExpression(exp2).FirstOrDefault();
+
+                    //    productRTC = productRTC ?? new ProductRTCModel();
+                    //    productRTC.ProductCode = productCode;
+                    //    productRTC.ProductName = TextUtils.ToString(gridView.GetRowCellValue(i, colProductName)).Trim();
+
+                    //    string unitName = TextUtils.ToString(gridView.GetRowCellValue(i, colUnitName)).Trim();
+                    //    UnitCountKTModel unitCountKT = SQLHelper<UnitCountKTModel>.FindByAttribute("UnitCountName", unitName).FirstOrDefault() ?? new UnitCountKTModel();
+                    //    productRTC.UnitCountID = unitCountKT.ID;
+                    //    productRTC.ProductGroupRTCID = productGroupRTCId;
+                    //    if (productRTC.ID > 0)
+                    //    {
+                    //        //SQLHelper<ProductSaleModel>.Update(productSale);
+                    //    }
+                    //    else
+                    //    {
+                    //        productRTC.ProductCodeRTC = GetProductCodeRTC();
+                    //        productRTC.ID = SQLHelper<ProductRTCModel>.Insert(productRTC).ID;
+                    //    }
+
+                    //    gridView.SetRowCellValue(i, colProductRTCID.FieldName, productRTC.ID);
+                    //    gridView.SetRowCellValue(i, "ProductCodeRTC", productRTC.ProductCodeRTC);
+                    //}
+
+
+                }
+                //LoadData();
+            }
+            catch (Exception ex)
+            {
+                //string a = "a";
+                throw;
+            }
+        }
+
+        string GetProductCodeRTC()
+        {
+            string numberCodeDefault = "00000001";
+            string productCodeRTC = "Z";
+            var listProducts = SQLHelper<ProductRTCModel>.FindAll();
+            var listproductCodeRTCs = listProducts.Select(x => new
+            {
+                ProductCodeRTC = x.ProductCodeRTC,
+                STT = string.IsNullOrWhiteSpace(x.ProductCodeRTC) ? 0 : TextUtils.ToInt(x.ProductCodeRTC.Substring(1))
+            }).ToList();
+
+            int numberCode = listproductCodeRTCs.Count <= 0 ? 0 : listproductCodeRTCs.Max(x => x.STT);
+            string numberCodeText = (++numberCode).ToString();
+
+            while (numberCodeText.Length < numberCodeDefault.Length)
+            {
+                numberCodeText = "0" + numberCodeText;
+            }
+            productCodeRTC += numberCodeText;
+
+            return productCodeRTC;
+        }
+
+        string LoadNewCode(int productGroupId)
+        {
+            string newCodeRTC = "";
+            if (productGroupId <= 0) return newCodeRTC;
+
+            DataSet ds = TextUtils.LoadDataSetFromSP("spLoadNewCodeRTC", new string[] { "@Group" }, new object[] { productGroupId });
+            string code = "";
+            string codeRTC = TextUtils.ToString(ds.Tables[1].Rows[0][0]);
+
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                newCodeRTC = codeRTC + "000000001";
+            }
+            else
+            {
+                if (!codeRTC.Contains("HCM"))
+                {
+                    code = TextUtils.ToString(ds.Tables[0].Rows[0][0]).Replace(codeRTC, "");
+                    int stt = TextUtils.ToInt(code) + 1;
+                    for (int i = 0; codeRTC.Length < (9 - stt.ToString().Length); i++)
+                    {
+                        codeRTC = codeRTC + "0";
+                    }
+                    newCodeRTC = codeRTC + stt.ToString();
+                }
+                else
+                {
+                    code = TextUtils.ToString(ds.Tables[0].Rows[0][0]).Replace(codeRTC, "");
+                    int stt = TextUtils.ToInt(code) + 1;
+                    string indexString = TextUtils.ToString(stt);
+                    for (int i = 0; indexString.Length < code.Length; i++)
+                    {
+                        indexString = "0" + indexString;
+                    }
+                    newCodeRTC = codeRTC + indexString.ToString();
+                }
+            }
+
+            return newCodeRTC;
+        }
+
+
+        decimal CalculatorTotalMoneyExchange(int rowHandle)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return 0;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            decimal totalMoney = TextUtils.ToDecimal(gridView.GetRowCellValue(rowHandle, colTotalPrice));
+            decimal currencyRate = TextUtils.ToDecimal(gridView.GetRowCellValue(rowHandle, colCurrencyRate));
+            decimal totalMoneyExchange = totalMoney * currencyRate;
+            return totalMoneyExchange;
+        }
+
+        void UpdateProductImport(bool isImport)
+        {
+            string isImportText = isImport ? "hàng nhập khẩu" : "hàng nội địa";
+            string sqlInsertIsImport = "";
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            var selectedRows = gridView.GetSelectedRows();
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn chuyển thành {isImportText}!", "Thông báo");
+                return;
+            }
+
+            DialogResult dialog = MessageBox.Show($"Bạn có chắc muốn chuyển sản phẩm đã chọn thành {isImportText} không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog == DialogResult.Yes)
+            {
+                foreach (int row in selectedRows)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID));
+                    if (id <= 0) continue;
+                    grvData.SetRowCellValue(row, colIsImport, 0);
+                    int isImportValue = isImport ? 1 : 0;
+                    sqlInsertIsImport += $"UPDATE dbo.ProjectPartlistPurchaseRequest SET IsImport = {isImportValue}, " +
+                                            $"UpdatedDate = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}'," +
+                                            $"UpdatedBy = '{Global.LoginName}'" +
+                                            $"WHERE ID = {id}\n";
+                }
+
+                if (!string.IsNullOrEmpty(sqlInsertIsImport.Trim())) TextUtils.ExcuteSQL(sqlInsertIsImport);
+                LoadData();
+            }
+            //int id = 0;
+
+
+        }
+
+        void RequestApproved(bool isRequestApproved)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            DataTable dtSource = gridControl.DataSource as DataTable;
+
+            int[] selectedRows = gridView.GetSelectedRows();
+            //grvData.CloseEditor();
+            string isRequestApprovedText = isRequestApproved ? "yêu cầu duyệt" : "huỷ yêu cầu duyệt";
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn {isRequestApprovedText}!", "Thông báo");
+                return;
+            }
+
+            foreach (int row in selectedRows)
+            {
+                int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                if (id <= 0) continue;
+                int productSaleId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductSaleID));
+                int productRTCId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductRTCID));
+                int supplierSaleId = TextUtils.ToInt(gridView.GetRowCellValue(row, colSupplierSaleID.FieldName));
+                decimal unitPrice = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colUnitPrice.FieldName));
+                int currencyIDRequest = TextUtils.ToInt(gridView.GetRowCellValue(row, colCurrencyID.FieldName));
+
+                string productCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductCode.FieldName));
+                if (productRTCId <= 0)
+                {
+
+                    if (supplierSaleId <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng nhập Nhà cung cấp cho sản phẩm [{productCode}].\nChọn Nhà cung cấp sau đó chọn Lưu thay đổi!", "Thông báo");
+                        return;
+                    }
+
+                    if (unitPrice <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng nhập Đơn giá cho sản phẩm [{productCode}].\nChọn Nhà cung cấp sau đó chọn Lưu thay đổi!", "Thông báo");
+                        return;
+                    }
+
+                    if (productRTCId <= 0 && productSaleId <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng tạo Mã nội bộ cho sản phẩm [{productCode}].\nChọn Loại kho sau đó chọn Lưu thay đổi để tạo Mã nội bộ!", "Thông báo");
+                        return;
+                    }
+
+                    if (currencyIDRequest <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng chọn loại tiền tệ cho sản phẩm [{productCode}].\nChọn Loại tiền sau đó chọn Lưu thay đổi!", "Thông báo");
+                        return;
+                    }
+                }
+
+            }
+
+            DialogResult dialog = MessageBox.Show($"Bạn có chắc muốn {isRequestApprovedText} danh sách sản phẩm đã chọn không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua!", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog == DialogResult.Yes)
+            {
+                DataTable data = new DataTable();
+                dtSource.AcceptChanges();
+                data = dtSource.Clone();
+
+                foreach (int row in selectedRows)
+                {
+
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    if (id <= 0) continue;
+
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                    if (row < 0) continue;
+
+                    DataRow dataRow = data.NewRow();
+
+                    dataRow = gridView.GetDataRow(row);
+                    data.ImportRow(dataRow);
+                }
+
+                if (data.Rows.Count > 0)
+                {
+                    UpdateData(data);
+                }
+
+                List<int> listId = new List<int>();
+                foreach (int row in selectedRows)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    if (id <= 0) continue;
+
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                    listId.Add(id);
+                    //grvData.SetRowCellValue(row, colIsImport, 0);
+                    //int isRequestApprovedValue = isRequestApproved ? 1 : 0;
+                    //sqlInsertIsImport += $"UPDATE dbo.ProjectPartlistPurchaseRequest SET IsImport = {isImportValue}, " +
+                    //                        $"UpdatedDate = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}'," +
+                    //                        $"UpdatedBy = '{Global.LoginName}'" +
+                    //                        $"WHERE ID = {id}\n";
+                }
+
+                if (listId.Count <= 0) return;
+
+                int isRequestApprovedValue = isRequestApproved ? 1 : 0;
+                string idText = string.Join(",", listId);
+
+                var myDict = new Dictionary<string, object>()
+                {
+                    { ProjectPartlistPurchaseRequestModel_Enum.IsRequestApproved.ToString(), isRequestApprovedValue},
+                    { ProjectPartlistPurchaseRequestModel_Enum.EmployeeIDRequestApproved.ToString(), Global.EmployeeID},
+                    { ProjectPartlistPurchaseRequestModel_Enum.UpdatedBy.ToString(),Global.LoginName},
+                    { ProjectPartlistPurchaseRequestModel_Enum.UpdatedDate.ToString(), DateTime.Now },
+                };
+
+                var exp = new Expression("ID", idText, "IN");
+                SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(myDict, exp);
+                LoadData();
+            }
+        }
+
+        private void cboStatusRequest_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //LoadData();
+        }
+
+        private void cboProject_EditValueChanged(object sender, EventArgs e)
+        {
+            //LoadData();
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            LoadData();
+
+        }
+
+        private void btnAddUnitPrice_Click(object sender, EventArgs e)
+        {
+            using (WaitDialogForm fWait = new WaitDialogForm())
+            {
+                CreateProduct();
+                SaveData();
+            }
+
+        }
+
+        private void btnOrder_Click(object sender, EventArgs e)
+        {
+            UpdateStatusPurcharRequest(3);
+        }
+
+        private void btnReturning_Click(object sender, EventArgs e)
+        {
+            UpdateStatusPurcharRequest(4);
+        }
+
+        private void btnReturned_Click(object sender, EventArgs e)
+        {
+            UpdateStatusPurcharRequest(5);
+        }
+
+        private void btnNotOrder_Click(object sender, EventArgs e)
+        {
+            UpdateStatusPurcharRequest(6);
+        }
+
+        private void grvData_KeyDown(object sender, KeyEventArgs e)
+        {
+            GridView gridView = sender as GridView;
+            if (gridView == null) return;
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                string value = TextUtils.ToString(gridView.GetFocusedRowCellValue(gridView.FocusedColumn)).Trim();
+                if (string.IsNullOrEmpty(value)) return;
+                Clipboard.SetText(value);
+                e.Handled = true;
+            }
+        }
+
+        private void btnDuplicateContext_Click(object sender, EventArgs e)
+        {
+            Duplicate();
+        }
+
+        private void btnPurchaseApproved_Click(object sender, EventArgs e)
+        {
+            Approved(true, true);
+        }
+
+        private void btnPurchaseUnApproved_Click(object sender, EventArgs e)
+        {
+            Approved(false, true);
+        }
+
+        private void btnBGDApproved_Click(object sender, EventArgs e)
+        {
+            Approved(true, false);
+        }
+
+        private void btnBGDUnApproved_Click(object sender, EventArgs e)
+        {
+            Approved(false, false);
+        }
+
+        void UpdateValue(int row)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            decimal quantity = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colQuantity));
+            decimal unitPrice = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colUnitPrice));
+            decimal currencyRate = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colCurrencyRate));
+
+            decimal totalPrice = quantity * unitPrice;
+            gridView.SetRowCellValue(row, colTotalPrice, totalPrice);
+
+            decimal totalPriceExchange = quantity * unitPrice * currencyRate;
+            gridView.SetRowCellValue(row, colTotalPriceExchange, totalPriceExchange);
+
+            decimal unitImportPrice = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colUnitImportPrice));
+            decimal totalImportPrice = unitImportPrice * quantity;
+            gridView.SetRowCellValue(row, colTotalImportPrice, totalImportPrice);
+
+            decimal vat = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colVAT));
+            decimal totalMoneyVAT = totalPrice + ((totalPrice * vat) / 100);
+            gridView.SetRowCellValue(row, colTotaMoneyVAT, totalMoneyVAT);
+        }
+
+        bool isRecallCellValueChanged = false;
+        private void grvData_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+        {
+            //if (grvData.FocusedColumn == colCurrencyID) return;
+            if (isRecallCellValueChanged == true) return;
+            try
+            {
+                if (e.Column != colProductSaleID && e.Column != colProductNewCode)
+                {
+                    using (WaitDialogForm fWait = new WaitDialogForm())
+                    {
+                        grvData.CloseEditor();
+                        isRecallCellValueChanged = true;
+                        if (grvData.SelectedRowsCount > 0)
+                        {
+                            if (e.Value == null) return;
+                            foreach (int row in grvData.GetSelectedRows())
+                            {
+                                if (e.Column == colProductSaleID) continue;
+                                if (e.Column == colProductNewCode) continue;
+                                if (e.Column == colInventoryProjectID) continue;
+                                grvData.SetRowCellValue(row, grvData.Columns[e.Column.FieldName], e.Value);
+
+
+                                if (grvData.FocusedColumn != colUnitPrice
+                                    && grvData.FocusedColumn != colUnitImportPrice
+                                    && grvData.FocusedColumn != colVAT
+                                    && grvData.FocusedColumn != colTargetPrice)
+                                {
+                                    continue;
+                                }
+
+                                UpdateValue(row);
+                            }
+                        }
+                        else UpdateValue(grvData.FocusedRowHandle);
+                    }
+                }
+            }
+            finally
+            {
+                isRecallCellValueChanged = false;
+            }
+
+
+        }
+
+        private void frmProjectPartlistPurchaseRequest_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //SaveData("đóng");
+            DialogResult dialogResult = MessageBox.Show("Bạn có muốn lưu thay đổi không?", "Thông báo", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            e.Cancel = !SaveData();
+        }
+
+
+
+        private void btnAddPONCC_Click(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            DataTable dtSource = gridControl.DataSource as DataTable;
+
+            int[] selectedRows = gridView.GetSelectedRows();
+            int id = 0;
+            string message = isYCMH ? "YCM" : "PO NCC";
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn Tạo {message}!", "Thông báo");
+                return;
+            }
+            //Check validate danh sách sản phẩm có cùng nhà cung cấp không
+            List<int> listSupplierSale = new List<int>();
+            foreach (int row in selectedRows)
+            {
+                id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                if (id <= 0) continue;
+                int supplierSaleId = TextUtils.ToInt(gridView.GetRowCellValue(row, colSupplierSaleID.FieldName));
+                listSupplierSale.Add(supplierSaleId);
+            }
+
+            listSupplierSale = listSupplierSale.Distinct().ToList();
+            if (listSupplierSale.Count > 1)
+            {
+                MessageBox.Show("Vui lòng chỉ chọn sản phầm từ 1 Nhà cung cấp!", "Thông báo");
+                return;
+            }
+
+
+            // =============================================== lee min khooi update 27/09/2024 ===============================================
+            if (isYCMH)
+            {
+                foreach (int row in selectedRows)
+                {
+                    id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    if (id <= 0) continue;
+                    string code = TextUtils.ToString(gridView.GetRowCellValue(row, colProductNewCode.FieldName));
+                    if (TextUtils.ToInt(gridControl.Tag) != 5 || TextUtils.ToInt(gridControl.Tag) != 6)
+                    {
+                        bool isBGDAprroved = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedBGD.FieldName));
+                        bool isTechBought = TextUtils.ToBoolean(gridView.GetRowCellValue(row, "IsTechBought"));
+                        //int jobRequirementID = TextUtils.ToInt(gridView.GetRowCellValue(row, colJobRequirementID.FieldName));
+                        if (!isBGDAprroved && !isTechBought)
+                        {
+                            MessageBox.Show("Sản phẩm chưa được BGĐ duyệt!", "Thông báo");
+                            return;
+                        }
+                        if (string.IsNullOrWhiteSpace(code))
+                        {
+                            MessageBox.Show("Sản phẩm chưa có mã nội bộ!", "Thông báo");
+                            return;
+                        }
+                    }
+                }
+
+
+                foreach (int row in selectedRows)
+                {
+                    id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    string code = TextUtils.ToString(gridView.GetRowCellValue(row, colProductNewCode.FieldName));
+
+                    if (id <= 0) continue;
+                    //Kiểm tra xem có phải hàng thương mại không
+                    if (TextUtils.ToInt(gridControl.Tag) != 5 || TextUtils.ToInt(gridControl.Tag) != 6)
+                    {
+                        bool isBGDAprroved = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedBGD.FieldName));
+                        if (!isBGDAprroved) continue;
+                        if (string.IsNullOrWhiteSpace(code)) continue;
+                    }
+
+                    if (!lstYCMH.Contains(id))
+                    {
+                        lstYCMH.Add(id);
+                        lstYCMHCode.Add(code);
+                    }
+                }
+
+
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                var dataChange = dtSource.GetChanges();
+                if (dataChange != null)
+                {
+                    MessageBox.Show($"Vui lòng Lưu thay đổi trước kho Tạo PO NCC!", "Thông báo");
+                    return;
+                }
+
+                foreach (int row in selectedRows)
+                {
+
+                    id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    if (id <= 0) continue;
+                    int supplierSaleId = TextUtils.ToInt(gridView.GetRowCellValue(row, colSupplierSaleID.FieldName));
+                    string productCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductCode.FieldName));
+                    int productRtcId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductRTCID.FieldName));
+                    int productSaleId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductSaleID.FieldName));
+                    int currencyIDRequest = TextUtils.ToInt(gridView.GetRowCellValue(row, colCurrencyID.FieldName));
+                    decimal unitPrice = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colUnitPrice.FieldName));
+
+                    string parentProductCode = TextUtils.ToString(gridView.GetRowCellValue(row, colParentProductCode.FieldName));
+
+
+                    ProjectPartlistPurchaseRequestModel requestModel = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+
+                    bool isTBPAprroved = TextUtils.ToBoolean(requestModel.IsApprovedTBP);
+                    int isBorrowProduct = TextUtils.ToInt(gridView.GetRowCellValue(row, "TicketType")); //0:mua,1:mượn
+
+                    if (productRtcId <= 0 && productSaleId <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng tạo Mã nội bộ cho sản phẩm [{productCode}].\nChọn Loại kho sau đó chọn Lưu thay đổi để tạo Mã nội bộ!", "Thông báo");
+                        return;
+                    }
+
+                    if (currencyIDRequest <= 0 /*&& isBorrowProduct == 0*/)
+                    {
+                        MessageBox.Show($"Vui lòng chọn loại tiền tệ cho sản phẩm [{productCode}].\nChọn Loại tiền sau đó chọn Lưu thay đổi!", "Thông báo");
+                        return;
+                    }
+
+
+                    if (!string.IsNullOrWhiteSpace(parentProductCode))
+                    {
+                        if (supplierSaleId <= 0)
+                        {
+                            MessageBox.Show($"Vui lòng nhập Nhà cung cấp cho sản phẩm con [{productCode}].\nChọn Nhà cung cấp sau đó chọn Lưu thay đổi!", "Thông báo");
+                            return;
+                        }
+                        // Bỏ qua validate khác
+                        continue;
+                    }
+
+
+                    if (supplierSaleId <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng nhập Nhà cung cấp cho sản phẩm [{productCode}].\nChọn Nhà cung cấp sau đó chọn Lưu thay đổi!", "Thông báo");
+                        return;
+                    }
+
+                    if (unitPrice <= 0 && isBorrowProduct == 0)
+                    {
+                        MessageBox.Show($"Vui lòng nhập Đơn giá cho sản phẩm [{productCode}]!", "Thông báo");
+                        return;
+                    }
+
+                    if (!isTBPAprroved && isBorrowProduct == 1)
+                    {
+                        MessageBox.Show("Sản phẩm chưa được TBP duyệt!", "Thông báo");
+                        return;
+                    }
+                }
+
+
+
+                DialogResult dialog = MessageBox.Show("Bạn có chắc muốn tạo PO NCC danh sách sản phẩm đã chọn không.\n" +
+                                                    "Những sản phẩm chưa được BGĐ duyệt sẽ tự động được bỏ qua!", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialog != DialogResult.Yes) return;
+                List<ProjectPartlistPurchaseRequestDTO> listRequest = new List<ProjectPartlistPurchaseRequestDTO>();
+                List<int> currencys = new List<int>();
+                foreach (int row in selectedRows)
+                {
+                    id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    if (id <= 0) continue;
+
+                    //TODO : HuyNT Update 14/06/2025 
+                    int requestTypeID = TextUtils.ToInt(gridView.GetRowCellValue(row, colProjectPartlistPurchaseRequestTypeID));
+                    ProjectPartlistPurchaseRequestTypeModel requestType = SQLHelper<ProjectPartlistPurchaseRequestTypeModel>.FindByID(requestTypeID) ?? new ProjectPartlistPurchaseRequestTypeModel();
+                    bool IsIgnoreBGD = TextUtils.ToBoolean(requestType.IsIgnoreBGD);
+                    //======================================
+
+                    ProjectPartlistPurchaseRequestModel requestModel = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+
+                    bool isApprovedBGD = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedBGD.FieldName));
+                    bool isCommercialProduct = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsCommercialProduct.FieldName));
+                    bool isTechBought = TextUtils.ToBoolean(gridView.GetRowCellValue(row, "IsTechBought"));
+
+
+                    bool isTBPAprroved = TextUtils.ToBoolean(requestModel.IsApprovedTBP);
+                    int isBorrowProduct = TextUtils.ToInt(gridView.GetRowCellValue(row, "TicketType")); //0:mua,1:mượn
+                    int productRtcId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductRTCID.FieldName));
+                    int jobRequirementID = TextUtils.ToInt(gridView.GetRowCellValue(row, colJobRequirementID.FieldName));
+
+                    if (jobRequirementID <= 0)
+                    {
+                        //ndNhat update 27/03/2025
+                        if (isBorrowProduct == 0)//mua
+                        {
+                            if (!isApprovedBGD && !isCommercialProduct && !isTechBought && productRtcId <= 0 && !IsIgnoreBGD) continue;
+                        }
+                        else
+                        {
+                            if (!isTBPAprroved) continue;
+                        }
+                    }
+
+                    //end ndNhat update 27/03/2025
+                    int productId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductSaleID.FieldName));
+                    int productRTCID = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductRTCID.FieldName));
+                    decimal quantity = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colQuantity.FieldName));
+                    decimal unitPrice = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colUnitPrice.FieldName));
+                    int projectId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProjectID.FieldName));
+                    string projectName = TextUtils.ToString(gridView.GetRowCellValue(row, colProjectName.FieldName));
+                    DateTime? deadline = TextUtils.ToDate4(gridView.GetRowCellValue(row, colDateReturnExpected.FieldName));
+                    string productCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductCode.FieldName));
+                    decimal vat = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colVAT.FieldName));
+                    decimal totaMoneyVAT = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colTotaMoneyVAT.FieldName));
+                    int ticketType = TextUtils.ToInt(gridView.GetRowCellValue(row, ProjectPartlistPurchaseRequestModel_Enum.TicketType.ToString()));
+
+
+                    DateTime? dateReturnEstimated = TextUtils.ToDate4(gridView.GetRowCellValue(row, colDateReturnEstimated.FieldName));
+
+                    if (isCommercialProduct && projectId <= 0)
+                    {
+                        string customerCode = TextUtils.ToString(gridView.GetRowCellValue(row, colCustomerCode.FieldName));
+                        string poNumber = TextUtils.ToString(gridView.GetRowCellValue(row, colPONumber.FieldName));
+                        projectName = $"{customerCode}_{poNumber}";
+                    }
+
+
+                    ProjectPartlistPurchaseRequestDTO request = new ProjectPartlistPurchaseRequestDTO()
+                    {
+                        ID = id,
+                        ProductSaleID = productId,
+                        ProductRTCID = productRTCID,//ndNhat update 27/03/2025
+                        Quantity = quantity,
+                        UnitPrice = unitPrice,
+                        EmployeeID = Global.EmployeeID,
+                        ProjectID = projectId,
+                        //ProjectID = 1,
+                        ProjectName = projectName,
+                        Deadline = deadline,
+                        ProductCode = productCode,
+                        VAT = vat,
+                        TotaMoneyVAT = totaMoneyVAT,
+                        GuestCode = TextUtils.ToString(gridView.GetRowCellValue(row, colGuestCode.FieldName)),
+                        //GuestCode = "adasdas",
+                        IsCommercialProduct = isCommercialProduct,
+                        HistoryPrice = TextUtils.ToDecimal(gridView.GetRowCellValue(row, colHistoryPrice.FieldName)),
+                        PONCCDetailRequestBuyID = id.ToString(),
+                        IsBill = vat > 0,
+                        DateReturnEstimated = dateReturnEstimated,
+                        TicketType = ticketType,
+                        IsStock = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsStock.FieldName)),
+                        ProductGroupID = TextUtils.ToInt(gridView.GetRowCellValue(row, colProductGroupID.FieldName)),
+                        UnitName = TextUtils.ToString(gridView.GetRowCellValue(row, ProjectPartlistPurchaseRequestModel_Enum.UnitName.ToString())),
+                        SpecialCode = TextUtils.ToString(gridView.GetRowCellValue(row, colSpecialCode.FieldName)),
+                        ParentProductCode = TextUtils.ToString(gridView.GetRowCellValue(row, colParentProductCode)),//ndnhat update 14/10/2025
+                        IsPurchase = false//ndnhat update 14/10/2025
+                    };
+                    listRequest.Add(request);
+                    currencys.Add(TextUtils.ToInt(gridView.GetRowCellValue(row, colCurrencyID.FieldName)));
+                }
+
+
+                //Distint loại tiền
+                int currencyID = currencys.Distinct().ToList().Count > 1 ? 0 : currencys.Distinct().FirstOrDefault();
+
+                frmPONCCDetailNew frm = new frmPONCCDetailNew();
+                //frm.listRequest = result;
+                frm.listRequest = listRequest;
+                frm.supplierSaleID = listSupplierSale.FirstOrDefault();
+                SupplierSaleModel supplier = SQLHelper<SupplierSaleModel>.FindByID(listSupplierSale.FirstOrDefault());
+                frm.txtAccountNumberSupplier.Text = supplier.SoTK;
+                frm.txtBankSupplier.Text = supplier.SoTK;
+                frm.txtAddressSupplier.Text = supplier.AddressNCC;
+                frm.txtMaSoThueNCC.Text = supplier.MaSoThue;
+                frm.cboEmployee.EditValue = Global.EmployeeID;
+
+                frm.currencyID = currencyID;
+                if (isSelectedPO)
+                {
+                    this.DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    PONCCModel po = new PONCCModel();
+                    frm.po = po;
+                    frm.Tag = po.BillCode;
+                    TextUtils.OpenChildForm(frm, null);
+                }
+            }
+        }
+
+        private void grvData_ValidatingEditor(object sender, DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs e)
+        {
+            return;
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            bool isApprovedTBP = TextUtils.ToBoolean(gridView.GetFocusedRowCellValue(colIsApprovedTBP.FieldName));
+            bool isApprovedBGD = TextUtils.ToBoolean(gridView.GetFocusedRowCellValue(colIsApprovedBGD.FieldName));
+            if (gridView.FocusedColumn == colProductGroupID || gridView.FocusedColumn == colNote) return;
+
+            if (isApprovedTBP && !Global.IsAdmin)
+            {
+                gridView.BeginUpdate();
+                e.Valid = false;
+                e.ErrorText = $"Bạn không thể sửa [{gridView.FocusedColumn.Caption}] vì đã được TBP duyệt!";
+                gridView.EndUpdate();
+            }
+
+            if (isApprovedBGD && !Global.IsAdmin)
+            {
+                gridView.BeginUpdate();
+                e.Valid = false;
+                e.ErrorText = $"Bạn không thể sửa [{gridView.FocusedColumn.Caption}] vì đã được BGĐ duyệt!";
+                gridView.EndUpdate();
+            }
+        }
+
+        private void cboSupplier_EditValueChanged(object sender, EventArgs e)
+        {
+            if (Lib.LockEvents) return; // Thêm dòng này
+            LoadData();
+        }
+
+        private void cboIsApprovedTBP_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // LoadData();
+        }
+
+        private void cboIsApprovedBGD_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Lib.LockEvents) return; // Thêm dòng này
+            LoadData();
+        }
+
+        private void cboUnit_EditValueChanged(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            SearchLookUpEdit lookUpEdit = (SearchLookUpEdit)sender;
+            CurrencyModel currency = (CurrencyModel)lookUpEdit.GetSelectedDataRow();
+
+            gridView.SetFocusedRowCellValue(colUnitMoney, currency.Code);
+            //grvData.SetFocusedRowCellValue(colCurrencyRate, currency.CurrencyRate);
+        }
+
+        private void grdData_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnExportExcel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnHistoryPriceContext_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboCurrency_EditValueChanged(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            SearchLookUpEdit lookUpEdit = (SearchLookUpEdit)sender;
+            CurrencyModel currency = (CurrencyModel)lookUpEdit.GetSelectedDataRow() ?? new CurrencyModel();
+
+            bool isExpried = true;
+            if (currency.DateExpried.HasValue && currency.DateStart.HasValue && !string.IsNullOrWhiteSpace(currency.Code))
+            {
+                //validate ngày bắt đầu < ngày hết hạn
+                isExpried = ((currency.DateExpried.Value.Date < DateTime.Now.Date.Date || currency.DateStart.Value.Date > DateTime.Now.Date) && currency.Code.ToLower().Trim() != "vnd");
+            }
+
+
+            int[] rowSelecteds = grvData.GetSelectedRows();
+            if (rowSelecteds.Length <= 0)
+            {
+                gridView.SetRowCellValue(gridView.FocusedRowHandle, colCurrencyID, currency.ID);
+                gridView.SetRowCellValue(gridView.FocusedRowHandle, colCurrencyRate, currency.CurrencyRate);
+                if (isExpried) gridView.SetRowCellValue(gridView.FocusedRowHandle, colCurrencyRate, 0);
+                gridView.SetRowCellValue(gridView.FocusedRowHandle, colTotalPriceExchange, CalculatorTotalMoneyExchange(gridView.FocusedRowHandle));
+                //grvData.SetRowCellValue(grvData.FocusedRowHandle, colStatusUpdate, 2);
+            }
+            else
+            {
+                using (WaitDialogForm fWait = new WaitDialogForm())
+                {
+                    foreach (int row in rowSelecteds)
+                    {
+                        gridView.SetRowCellValue(row, colCurrencyID, currency.ID);
+                        gridView.SetRowCellValue(row, colCurrencyRate, currency.CurrencyRate);
+                        if (isExpried) gridView.SetRowCellValue(row, colCurrencyRate, 0);
+                        gridView.SetRowCellValue(row, colTotalPriceExchange, CalculatorTotalMoneyExchange(row));
+                        //grvData.SetRowCellValue(row, colStatusUpdate, 2);
+                    }
+                }
+            }
+        }
+
+        private void btnUpdateImport_Click(object sender, EventArgs e)
+        {
+            UpdateProductImport(true);
+        }
+
+        private void btnCancelImport_Click(object sender, EventArgs e)
+        {
+            UpdateProductImport(true);
+        }
+
+        private void btnRequestApproved_Click(object sender, EventArgs e)
+        {
+            RequestApproved(true);
+        }
+
+        private void btnCancelRequestApproved_Click(object sender, EventArgs e)
+        {
+            RequestApproved(false);
+        }
+
+        private void btnImportContext_Click(object sender, EventArgs e)
+        {
+            //Tạo phiếu nhập kho trạng thái yc nhập kho
+        }
+
+        private void btnAddSupplierSale_Click(object sender, EventArgs e)
+        {
+            frmSupplierSaleDetail frm = new frmSupplierSaleDetail();
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                LoadSupplierSale();
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            int[] rowSelected = gridView.GetSelectedRows();
+            if (rowSelected.Length <= 0)
+            {
+                MessageBox.Show("Vui lòng chọn sản phẩm muốn xoá!", "Thông báo");
+                return;
+            }
+
+
+            //Check valiadate
+            if (!Global.IsAdmin)
+            {
+                foreach (int row in rowSelected)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(row, "ID"));
+                    if (id <= 0) continue;
+                    bool isCommercialProduct = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsCommercialProduct.FieldName));
+                    int poNCC = TextUtils.ToInt(gridView.GetRowCellValue(row, colPONCCID.FieldName));
+
+                    string productCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductCode.FieldName));
+
+                    if (!isCommercialProduct)
+                    {
+                        MessageBox.Show($"Sản phẩm mã [{productCode}] không phải hàng thương mại.\nBạn không thể xoá!", "Thông báo");
+                        return;
+                    }
+
+                    if (poNCC > 0)
+                    {
+                        MessageBox.Show($"Sản phẩm mã [{productCode}] đã có PO Nhà cung cấp.\nBạn không thể xoá!", "Thông báo");
+                        return;
+                    }
+
+                    if (isPurchaseRequestDemo)
+                    {
+                        string updateName = TextUtils.ToString(gridView.GetRowCellValue(row, colUpdatedName));
+                        int requestStatus = TextUtils.ToInt(gridView.GetRowCellValue(row, colStatusRequest));
+                        bool isApprovedTBP = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedTBP));
+                        bool isApprovedBGD = TextUtils.ToBoolean(gridView.GetRowCellValue(row, colIsApprovedBGD));
+
+                        if (updateName != "" && requestStatus != 1)
+                        {
+                            MessageBox.Show($"Sản phẩm mã [{productCode}] đã nhân viên mua.\nBạn không thể hủy yêu cầu!", "Thông báo");
+                            return;
+                        }
+
+                        if (isApprovedTBP)
+                        {
+                            MessageBox.Show($"Sản phẩm mã [{productCode}] đã được TBP duyệt.\nBạn không thể hủy yêu cầu!", "Thông báo");
+                            return;
+                        }
+
+                        if (isApprovedBGD)
+                        {
+                            MessageBox.Show($"Sản phẩm mã [{productCode}] đã được BGD duyệt.\nBạn không thể hủy yêu cầu!", "Thông báo");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            DialogResult dialog = MessageBox.Show("Bạn có chắc muốn xoá danh sách đã chọn không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog == DialogResult.Yes)
+            {
+                List<int> inventoryProjects = new List<int>();
+                foreach (int row in rowSelected)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(row, "ID"));
+                    if (id <= 0) continue;
+                    //idDeletes.Add(id);
+
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    request.IsDeleted = true;
+
+                    //SQLHelper<ProjectPartlistPurchaseRequestModel>.DeleteModelByID(id);
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.Update(request);
+
+
+                    int inventoryProjectID = TextUtils.ToInt(gridView.GetRowCellValue(row, colInventoryProjectID.FieldName));
+                    if (inventoryProjectID > 0) inventoryProjects.Add(inventoryProjectID);
+                }
+
+
+                if (inventoryProjects.Count > 0)
+                {
+                    var myDict = new Dictionary<string, object>()
+                    {
+                        {InventoryProjectModel_Enum.IsDeleted.ToString(),true },
+                        {InventoryProjectModel_Enum.UpdatedBy.ToString(),Global.AppUserName },
+                        {InventoryProjectModel_Enum.UpdatedDate.ToString(),DateTime.Now },
+                    };
+                    string idInventoryProject = string.Join(",", inventoryProjects);
+                    var exp = new Expression(InventoryProjectModel_Enum.ID.ToString(), idInventoryProject, "IN");
+
+                    SQLHelper<InventoryProjectModel>.UpdateFields(myDict, exp);
+                }
+                //if (idDeletes.Count <= 0) return;
+                //string idDelete = string.Join(",", idDeletes);
+                //string sql = $"UPDATE ProjectPartlistPriceRequest SET IsDeleted = 1 WHERE ID IN ({idDelete})";
+                //TextUtils.ExcuteSQL(sql);
+
+                LoadData();
+            }
+        }
+
+        private void btnRequestApproved_Click_1(object sender, EventArgs e)
+        {
+            RequestApproved(true);
+        }
+
+        private void btnCancelRequestApproved_Click_1(object sender, EventArgs e)
+        {
+            RequestApproved(false);
+        }
+
+        private void btnShowPODetail_Click(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            int poID = TextUtils.ToInt(gridView.GetFocusedRowCellValue("PONCCID"));
+            //var poDetails = SQLHelper<PONCCDetailModel>.FindByAttribute("ProjectPartlistPurchaseRequestID", id);
+
+            if (poID <= 0) return;
+            PONCCModel po = SQLHelper<PONCCModel>.FindByID(poID);
+            frmPONCCDetailNew frm = new frmPONCCDetailNew();
+            frm.po = po;
+            frm.Tag = po.BillCode;
+            TextUtils.OpenChildForm(frm, null);
+        }
+
+
+
+        private void grvData_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
+        {
+            var view = sender as GridView;
+            if (view == null) return;
+
+            if (e.RowHandle >= 0)
+            {
+                bool isDeleted = TextUtils.ToBoolean(view.GetRowCellValue(e.RowHandle, colIsDeleted));
+                if (isDeleted)
+                {
+                    e.Appearance.BackColor = System.Drawing.Color.Red;
+                    e.Appearance.ForeColor = System.Drawing.Color.White;
+                    e.HighPriority = true;
+                }
+                else
+                {
+                    //var view = sender as GridView;
+                    if (view.FocusedRowHandle == e.RowHandle)
+                    {
+                        e.Appearance.BackColor = System.Drawing.Color.LightYellow;
+                        e.Appearance.ForeColor = System.Drawing.Color.Black;
+                        //e.HighPriority = true;
+                    }
+                }
+            }
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            try
+            {
+                int ID = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colID.FieldName));
+                if (ID == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn yêu cầu muốn sửa!", "Thông báo");
+                    return;
+                }
+                //bool isCommercialProduct = TextUtils.ToBoolean(gridView.GetFocusedRowCellValue(colIsCommercialProduct.FieldName));
+                //int poNCC = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colPONCCID.FieldName));
+                //if (!isCommercialProduct || poNCC > 0)
+                //{
+                //    MessageBox.Show("Sửa Y/C chỉ áp dụng với [Hàng thương mại] và yêu cầu [Chưa có PO]!", "Thông báo");
+                //    return;
+                //}
+                int[] lstID = { 5, 6 };//5:Hàng thương mại, 6:hàng HR
+                int poNCC = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colPONCCID.FieldName));
+                if (!lstID.Contains(TextUtils.ToInt(gridControl.Tag)) || poNCC > 0)
+                {
+                    MessageBox.Show("Sửa Y/C chỉ áp dụng với [Hàng thương mại] và yêu cầu [Chưa có PO]!", "Thông báo");
+                    return;
+                }
+
+                int customerID = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colCustomerID.FieldName));
+                int quantity = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colQuantity.FieldName));
+                string statusRequest = TextUtils.ToString(gridView.GetFocusedRowCellValue(colStatusRequestText.FieldName));
+
+                frmProjectPartlistPurchaseRequestDetail frm = new frmProjectPartlistPurchaseRequestDetail();
+                frm.model = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(ID);
+                frm.customerID = customerID;
+                frm.quantity = quantity;
+                frm.statusRequest = statusRequest;
+
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadData();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, TextUtils.Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void grvData_DoubleClick(object sender, EventArgs e)
+        {
+            btnEdit_Click(null, null);
+        }
+
+        void CheckOrder(bool isCheckOrder)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            string isCheckOrderText = isCheckOrder ? "check" : "hủy check";
+            int[] selectedRows = gridView.GetSelectedRows();
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show("Vui lòng chọn sản phẩm muốn check!", "Thông báo");
+                return;
+            }
+
+
+            //Check Validate
+            //foreach (var row in selectedRows)
+            //{
+            //    int id = TextUtils.ToInt(grvData.GetRowCellValue(row, colID));
+            //    if (id <= 0) continue;
+
+            //    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+
+            //    if (request.EmployeeIDRequestApproved != Global.EmployeeID)
+            //    {
+
+            //    }
+            //}
+
+
+            DialogResult dialogResult = MessageBox.Show($"Bạn có chắc muốn {isCheckOrderText} danh sách đang chọn không?\nNhững sản phẩm đã có NV mua check sẽ tự động được bỏ qua!", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
+            {
+                List<int> listIDs = new List<int>();
+                foreach (var row in selectedRows)
+                {
+                    int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                    if (id <= 0) continue;
+
+
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    if (request.EmployeeIDRequestApproved != Global.EmployeeID && request.EmployeeIDRequestApproved > 0 && !isAdmin) continue;
+
+
+                    listIDs.Add(id);
+                }
+
+                if (listIDs.Count <= 0) return;
+
+                string idsText = string.Join(",", listIDs);
+                var myDict = new Dictionary<string, object>()
+                {
+                    {"EmployeeIDRequestApproved",isCheckOrder ? Global.EmployeeID:0 },
+                };
+
+                var exp = new Expression("ID", idsText, "IN");
+                var result = SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(myDict, exp);
+
+                if (result.IsSuccess) LoadData();
+                else MessageBox.Show(result.ErrorText, "Thông báo");
+
+            }
+        }
+        private void btnIsCheckOrder_Click(object sender, EventArgs e)
+        {
+            CheckOrder(true);
+        }
+
+        private void btnUnCheckOrder_Click(object sender, EventArgs e)
+        {
+            CheckOrder(false);
+        }
+
+        private void btnExportExcelAll_Click(object sender, EventArgs e)
+        {
+            ExportExcel(false);
+        }
+
+        private void btnExportExcelChoise_Click(object sender, EventArgs e)
+        {
+            ExportExcel(true);
+        }
+
+        void ExportExcel(bool choise)
+        {
+            try
+            {
+                var tab = xtraTabControl1.SelectedTabPage;
+                if (tab == null) return;
+                GridControl grdExport = (GridControl)tab.Controls[0];
+                GridView grvExport = grdExport.MainView as GridView;
+                if (grdExport == null || grvExport == null)
+                {
+                    //MessageBox.Show("Không tìm thấy GridControl hoặc GridView trong tab hiện tại!", "Thông báo");
+                    return;
+                }
+
+                DataTable dtNew = ((DataTable)grdExport.DataSource).Clone();
+                DataTable dtOld = ((DataTable)grdExport.DataSource);
+                int[] listFocus = { };
+                if (choise)
+                {
+                    if (grvExport.RowCount <= 0) return;
+                    if (grvExport.SelectedRowsCount <= 0)
+                    {
+                        MessageBox.Show($"Vui lòng chọn sản phẩm cần xuất excel!", "Thông báo");
+                        return;
+                    }
+                    listFocus = grvExport.GetSelectedRows();
+                    foreach (int rowIndex in listFocus)
+                    {
+                        if (rowIndex < 0) continue;
+                        DataRow rowObj = grvExport.GetDataRow(rowIndex);
+                        if (rowObj == null) continue;
+                        //DataRow row = rowView.Row;
+                        dtNew.ImportRow(rowObj);
+                    }
+                }
+
+                SaveFileDialog f = new SaveFileDialog();
+                f.Filter = "Excel Files|*.xlsx";
+                string name = !choise ? "_All" : "";
+                f.FileName = $"YeuCauMua_{tab.Text}{name}_{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    string filepath = f.FileName;
+
+                    XlsxExportOptions optionsEx = new XlsxExportOptions();
+                    PrintingSystem printingSystem = new PrintingSystem();
+
+                    PrintableComponentLink printableComponentLink1 = new PrintableComponentLink(printingSystem);
+                    if (choise) grdExport.DataSource = dtNew;
+                    printableComponentLink1.Component = grdExport;
+
+
+                    CompositeLink compositeLink = new CompositeLink(printingSystem);
+                    compositeLink.Links.Add(printableComponentLink1);
+
+                    compositeLink.CreatePageForEachLink();
+                    optionsEx.ExportMode = XlsxExportMode.SingleFilePageByPage;
+
+                    compositeLink.PrintingSystem.SaveDocument(filepath);
+                    compositeLink.ExportToXlsx(filepath, optionsEx);
+
+                    if (choise)
+                    {
+                        grdExport.DataSource = dtOld;
+                        foreach (int rowIndex in listFocus) grvExport.SelectRow(rowIndex);
+                        grvExport.MakeRowVisible(listFocus.Min());
+                    }
+
+                    Process.Start(filepath);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        void CompleteRequestBuy(int status)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+            DataTable dtSource = (DataTable)gridControl.DataSource;
+
+            string statusText = status == 7 ? "hoàn thành" : "hủy hoàn thành";
+            int[] selectedRows = gridView.GetSelectedRows();
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn {statusText} yêu cầu mua!", "Thông báo");
+                return;
+            }
+
+            DialogResult dialog = MessageBox.Show($"Bạn có chắc muốn {statusText} danh sách sản phẩm đã chọn không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua!", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog == DialogResult.Yes)
+            {
+                using (WaitDialogForm fWait = new WaitDialogForm("Vui lòng chờ trong giây lát...", "Đang load dữ liệu"))
+                {
+                    dtSource.AcceptChanges();
+                    DataTable data = dtSource.Clone();
+                    foreach (int row in selectedRows)
+                    {
+                        int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                        if (id <= 0) continue;
+
+                        ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                        if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                        if (row < 0) continue;
+
+                        DataRow dataRow = data.NewRow();
+
+                        dataRow = gridView.GetDataRow(row);
+                        data.ImportRow(dataRow);
+                    }
+                    UpdateData(data);
+
+                    List<int> listId = new List<int>();
+                    foreach (int row in selectedRows)
+                    {
+                        int id = TextUtils.ToInt(gridView.GetRowCellValue(row, colID.FieldName));
+                        if (id <= 0) continue;
+
+                        ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                        if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                        listId.Add(id);
+                    }
+
+                    if (listId.Count <= 0) return;
+
+                    var myDict = new Dictionary<string, object>()
+                        {
+                            { "EmployeeIDRequestApproved",Global.EmployeeID},
+                            { "StatusRequest",status},
+                            { "UpdatedDate",DateTime.Now},
+                            { "UpdatedBy",Global.AppCodeName},
+                        };
+
+                    var exp = new Expression("ID", string.Join(",", listId), "IN");
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(myDict, exp);
+
+                    LoadData();
+                }
+
+            }
+        }
+
+
+        void KeepProduct(bool isKeep)
+        {
+            string isKeepText = isKeep == true ? "giữ hàng" : "hủy giữ hàng";
+            int[] selectedRows = grvData.GetSelectedRows();
+            if (selectedRows.Length <= 0)
+            {
+                MessageBox.Show($"Vui lòng chọn sản phẩm muốn {isKeepText}!", "Thông báo");
+                return;
+            }
+
+            DialogResult dialog = MessageBox.Show($"Bạn có chắc muốn {isKeepText} danh sách sản phẩm đã chọn không?\nNhững sản phẩm NV mua không phải bạn sẽ tự động được bỏ qua!", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog == DialogResult.Yes)
+            {
+                foreach (int row in selectedRows)
+                {
+                    int id = TextUtils.ToInt(grvData.GetRowCellValue(row, colID));
+                    if (id <= 0) continue;
+
+                    int productID = TextUtils.ToInt(grvData.GetRowCellValue(row, colProductSaleID.FieldName));
+                    int projectID = TextUtils.ToInt(grvData.GetRowCellValue(row, colProjectID.FieldName));
+                    if (productID <= 0 /*|| projectID <= 0*/) continue;
+
+                    //check sl tồn kho
+                    DataTable dt = TextUtils.LoadDataFromSP("spGetInventory", "A", new string[] { "@ProductSaleID" }, new object[] { productID });
+                    if (dt.Rows.Count <= 0) continue;
+                    decimal totalQuantityLast = TextUtils.ToDecimal(dt.Rows[0]["TotalQuantityLast"]);
+                    if (totalQuantityLast <= 0) continue;
+
+                    int inventoryProjectID = TextUtils.ToInt(grvData.GetRowCellValue(row, colInventoryProjectID.FieldName));
+                    //int inventoryProjectIDq = TextUtils.ToInt(grvData.GetRowCellValue(18, colInventoryProjectID));
+
+                    ProjectPartlistPurchaseRequestModel request = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+                    if (request.EmployeeIDRequestApproved != Global.EmployeeID && !isAdmin) continue;
+
+                    InventoryProjectModel inventoryProject = SQLHelper<InventoryProjectModel>.FindByID(inventoryProjectID);
+                    inventoryProject.ProjectID = projectID;
+                    inventoryProject.ProductSaleID = productID;
+                    inventoryProject.EmployeeID = request.EmployeeIDRequestApproved;
+                    inventoryProject.WarehouseID = 1;
+                    inventoryProject.Quantity = TextUtils.ToDecimal(grvData.GetRowCellValue(row, colQuantity.FieldName));
+
+                    inventoryProject.CustomerID = TextUtils.ToInt(grvData.GetRowCellValue(row, colCustomerID.FieldName));
+                    inventoryProject.POKHDetailID = TextUtils.ToInt(grvData.GetRowCellValue(row, colPOKHDetailID.FieldName));
+
+                    if (inventoryProject.ID <= 0)
+                    {
+                        inventoryProject.ID = SQLHelper<InventoryProjectModel>.Insert(inventoryProject).ID;
+                    }
+                    else
+                    {
+                        SQLHelper<InventoryProjectModel>.Update(inventoryProject);
+                    }
+
+                    request.InventoryProjectID = inventoryProject.ID;
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.Update(request);
+                    grvData.SetRowCellValue(row, colInventoryProjectID.FieldName, inventoryProject.ID);
+
+                }
+
+            }
+        }
+        private void btnCompleteRequestBuy_Click(object sender, EventArgs e)
+        {
+            CompleteRequestBuy(7);
+        }
+
+        private void btnUnCompleteRequestBuy_Click(object sender, EventArgs e)
+        {
+            CompleteRequestBuy(1);
+        }
+
+        private void btnKeepProduct_Click(object sender, EventArgs e)
+        {
+            KeepProduct(true);
+        }
+
+        private void cboProductRTC_EditValueChanged(object sender, EventArgs e)
+        {
+            //LoadData();
+        }
+        ////ndNhat update 26/03/2025
+        //private void repositoryItemSearchLookUpEdit8_EditValueChanged(object sender, EventArgs e)
+        //{
+        //    var tabSelected = xtraTabControl1.SelectedTabPage;
+
+        //    if (tabSelected.Controls.Count <= 0) return;
+        //    GridControl gridControl = (GridControl)tabSelected.Controls[0];
+        //    GridView gridView = gridControl.MainView as GridView;
+
+        //    gridView.CloseEditor();
+        //    SearchLookUpEdit lookUpEdit = sender as SearchLookUpEdit;
+        //    CurrencyModel model = lookUpEdit.GetSelectedDataRow() as CurrencyModel;
+        //    if (model == null) return;
+        //    int rowHandle = gridView.FocusedRowHandle;
+        //    gridView.SetRowCellValue(rowHandle, colCurrencyRate, model.CurrencyRate);
+        //    gridView.SetRowCellValue(rowHandle, colCurrencyID, model.ID);
+
+        //}
+
+        //private void repositoryItemSearchLookUpEdit5_EditValueChanged(object sender, EventArgs e)
+        //{
+        //    var tabSelected = xtraTabControl1.SelectedTabPage;
+
+        //    if (tabSelected.Controls.Count <= 0) return;
+        //    GridControl gridControl = (GridControl)tabSelected.Controls[0];
+        //    GridView gridView = gridControl.MainView as GridView;
+
+        //    gridView.CloseEditor();
+        //    SearchLookUpEdit lookUpEdit = sender as SearchLookUpEdit;
+        //    SupplierSaleModel model = lookUpEdit.GetSelectedDataRow() as SupplierSaleModel;
+        //    if (model == null) return;
+        //    int rowHandle = gridView.FocusedRowHandle;
+        //    gridView.SetRowCellValue(rowHandle, colSupplierSaleID, model.ID);
+        //}
+
+        private void btnDownloadFile_Click(object sender, EventArgs e)
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+
+            int[] rowSelecteds = gridView.GetSelectedRows();
+            if (rowSelecteds.Length <= 0)
+            {
+                MessageBox.Show("Vui lòng chọn sản phẩm muốn tải file!", "Thông báo");
+                return;
+            }
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string productCode = "";
+                foreach (int row in rowSelecteds)
+                {
+                    try
+                    {
+                        int projectId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProjectID));
+
+                        ProjectModel project = SQLHelper<ProjectModel>.FindByID(projectId);
+                        if (project == null) continue;
+                        if (!project.CreatedDate.HasValue) continue;
+
+                        int projectPartlistId = TextUtils.ToInt(gridView.GetRowCellValue(row, colProjectPartListID));
+
+                        ProjectSolutionModel solution = SQLHelper<ProjectSolutionModel>.ProcedureToList("spGetProjectSolutionByProjectPartListID",
+                                                            new string[] { "@ProjectPartListID" }, new object[] { projectPartlistId }).FirstOrDefault();
+                        if (solution == null) continue;
+                        if (string.IsNullOrEmpty(solution.CodeSolution)) continue;
+                        string pathPattern = $@"{project.CreatedDate.Value.Year}/{project.ProjectCode.Trim()}/THIETKE.Co/{solution.CodeSolution.Trim()}/2D/GC/DH";
+
+                        productCode = TextUtils.ToString(gridView.GetRowCellValue(row, colProductCode));
+                        if (string.IsNullOrEmpty(productCode)) continue;
+                        string pathDowload = Path.Combine(fbd.SelectedPath, $"{productCode}.pdf");
+                        string url = $"http://113.190.234.64:8083/api/project/{pathPattern}/{productCode}.pdf";
+
+                        WebClient webClient = new WebClient();
+                        webClient.DownloadFile(url, pathDowload);
+                        Process.Start(pathDowload);
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                        //MessageBox.Show($"File [{productCode}.pdf] không tồn tại!\r\n{ex.ToString()}", "Thông báo");
+                    }
+
+                }
+
+            }
+        }
+
+        private void helpToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private void cboSupplierSaleDemo_EditValueChanged(object sender, EventArgs e)
+        {
+            //LoadData();
+        }
+
+
+        private void btnUpdateProductCodeRTC_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void grvProductMarketing_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+        {
+
+        }
+        #region Nhật update check validate bắt buộc có hãng khi tạo mã sp kho vision (19/07/2025)
+        const int PRODUCT_GROUP_TVISION = 4;
+        bool validateManufacturer(GridView gridView)
+        {
+            for (int i = 0; i < gridView.RowCount; i++)
+            {
+                string manufacturer = TextUtils.ToString(gridView.GetRowCellValue(i, colManufacturer.FieldName)).Trim();
+                int productGroupID = TextUtils.ToInt(gridView.GetRowCellValue(i, colProductGroupID.FieldName));
+                string tt = TextUtils.ToString(gridView.GetRowCellValue(i, colTT.FieldName)).Trim();
+                string productCode = TextUtils.ToString(gridView.GetRowCellValue(i, colProductCode.FieldName)).Trim();
+                int productSaleID = TextUtils.ToInt(gridView.GetRowCellValue(i, colProductSaleID.FieldName));
+                if (productSaleID <= 0)
+                {
+                    if (string.IsNullOrEmpty(manufacturer) && productGroupID == PRODUCT_GROUP_TVISION)
+                    {
+                        MessageBox.Show($"Yêu cầu mua hàng kho vision có mã sản phẩm {productCode} ở vị trí {tt} phải có hãng!", "Thông báo");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        #endregion
+
+
+        #region Nhật update check cho sửa SL khi Duplicate (18/07/2025)
+        void Duplicate()
+        {
+            var tabSelected = xtraTabControl1.SelectedTabPage;
+
+            if (tabSelected.Controls.Count <= 0) return;
+            GridControl gridControl = (GridControl)tabSelected.Controls[0];
+            GridView gridView = gridControl.MainView as GridView;
+
+            gridView.CloseEditor();
+
+            int id = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colID));
+            int duplicateID = TextUtils.ToInt(gridView.GetFocusedRowCellValue(colDuplicateID));
+            decimal quantity = TextUtils.ToDecimal(gridView.GetFocusedRowCellValue(colOriginQuantity));
+            if (id <= 0) return;
+            colQuantity.OptionsColumn.AllowEdit = true;
+            colQuantity.OptionsColumn.ReadOnly = false;
+            string productCode = TextUtils.ToString(gridView.GetFocusedRowCellValue(colProductCode));
+            DialogResult dialog = MessageBox.Show($"Bạn có chắc muốn duplicate yêu cầu mua vật tư [{productCode}] không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog != DialogResult.Yes) return;
+
+            ProjectPartlistPurchaseRequestModel purchase = SQLHelper<ProjectPartlistPurchaseRequestModel>.FindByID(id);
+            if (purchase == null || purchase.ID <= 0) return;
+
+            int originalRowHandle = gridView.FocusedRowHandle;
+
+            purchase.ID = 0;
+            if (duplicateID > 0)
+            {
+                purchase.DuplicateID = duplicateID;
+                purchase.OriginQuantity = quantity;
+            }
+            else
+            {
+                purchase.DuplicateID = id;
+                purchase.OriginQuantity = purchase.Quantity;
+            }
+            //purchase.OriginQuantity = purchase.Quantity;
+            purchase.Quantity = 0;
+
+            //purchase.DuplicateID = id;
+
+
+            int ids = SQLHelper<ProjectPartlistPurchaseRequestModel>.Insert(purchase).ID;
+            Dictionary<string, object> updateFields = new Dictionary<string, object>
+            {
+                { ProjectPartlistPurchaseRequestModel_Enum.DuplicateID.ToString(), purchase.DuplicateID },
+                { ProjectPartlistPurchaseRequestModel_Enum.OriginQuantity.ToString(), purchase.OriginQuantity },
+                {ProjectPartlistPurchaseRequestModel_Enum.UpdatedDate.ToString(), DateTime.Now},
+                {ProjectPartlistPurchaseRequestModel_Enum.UpdatedBy.ToString(), Global.AppCodeName}
+            };
+            SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFieldsByID(updateFields, id);
+        }
+
+        //bool checkValidate()
+        //{
+        //    GridControl gridcontrol = xtraTabControl1.SelectedTabPage.Controls[0] as GridControl;
+        //    var gridView = gridcontrol.MainView as GridView;
+        //    gridView.PostEditor();
+        //    gridView.UpdateCurrentRow();
+        //    DataTable dtSources = (DataTable)gridcontrol.DataSource;
+
+        //    if (gridView.RowCount == 0)
+        //    {
+        //        MessageBox.Show("Lưới không có dữ liệu để kiểm tra!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return false;
+        //    }
+
+        //    // Gom nhóm dữ liệu theo DuplicateID
+        //    var dict = new Dictionary<int, (decimal OriginQuantity, decimal TotalQuantity)>();
+
+        //    for (int i = 0; i < gridView.RowCount; i++)
+        //    {
+        //        int duplicateID = TextUtils.ToInt(gridView.GetRowCellValue(i, "DuplicateID"));
+        //        if (duplicateID <= 0) continue;
+
+        //        decimal quantity = TextUtils.ToDecimal(gridView.GetRowCellValue(i, "Quantity"));
+        //        decimal originQuantity = TextUtils.ToDecimal(gridView.GetRowCellValue(i, "OriginQuantity"));
+
+        //        if (!dict.ContainsKey(duplicateID))
+        //            dict[duplicateID] = (originQuantity, quantity);
+        //        else
+        //        {
+        //            var data = dict[duplicateID];
+        //            data.TotalQuantity += quantity;
+        //            dict[duplicateID] = data;
+        //        }
+        //    }
+
+        //    // Kiểm tra từng DuplicateID
+        //    foreach (var kvp in dict)
+        //    {
+        //        int duplicateID = kvp.Key;
+        //        decimal originQuantity = kvp.Value.OriginQuantity;
+        //        decimal totalQuantity = kvp.Value.TotalQuantity;
+
+        //        if (totalQuantity != originQuantity)
+        //        {
+        //            MessageBox.Show($"Tổng Quantity ({totalQuantity}) cho DuplicateID {duplicateID} không khớp với OriginQuantity ({originQuantity})!",
+        //                "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //            return false;
+        //        }
+        //    }
+
+        //    return true;
+        //}
+        //bool checkValidate()
+        //{
+        //    GridControl gridcontrol = xtraTabControl1.SelectedTabPage.Controls[0] as GridControl;
+        //    var gridView = gridcontrol.MainView as GridView;
+        //    gridView.PostEditor();
+        //    gridView.UpdateCurrentRow();
+        //    DataTable dtSources = (DataTable)gridcontrol.DataSource;
+
+        //    if (dtSources == null || dtSources.Rows.Count == 0)
+        //    {
+        //        MessageBox.Show("Lưới không có dữ liệu để kiểm tra!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return false;
+        //    }
+
+        //    var dict = new Dictionary<int, (decimal OriginQuantity, decimal TotalQuantity)>();
+
+        //    foreach (DataRow row in dtSources.Rows)
+        //    {
+        //        int duplicateID = TextUtils.ToInt(row["DuplicateID"]);
+        //        if (duplicateID <= 0) continue;
+
+        //        decimal quantity = TextUtils.ToDecimal(row["Quantity"]);
+        //        decimal originQuantity = TextUtils.ToDecimal(row["OriginQuantity"]);
+
+        //        if (!dict.ContainsKey(duplicateID))
+        //            dict[duplicateID] = (originQuantity, quantity);
+        //        else
+        //        {
+        //            var data = dict[duplicateID];
+        //            data.TotalQuantity += quantity;
+        //            dict[duplicateID] = data;
+        //        }
+        //    }
+
+        //    foreach (var kvp in dict)
+        //    {
+        //        int duplicateID = kvp.Key;
+        //        decimal originQuantity = kvp.Value.OriginQuantity;
+        //        decimal totalQuantity = kvp.Value.TotalQuantity;
+
+        //        if (totalQuantity != originQuantity)
+        //        {
+        //            MessageBox.Show($"Tổng Quantity ({totalQuantity}) cho DuplicateID {duplicateID} không khớp với OriginQuantity ({originQuantity})!",
+        //                "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //            return false;
+        //        }
+        //    }
+
+        //    return true;
+        //}
+
+        bool checkValidate()
+        {
+            GridControl gridcontrol = xtraTabControl1.SelectedTabPage.Controls[0] as GridControl;
+            var gridView = gridcontrol.MainView as GridView;
+            gridView.PostEditor();
+            gridView.UpdateCurrentRow();
+
+            if (!(gridcontrol.DataSource is DataTable dt) || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("Lưới không có dữ liệu để kiểm tra!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Tạo dictionary từ DuplicateID
+            var dict = new Dictionary<int, (decimal origin, decimal total)>(dt.Rows.Count / 2);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                // Ép kiểu nhanh, không qua TextUtils
+                if (row["DuplicateID"] == DBNull.Value) continue;
+                int duplicateID = Convert.ToInt32(row["DuplicateID"]);
+                if (duplicateID <= 0) continue;
+
+                decimal quantity = row["Quantity"] == DBNull.Value ? 0 : Convert.ToDecimal(row["Quantity"]);
+                decimal originQuantity = row["OriginQuantity"] == DBNull.Value ? 0 : Convert.ToDecimal(row["OriginQuantity"]);
+
+                if (!dict.TryGetValue(duplicateID, out var item))
+                    dict[duplicateID] = (originQuantity, quantity);
+                else
+                    dict[duplicateID] = (item.origin, item.total + quantity);
+            }
+
+            // Kiểm tra sai lệch — chỉ hiện 1 message duy nhất
+            var invalid = dict.FirstOrDefault(kv => kv.Value.origin != kv.Value.total);
+            if (invalid.Key != 0)
+            {
+                MessageBox.Show(
+                    $"Tổng Quantity ({invalid.Value.total}) cho DuplicateID {invalid.Key} không khớp với OriginQuantity ({invalid.Value.origin})!",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        //bool checkValidate()
+        //{
+        //    GridControl gridcontrol = xtraTabControl1.SelectedTabPage.Controls[0] as GridControl;
+        //    var gridView = gridcontrol.MainView as GridView;
+        //    gridView.PostEditor();
+        //    gridView.UpdateCurrentRow();
+        //    DataTable dtSources = (DataTable)gridcontrol.DataSource;
+        //    // Kiểm tra nếu lưới rỗng
+        //    if (gridView.RowCount == 0)
+        //    {
+        //        MessageBox.Show("Lưới không có dữ liệu để kiểm tra!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return false;
+        //    }
+
+        //    // Thu thập tất cả các DuplicateID duy nhất
+        //    var duplicateIDs = new List<int>();
+        //    for (int i = 0; i < gridView.RowCount; i++)
+        //    {
+        //        int duplicateID = TextUtils.ToInt(gridView.GetRowCellValue(i, "DuplicateID"));
+        //        if (duplicateID > 0 && !duplicateIDs.Contains(duplicateID))
+        //        {
+        //            duplicateIDs.Add(duplicateID);
+        //        }
+        //    }
+
+        //    // Nếu không có DuplicateID nào, trả về true
+        //    if (duplicateIDs.Count == 0)
+        //    {
+        //        return true;
+        //    }
+
+        //    // Kiểm tra từng nhóm DuplicateID
+        //    foreach (int duplicateID in duplicateIDs)
+        //    {
+        //        // Lấy OriginQuantity từ cột OriginQuantity của một dòng có DuplicateID phù hợp
+        //        decimal originQuantity = 0;
+        //        bool foundOrigin = false;
+        //        for (int i = 0; i < gridView.RowCount; i++)
+        //        {
+        //            if (TextUtils.ToInt(gridView.GetRowCellValue(i, "DuplicateID")) == duplicateID)
+        //            {
+        //                originQuantity = TextUtils.ToDecimal(gridView.GetRowCellValue(i, "OriginQuantity"));
+        //                foundOrigin = true;
+        //                break; // Lấy giá trị OriginQuantity từ dòng đầu tiên tìm thấy
+        //            }
+        //        }
+
+        //        if (!foundOrigin)
+        //        {
+        //            MessageBox.Show($"Không tìm thấy OriginQuantity cho DuplicateID {duplicateID}!",
+        //                "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //            return false;
+        //        }
+
+        //        // Tính tổng Quantity của các dòng có DuplicateID này
+        //        decimal totalQuantity = 0;
+        //        for (int i = 0; i < gridView.RowCount; i++)
+        //        {
+        //            if (TextUtils.ToInt(gridView.GetRowCellValue(i, "DuplicateID")) == duplicateID)
+        //            {
+        //                totalQuantity += TextUtils.ToDecimal(gridView.GetRowCellValue(i, "Quantity"));
+        //            }
+        //        }
+
+        //        // Kiểm tra tổng Quantity có bằng OriginQuantity hay không
+        //        if (totalQuantity != originQuantity)
+        //        {
+        //            MessageBox.Show($"Tổng Quantity ({totalQuantity}) cho DuplicateID {duplicateID} không khớp với OriginQuantity ({originQuantity})!",
+        //                "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //            return false;
+        //        }
+        //    }
+
+        //    return true;
+        //}
+
+        #endregion
+
+        private void dtpDateStart_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUpdateRequestType_Click(object sender, EventArgs e)
+        {
+            using (WaitDialogForm fWait = new WaitDialogForm("Vui lòng chờ trong giây lát...", "Đang load dữ liệu"))
+            {
+                try
+                {
+                    Lib.LockEvents = true;
+                    //if (!SaveData("load dữ liệu")) return;
+                    DialogResult dialog = MessageBox.Show($"Bạn có chắc muốn lưu thay đổi không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (!SaveData()) return;
+
+                    DateTime dateStart = new DateTime(dtpDateStart.Value.Year, dtpDateStart.Value.Month, dtpDateStart.Value.Day, 0, 0, 0);
+                    DateTime dateEnd = new DateTime(dtpDateEnd.Value.Year, dtpDateEnd.Value.Month, dtpDateEnd.Value.Day, 23, 59, 59);
+                    int statusRequest = cboStatusRequest.SelectedIndex;
+                    int projectId = TextUtils.ToInt(cboProject.EditValue);
+                    int productrtcId = TextUtils.ToInt(cboProductRTC.EditValue);
+                    string keyword = txtKeyword.Text.Trim();
+
+                    int supplierSaleId = TextUtils.ToInt(cboSupplier.EditValue);
+                    int isApprovedTBP = cboIsApprovedTBP.SelectedIndex - 1;
+                    int isApprovedBGD = cboIsApprovedBGD.SelectedIndex - 1;
+                    int isCommercialProduct =
+                    poKHID = TextUtils.ToInt(cboPOCode.EditValue);
+                    int isDeleted = cboIsDeleted.SelectedIndex - 1;
+                    int isJobRequirement = -1;
+
+                    // Load toàn bộ dữ liệu
+                    DataTable dtAll = TextUtils.LoadDataFromSP("spGetProjectPartlistPurchaseRequest_New_Khanh", "A",
+                        new string[] { "@DateStart", "@DateEnd", "@StatusRequest", "@ProjectID", "@Keyword", "@SupplierSaleID", "@IsApprovedTBP", "@IsApprovedBGD", "@IsCommercialProduct", "@POKHID", "@ProductRTCID", "@IsDeleted", "@IsTechBought", "@IsJobRequirement", "@EmployeeID", "@IsRequestApproved" },
+                        new object[] { dateStart, dateEnd, statusRequest, projectId, keyword, supplierSaleId, isApprovedTBP, isApprovedBGD, -1, poKHID, -1, isDeleted, -1, isJobRequirement, 0, -1 });
+                    //==========================
+                    string filterNotMKT = $"{ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID} <> 7";
+
+                    var dataPurchaseRequest = dtAll.Select($"([ProductRTCID] <= 0 OR [ProductRTCID] IS NULL) AND {filterNotMKT}");
+
+                    var dataPurchaseRequestID = dataPurchaseRequest.Select(r => TextUtils.ToInt(r["ID"])).ToList();
+                    Dictionary<string, object> mydict = new Dictionary<string, object>()
+                    {
+                        { ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID.ToString(),1 }
+                    };
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(mydict, new Expression("ID", string.Join(",", dataPurchaseRequestID), "IN"));
+
+                    //==========================
+                    var dataRTC = dtAll.Select($"[ProductRTCID] > 0 AND TicketType = 0 AND {filterNotMKT}");
+                    var dataRTCID = dataRTC.Select(r => TextUtils.ToInt(r["ID"])).ToList();
+                    mydict = new Dictionary<string, object>()
+                    {
+                        { ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID.ToString(),3 }
+                    };
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(mydict, new Expression("ID", string.Join(",", dataRTCID), "IN"));
+
+                    //==========================
+                    var dataTechBought = dtAll.Select($"[IsTechBought] = true AND {filterNotMKT}");
+                    var dataTechBoughtID = dataTechBought.Select(r => TextUtils.ToInt(r["ID"])).ToList();
+                    mydict = new Dictionary<string, object>()
+                    {
+                        { ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID.ToString(),2 }
+                    };
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(mydict, new Expression("ID", string.Join(",", dataTechBoughtID), "IN"));
+
+                    //==========================
+                    string filter = $"[TicketType] = 1 AND {filterNotMKT}";
+
+
+                    DataRow[] dt = dtAll.Select(filter);
+                    var dataProductRTCBorrowID = dt.Select(r => TextUtils.ToInt(r["ID"])).ToList();
+                    mydict = new Dictionary<string, object>()
+                      {
+                          { ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID.ToString(),4 }
+                      };
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(mydict, new Expression("ID", string.Join(",", dataProductRTCBorrowID), "IN"));
+
+                    //==========================
+
+                    var dtCommercial = dtAll.Select($"[IsCommercialProduct] > 0");
+                    var dtCommercialID = dtCommercial.Select(r => TextUtils.ToInt(r["ID"])).ToList();
+                    mydict = new Dictionary<string, object>()
+                      {
+                          { ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID.ToString(),5 }
+                      };
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(mydict, new Expression("ID", string.Join(",", dtCommercialID), "IN"));
+
+                    //====================================
+                    var dtJobRequirement = dtAll.Select($"[JobRequirementID] > 0");
+                    var dtJobRequirementID = dtJobRequirement.Select(r => TextUtils.ToInt(r["ID"])).ToList();
+                    mydict = new Dictionary<string, object>()
+                      {
+                          { ProjectPartlistPurchaseRequestModel_Enum.ProjectPartlistPurchaseRequestTypeID.ToString(),6 }
+                      };
+                    SQLHelper<ProjectPartlistPurchaseRequestModel>.UpdateFields(mydict, new Expression("ID", string.Join(",", dtJobRequirementID), "IN"));
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex.Message}\r\n{ex.ToString()}", "Thông báo");
+                }
+                finally
+                {
+                    Lib.LockEvents = false;
+                }
+
+            }
+        }
+
+        private void xtraTabControl1_SelectedPageChanged(object sender, TabPageChangedEventArgs e)
+        {
+            //// Lấy GridControl trong tab hiện tại
+            //if (xtraTabControl1.SelectedTabPage != null)
+            //{
+            //    var grid = xtraTabControl1.SelectedTabPage.Controls.OfType<GridControl>().FirstOrDefault();
+            //    if (grid != null && grid.DataSource is DataTable dt)
+            //    {
+            //        if (dt.GetChanges() != null) // Có thay đổi
+            //        {
+            //            var result = MessageBox.Show(
+            //                "Dữ liệu đã thay đổi. Bạn có muốn lưu lại trước khi chuyển tab không?",
+            //                "Xác nhận",
+            //                MessageBoxButtons.YesNoCancel,
+            //                MessageBoxIcon.Question);
+
+            //            if (result == DialogResult.Yes)
+            //            {
+            //                if (!SaveData("Lưu dữ liệu thất bại!"))
+            //                {
+            //                    e. = true;
+            //                    return;
+            //                }
+            //                dt.AcceptChanges(); // Reset trạng thái sau khi lưu
+            //            }
+            //            else if (result == DialogResult.Cancel)
+            //            {
+            //                e.Cancel = true; // Hủy chuyển tab
+            //                return;
+            //            }
+            //            else
+            //            {
+            //                // Không lưu → reset thay đổi nếu muốn
+            //                // dt.RejectChanges(); // (chỉ dùng nếu muốn rollback)
+            //            }
+            //        }
+            //    }
+            //}
+        }
+
+        private void xtraTabControl1_SelectedPageChanging(object sender, TabPageChangingEventArgs e)
+        {
+            // Lấy tab hiện tại
+            var currentPage = xtraTabControl1.SelectedTabPage;
+            if (currentPage == null) return;
+
+            // Lấy GridControl trong tab hiện tại
+            var grid = currentPage.Controls.OfType<GridControl>().FirstOrDefault();
+            if (grid?.DataSource is DataTable dt && dt.GetChanges() != null)
+            {
+                var result = MessageBox.Show(
+                    "Dữ liệu đã thay đổi. Bạn có muốn lưu lại trước khi chuyển tab không?",
+                    "Xác nhận",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    if (!SaveData())
+                    {
+                        e.Cancel = true; // Hủy chuyển tab nếu lưu lỗi
+                        return;
+                    }
+                    dt.AcceptChanges(); // Reset thay đổi sau khi lưu
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true; // Hủy chuyển tab nếu người dùng bấm Hủy
+                    return;
+                }
+                else
+                {
+                    dt.RejectChanges(); // Không lưu → rollback thay đổi
+                    grid.RefreshDataSource();
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1451 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{059AE159-539C-41C2-B62B-5C246731BD48}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BaseBusiness</RootNamespace>
+    <AssemblyName>BaseBusiness</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BitMiracle.LibTiff.NET, Version=2.4.649.0, Culture=neutral, PublicKeyToken=53879b3e20e7a7d6, processorArchitecture=MSIL">
+      <HintPath>..\packages\BitMiracle.LibTiff.NET.2.4.649\lib\net40\BitMiracle.LibTiff.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.105.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d5f7376574c51ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.Parser.2.0.0\lib\netstandard2.0\ClosedXML.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v24.2.Export, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Drawing.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.Desktop.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpo.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraBars.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraNavBar.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DocumentFormat.OpenXml, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.1.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.1.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="IronSoftware.Drawing.Common, Version=2023.2.0.12, Culture=neutral, PublicKeyToken=8d7e55c97b3e9835, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronSoftware.System.Drawing.2023.2.12\lib\netstandard2.0\IronSoftware.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="IronXL, Version=2023.2.5.0, Culture=neutral, PublicKeyToken=0f5804b6690bad1e, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronXL.Excel.2023.2.5\lib\netstandard2.0\IronXL.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.1\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.2.1.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="QRCoder, Version=1.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.3.6\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
+    <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
+      <HintPath>..\packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.3\lib\net472\SixLabors.ImageSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp.Drawing, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronSoftware.System.Drawing.2023.2.12\lib\netstandard2.0\SixLabors.ImageSharp.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Zen.Barcode.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b5ae55aa76d2d9de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zen.Barcode.Rendering.Framework.3.1.10729.1\lib\Zen.Barcode.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BO\AccountingContractBO.cs" />
+    <Compile Include="BO\AccountingContractFileBO.cs" />
+    <Compile Include="BO\AccountingContractLogBO.cs" />
+    <Compile Include="BO\AccountingContractTypeBO.cs" />
+    <Compile Include="BO\ActivityLogBO.cs" />
+    <Compile Include="BO\AddressStockBO.cs" />
+    <Compile Include="BO\AdminMarketingBO.cs" />
+    <Compile Include="BO\AdminMarketingDetailBO.cs" />
+    <Compile Include="BO\AuditLogBO.cs" />
+    <Compile Include="BO\BaseBO.cs" />
+    <Compile Include="BO\BaseBusinessBO.cs" />
+    <Compile Include="BO\BillDocumentExportBO.cs" />
+    <Compile Include="BO\BillDocumentExportLogBO.cs" />
+    <Compile Include="BO\BillDocumentExportTechnicalBO.cs" />
+    <Compile Include="BO\BillDocumentExportTechnicalLogBO.cs" />
+    <Compile Include="BO\BillDocumentImportBO.cs" />
+    <Compile Include="BO\BillDocumentImportLogBO.cs" />
+    <Compile Include="BO\BillDocumentImportTechnicalBO.cs" />
+    <Compile Include="BO\BillDocumentImportTechnicalLogBO.cs" />
+    <Compile Include="BO\BillExportAcountantBO.cs" />
+    <Compile Include="BO\BillExportAcountantDetailBO.cs" />
+    <Compile Include="BO\BillExportBO.cs" />
+    <Compile Include="BO\BillExportDetailBO.cs" />
+    <Compile Include="BO\BillExportDetailSerialNumberBO.cs" />
+    <Compile Include="BO\BillExportDetailTechnicalBO.cs" />
+    <Compile Include="BO\BillExportDocumentBO.cs" />
+    <Compile Include="BO\BillExportLogBO.cs" />
+    <Compile Include="BO\BillExportTechDetailSerialBO.cs" />
+    <Compile Include="BO\BillExportTechnicalBO.cs" />
+    <Compile Include="BO\BillExportTechnicalLogBO.cs" />
+    <Compile Include="BO\BillFilmBO.cs" />
+    <Compile Include="BO\BillFilmDetailBO.cs" />
+    <Compile Include="BO\BillImportBO.cs" />
+    <Compile Include="BO\BillImportDetailBO.cs" />
+    <Compile Include="BO\BillImportDetailSerialNumberBO.cs" />
+    <Compile Include="BO\BillImportDetailTechnicalBO.cs" />
+    <Compile Include="BO\BillImportDocumentBO.cs" />
+    <Compile Include="BO\BillImportLogBO.cs" />
+    <Compile Include="BO\BillImportTechDetailSerialBO.cs" />
+    <Compile Include="BO\BillImportTechnicalBO.cs" />
+    <Compile Include="BO\BillImportTechnicalLogBO.cs" />
+    <Compile Include="BO\BonusRuleBO.cs" />
+    <Compile Include="BO\BonusRuleIndexBO.cs" />
+    <Compile Include="BO\BookingRoomBO.cs" />
+    <Compile Include="BO\BusinessFieldBO.cs" />
+    <Compile Include="BO\BusinessFieldLinkBO.cs" />
+    <Compile Include="BO\CompanyBO.cs" />
+    <Compile Include="BO\ConfigPriceBO.cs" />
+    <Compile Include="BO\ConfigSystemBO.cs" />
+    <Compile Include="BO\CourseAnswersBO.cs" />
+    <Compile Include="BO\CourseBO.cs" />
+    <Compile Include="BO\CourseCatalogBO.cs" />
+    <Compile Include="BO\CourseExamBO.cs" />
+    <Compile Include="BO\CourseExamEvaluateBO.cs" />
+    <Compile Include="BO\CourseExamPracticeBO.cs" />
+    <Compile Include="BO\CourseExamResultBO.cs" />
+    <Compile Include="BO\CourseExamResultDetailBO.cs" />
+    <Compile Include="BO\CourseFileBO.cs" />
+    <Compile Include="BO\CourseLessonBO.cs" />
+    <Compile Include="BO\CourseQuestionBO.cs" />
+    <Compile Include="BO\CourseRightAnswersBO.cs" />
+    <Compile Include="BO\CurrencyBO.cs" />
+    <Compile Include="BO\CustomerBaseBO.cs" />
+    <Compile Include="BO\CustomerBaseContactBO.cs" />
+    <Compile Include="BO\CustomerBO.cs" />
+    <Compile Include="BO\CustomerContactBO.cs" />
+    <Compile Include="BO\CustomerEmployeeBO.cs" />
+    <Compile Include="BO\CustomerPartBO.cs" />
+    <Compile Include="BO\CustomerSpecializationBO.cs" />
+    <Compile Include="BO\DailyReportHRBO.cs" />
+    <Compile Include="BO\DailyReportSaleAdminBO.cs" />
+    <Compile Include="BO\DailyReportSaleBO.cs" />
+    <Compile Include="BO\DailyReportTechnicalBO.cs" />
+    <Compile Include="BO\DepartmentBO.cs" />
+    <Compile Include="BO\DocumentBO.cs" />
+    <Compile Include="BO\DocumentExportBO.cs" />
+    <Compile Include="BO\DocumentFileBO.cs" />
+    <Compile Include="BO\DocumentImportBO.cs" />
+    <Compile Include="BO\DocumentImportPONCCBO.cs" />
+    <Compile Include="BO\DocumentSaleBO.cs" />
+    <Compile Include="BO\DocumentTypeBO.cs" />
+    <Compile Include="BO\EmployeeApproveBO.cs" />
+    <Compile Include="BO\EmployeeAttendanceBO.cs" />
+    <Compile Include="BO\EmployeeBO.cs" />
+    <Compile Include="BO\EmployeeBussinessBO.cs" />
+    <Compile Include="BO\EmployeeBussinessVehicleBO.cs" />
+    <Compile Include="BO\EmployeeChamCongDetailBO.cs" />
+    <Compile Include="BO\EmployeeChamCongMasterBO.cs" />
+    <Compile Include="BO\EmployeeChucVuBO.cs" />
+    <Compile Include="BO\EmployeeChucVuHDBO.cs" />
+    <Compile Include="BO\EmployeeCollectMoneyBO.cs" />
+    <Compile Include="BO\EmployeeCompensatoryLeaveBO.cs" />
+    <Compile Include="BO\EmployeeContractBO.cs" />
+    <Compile Include="BO\EmployeeCurricularBO.cs" />
+    <Compile Include="BO\EmployeeEarlyLateBO.cs" />
+    <Compile Include="BO\EmployeeErrorBO.cs" />
+    <Compile Include="BO\EmployeeFingerprintBO.cs" />
+    <Compile Include="BO\EmployeeFingerprintMasterBO.cs" />
+    <Compile Include="BO\EmployeeFoodOrderBO.cs" />
+    <Compile Include="BO\EmployeeLoaiHDLDBO.cs" />
+    <Compile Include="BO\EmployeeNighShiftBO.cs" />
+    <Compile Include="BO\EmployeeNoFingerprintBO.cs" />
+    <Compile Include="BO\EmployeeOnLeaveBO.cs" />
+    <Compile Include="BO\EmployeeOnLeaveMasterBO.cs" />
+    <Compile Include="BO\EmployeeOvertimeBO.cs" />
+    <Compile Include="BO\EmployeePayrollBO.cs" />
+    <Compile Include="BO\EmployeePayrollBonusDeuctionBO.cs" />
+    <Compile Include="BO\EmployeePayrollDetailBO.cs" />
+    <Compile Include="BO\EmployeePOContactBO.cs" />
+    <Compile Include="BO\EmployeeRegisterWorkBO.cs" />
+    <Compile Include="BO\EmployeeSalaryAdvanceBO.cs" />
+    <Compile Include="BO\EmployeeScheduleWorkBO.cs" />
+    <Compile Include="BO\EmployeeSendEmailBO.cs" />
+    <Compile Include="BO\EmployeeStatusBO.cs" />
+    <Compile Include="BO\EmployeeTinhTrangHonNhanBO.cs" />
+    <Compile Include="BO\EmployeeTypeBussinessBO.cs" />
+    <Compile Include="BO\EmployeeTypeOvertimeBO.cs" />
+    <Compile Include="BO\EmployeeVehicleBussinessBO.cs" />
+    <Compile Include="BO\EmployeeWFHBO.cs" />
+    <Compile Include="BO\EmployeeWorkingProcessBO.cs" />
+    <Compile Include="BO\EventsLogBO.cs" />
+    <Compile Include="BO\EventsLogErrorBO.cs" />
+    <Compile Include="BO\ExamCategoryBO.cs" />
+    <Compile Include="BO\ExamListTestBO.cs" />
+    <Compile Include="BO\ExamQuestionBankBO.cs" />
+    <Compile Include="BO\ExamQuestionBO.cs" />
+    <Compile Include="BO\ExamQuestionGroupBO.cs" />
+    <Compile Include="BO\ExamQuestionListTestBO.cs" />
+    <Compile Include="BO\ExamQuestionTypeBO.cs" />
+    <Compile Include="BO\ExamResultAnswerDetailBO.cs" />
+    <Compile Include="BO\ExamResultBO.cs" />
+    <Compile Include="BO\ExamResultDetailBO.cs" />
+    <Compile Include="BO\ExamTestResultBO.cs" />
+    <Compile Include="BO\ExamTypeTestBO.cs" />
+    <Compile Include="BO\FilmManagementBO.cs" />
+    <Compile Include="BO\FilmManagementDetailBO.cs" />
+    <Compile Include="BO\FirmBaseBO.cs" />
+    <Compile Include="BO\FirmBO.cs" />
+    <Compile Include="BO\FollowProjectBaseBO.cs" />
+    <Compile Include="BO\FollowProjectBaseDetailBO.cs" />
+    <Compile Include="BO\FollowProjectBO.cs" />
+    <Compile Include="BO\FollowProjectDetailBO.cs" />
+    <Compile Include="BO\FormAndFunctionBO.cs" />
+    <Compile Include="BO\FormAndFunctionGroupBO.cs" />
+    <Compile Include="BO\GoalBO.cs" />
+    <Compile Include="BO\GroupFileBO.cs" />
+    <Compile Include="BO\GroupProductSaleBO.cs" />
+    <Compile Include="BO\GroupSalesBO.cs" />
+    <Compile Include="BO\GroupSalesUserBO.cs" />
+    <Compile Include="BO\HistoryDeleteBillBO.cs" />
+    <Compile Include="BO\HistoryErrorBO.cs" />
+    <Compile Include="BO\HistoryKPISaleBO.cs" />
+    <Compile Include="BO\HistoryMoneyPOBO.cs" />
+    <Compile Include="BO\HistoryProductRTCBO.cs" />
+    <Compile Include="BO\HistoryProductRTCLogBO.cs" />
+    <Compile Include="BO\HolidayBO.cs" />
+    <Compile Include="BO\InventoryBO.cs" />
+    <Compile Include="BO\InventoryDemoBO.cs" />
+    <Compile Include="BO\InventoryStockBO.cs" />
+    <Compile Include="BO\InvoiceBO.cs" />
+    <Compile Include="BO\InvoiceLinkBO.cs" />
+    <Compile Include="BO\JobRequirementApprovedBO.cs" />
+    <Compile Include="BO\JobRequirementBO.cs" />
+    <Compile Include="BO\JobRequirementDetailBO.cs" />
+    <Compile Include="BO\JobRequirementFileBO.cs" />
+    <Compile Include="BO\KPIDetailBO.cs" />
+    <Compile Include="BO\KPIDetailUserBO.cs" />
+    <Compile Include="BO\ListCostBO.cs" />
+    <Compile Include="BO\LocationBO.cs" />
+    <Compile Include="BO\MainIndexBO.cs" />
+    <Compile Include="BO\ManufacturerBO.cs" />
+    <Compile Include="BO\OfficeSupplyBO.cs" />
+    <Compile Include="BO\OfficeSupplyRequestBO.cs" />
+    <Compile Include="BO\OfficeSupplyUnitBO.cs" />
+    <Compile Include="BO\PartBO.cs" />
+    <Compile Include="BO\PartGroupBO.cs" />
+    <Compile Include="BO\PartSummaryDetailBO.cs" />
+    <Compile Include="BO\PaymentOrderBO.cs" />
+    <Compile Include="BO\PaymentOrderDetailBO.cs" />
+    <Compile Include="BO\PaymentOrderFileBO.cs" />
+    <Compile Include="BO\PaymentOrderLogBO.cs" />
+    <Compile Include="BO\PaymentOrderTypeBO.cs" />
+    <Compile Include="BO\PercentMainIndexUserBO.cs" />
+    <Compile Include="BO\POBO.cs" />
+    <Compile Include="BO\PODetailBO.cs" />
+    <Compile Include="BO\POKHBO.cs" />
+    <Compile Include="BO\POKHDetailBO.cs" />
+    <Compile Include="BO\POKHDetailMoneyBO.cs" />
+    <Compile Include="BO\POKHFileBO.cs" />
+    <Compile Include="BO\PONCCBO.cs" />
+    <Compile Include="BO\PONCCDetailBO.cs" />
+    <Compile Include="BO\PONCCDetailLogBO.cs" />
+    <Compile Include="BO\PONCCHistoryBO.cs" />
+    <Compile Include="BO\PONCCRulePayBO.cs" />
+    <Compile Include="BO\PriceCheckBO.cs" />
+    <Compile Include="BO\ProductFilmBO.cs" />
+    <Compile Include="BO\ProductGroupBO.cs" />
+    <Compile Include="BO\ProductGroupRTCBO.cs" />
+    <Compile Include="BO\ProductGroupSALEBO.cs" />
+    <Compile Include="BO\ProductGroupWarehouseBO.cs" />
+    <Compile Include="BO\ProductKhachHangBO.cs" />
+    <Compile Include="BO\ProductLocationBO.cs" />
+    <Compile Include="BO\ProductRTCBO.cs" />
+    <Compile Include="BO\ProductRTCQRCodeBO.cs" />
+    <Compile Include="BO\ProductSaleBO.cs" />
+    <Compile Include="BO\ProjectBO.cs" />
+    <Compile Include="BO\ProjectCostBO.cs" />
+    <Compile Include="BO\ProjectDetailBO.cs" />
+    <Compile Include="BO\ProjectEmployeeBO.cs" />
+    <Compile Include="BO\ProjectFileBO.cs" />
+    <Compile Include="BO\ProjectHistoryProblemBO.cs" />
+    <Compile Include="BO\ProjectHistoryProblemDetailBO.cs" />
+    <Compile Include="BO\ProjectItemBO.cs" />
+    <Compile Include="BO\ProjectItemDetailBO.cs" />
+    <Compile Include="BO\ProjectItemLogBO.cs" />
+    <Compile Include="BO\ProjectItemProblemBO.cs" />
+    <Compile Include="BO\ProjectPartListBO.cs" />
+    <Compile Include="BO\ProjectPartlistPriceRequestBO.cs" />
+    <Compile Include="BO\ProjectPartlistPriceRequestHistoryBO.cs" />
+    <Compile Include="BO\ProjectPartlistPurchaseRequestBO.cs" />
+    <Compile Include="BO\ProjectPartListTypeBO.cs" />
+    <Compile Include="BO\ProjectPartListVersionBO.cs" />
+    <Compile Include="BO\ProjectPersonalPriotityBO.cs" />
+    <Compile Include="BO\ProjectPriorityBO.cs" />
+    <Compile Include="BO\ProjectPriorityLinkBO.cs" />
+    <Compile Include="BO\ProjectRequestBO.cs" />
+    <Compile Include="BO\ProjectRequestFileBO.cs" />
+    <Compile Include="BO\ProjectSolutionBO.cs" />
+    <Compile Include="BO\ProjectSolutionFileBO.cs" />
+    <Compile Include="BO\ProjectStatusBaseBO.cs" />
+    <Compile Include="BO\ProjectStatusBO.cs" />
+    <Compile Include="BO\ProjectStatusDetailBO.cs" />
+    <Compile Include="BO\ProjectTreeFolderBO.cs" />
+    <Compile Include="BO\ProjectTypeAssignBO.cs" />
+    <Compile Include="BO\ProjectTypeBaseBO.cs" />
+    <Compile Include="BO\ProjectTypeBO.cs" />
+    <Compile Include="BO\ProjectTypeLinkBO.cs" />
+    <Compile Include="BO\ProjectUserBO.cs" />
+    <Compile Include="BO\ProjectWorkerBO.cs" />
+    <Compile Include="BO\ProjectWorkerTypeBO.cs" />
+    <Compile Include="BO\ProjectWorkerVersionBO.cs" />
+    <Compile Include="BO\PurchaseOrderBO.cs" />
+    <Compile Include="BO\PurchaseOrderDetailBO.cs" />
+    <Compile Include="BO\QuotationBO.cs" />
+    <Compile Include="BO\QuotationDetailBO.cs" />
+    <Compile Include="BO\QuotationKHBO.cs" />
+    <Compile Include="BO\QuotationKHDetailBO.cs" />
+    <Compile Include="BO\QuotationNCCBO.cs" />
+    <Compile Include="BO\QuotationNCCDetailBO.cs" />
+    <Compile Include="BO\QuotationTermLinkBO.cs" />
+    <Compile Include="BO\QuoteNCCBO.cs" />
+    <Compile Include="BO\QuoteNCCDetailBO.cs" />
+    <Compile Include="BO\ReaderBO.cs" />
+    <Compile Include="BO\RegisterIdeaBO.cs" />
+    <Compile Include="BO\RegisterIdeaDetailBO.cs" />
+    <Compile Include="BO\RegisterIdeaFileBO.cs" />
+    <Compile Include="BO\RegisterIdeaScoreBO.cs" />
+    <Compile Include="BO\ReportIndexBO.cs" />
+    <Compile Include="BO\ReportPurchaseBO.cs" />
+    <Compile Include="BO\ReportTypeBO.cs" />
+    <Compile Include="BO\RequestBuyBO.cs" />
+    <Compile Include="BO\RequestBuyDetailBO.cs" />
+    <Compile Include="BO\RequestBuyRTCBO.cs" />
+    <Compile Include="BO\RequestBuyRTCTTDHBO.cs" />
+    <Compile Include="BO\RequestBuySaleBO.cs" />
+    <Compile Include="BO\RequestBuySaleDetailBO.cs" />
+    <Compile Include="BO\RequestExportBO.cs" />
+    <Compile Include="BO\RequestExportDetailBO.cs" />
+    <Compile Include="BO\RequestImportBO.cs" />
+    <Compile Include="BO\RequestImportDetailBO.cs" />
+    <Compile Include="BO\RequestPaidPOBO.cs" />
+    <Compile Include="BO\RequestPriceBO.cs" />
+    <Compile Include="BO\RequestPriceDetailBO.cs" />
+    <Compile Include="BO\RequestPriceNotifyBO.cs" />
+    <Compile Include="BO\RulePayBO.cs" />
+    <Compile Include="BO\SALEBO.cs" />
+    <Compile Include="BO\SalesPerformanceRankingBO.cs" />
+    <Compile Include="BO\SaleUserTypeBO.cs" />
+    <Compile Include="BO\ShorcutKeyBO.cs" />
+    <Compile Include="BO\StockBO.cs" />
+    <Compile Include="BO\StockLocationBO.cs" />
+    <Compile Include="BO\SupplierBO.cs" />
+    <Compile Include="BO\SupplierContactBO.cs" />
+    <Compile Include="BO\SupplierSaleBO.cs" />
+    <Compile Include="BO\SupplierSaleContactBO.cs" />
+    <Compile Include="BO\TaxCompanyBO.cs" />
+    <Compile Include="BO\TaxDepartmentBO.cs" />
+    <Compile Include="BO\TaxEmployeeBO.cs" />
+    <Compile Include="BO\TaxEmployeeContractBO.cs" />
+    <Compile Include="BO\TaxEmployeePositionBO.cs" />
+    <Compile Include="BO\TermConditionBO.cs" />
+    <Compile Include="BO\TradePriceBO.cs" />
+    <Compile Include="BO\TradePriceDetailBO.cs" />
+    <Compile Include="BO\TSAllocationEvictionAssetBO.cs" />
+    <Compile Include="BO\TSAssetAllocationBO.cs" />
+    <Compile Include="BO\TSAssetAllocationDetailBO.cs" />
+    <Compile Include="BO\TSAssetBO.cs" />
+    <Compile Include="BO\TSAssetManagementBO.cs" />
+    <Compile Include="BO\TSAssetManagementHistoryBO.cs" />
+    <Compile Include="BO\TSAssetManagementHistoryLogBO.cs" />
+    <Compile Include="BO\TSAssetRecoveryBO.cs" />
+    <Compile Include="BO\TSAssetRecoveryDetailBO.cs" />
+    <Compile Include="BO\TSCalendarPeriodAssetBO.cs" />
+    <Compile Include="BO\TSLiQuidationAssetBO.cs" />
+    <Compile Include="BO\TSLostReportAssetBO.cs" />
+    <Compile Include="BO\TSPeriodAssetBO.cs" />
+    <Compile Include="BO\TSRepairAssetBO.cs" />
+    <Compile Include="BO\TSReportBrokenAssetBO.cs" />
+    <Compile Include="BO\TSSourceAssetBO.cs" />
+    <Compile Include="BO\TSStatusAssetBO.cs" />
+    <Compile Include="BO\TSTranferAssetBO.cs" />
+    <Compile Include="BO\TSTranferAssetDetailBO.cs" />
+    <Compile Include="BO\UnitCountBO.cs" />
+    <Compile Include="BO\UnitCountKTBO.cs" />
+    <Compile Include="BO\UserGroupBO.cs" />
+    <Compile Include="BO\UserGroupLinkBO.cs" />
+    <Compile Include="BO\UserGroupRightDistributionBO.cs" />
+    <Compile Include="BO\UserRightDistributionBO.cs" />
+    <Compile Include="BO\UsersBO.cs" />
+    <Compile Include="BO\SessionBO.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BO\UserTeamBO.cs" />
+    <Compile Include="BO\UserTeamLinkBO.cs" />
+    <Compile Include="BO\VehicleBookingFileBO.cs" />
+    <Compile Include="BO\VehicleBookingManagementBO.cs" />
+    <Compile Include="BO\VehicleManagementBO.cs" />
+    <Compile Include="BO\vUserGroupLinkBO.cs" />
+    <Compile Include="BO\WarehouseBO.cs" />
+    <Compile Include="BO\WeekPlanBO.cs" />
+    <Compile Include="BO\WorkPlanBO.cs" />
+    <Compile Include="BO\WorkPlanDetailBO.cs" />
+    <Compile Include="DTO\AccountingContractDTO.cs" />
+    <Compile Include="DTO\AccountingContractFileDTO.cs" />
+    <Compile Include="DTO\AccountingContractLogDTO.cs" />
+    <Compile Include="DTO\BillImportDocumentDTO.cs" />
+    <Compile Include="DTO\CourseExamDTO.cs" />
+    <Compile Include="DTO\CourseExamResultDetailDTO.cs" />
+    <Compile Include="DTO\EmployeeDTO.cs" />
+    <Compile Include="DTO\ExamContentDTO.cs" />
+    <Compile Include="DTO\ExamContentModel.cs" />
+    <Compile Include="DTO\FormulaConfig.cs" />
+    <Compile Include="DTO\InvoiceDTO.cs" />
+    <Compile Include="DTO\KPIEmployeeTeamDTO.cs" />
+    <Compile Include="DTO\KPIEmployeeTeamLinkDTO.cs" />
+    <Compile Include="DTO\KPISumarizeDTO.cs" />
+    <Compile Include="DTO\PaymentOrderDetailDTO.cs" />
+    <Compile Include="DTO\PaymentOrderDTO.cs" />
+    <Compile Include="DTO\PONCCDetailDTO.cs" />
+    <Compile Include="DTO\PONCCDTO.cs" />
+    <Compile Include="DTO\ProductRTCDTO.cs" />
+    <Compile Include="DTO\ProjectPartListDTO.cs" />
+    <Compile Include="DTO\ProjectPartlistPriceRequestDTO.cs" />
+    <Compile Include="DTO\ProjectPartlistPurchaseRequestDTO.cs" />
+    <Compile Include="DTO\QuotationDetailDTO.cs" />
+    <Compile Include="DTO\spGetProjectPartlistPurchaseRequest_New_Khanh.cs" />
+    <Compile Include="DTO\UserTeamSaleDTO.cs" />
+    <Compile Include="Exceptions\BOException.cs" />
+    <Compile Include="Exceptions\FacadeException.cs" />
+    <Compile Include="Exceptions\ViewException.cs" />
+    <Compile Include="Facade\AccountingContractFacade.cs" />
+    <Compile Include="Facade\AccountingContractFileFacade.cs" />
+    <Compile Include="Facade\AccountingContractLogFacade.cs" />
+    <Compile Include="Facade\AccountingContractTypeFacade.cs" />
+    <Compile Include="Facade\ActivityLogFacade.cs" />
+    <Compile Include="Facade\AddressStockFacade.cs" />
+    <Compile Include="Facade\AdminMarketingDetailFacade.cs" />
+    <Compile Include="Facade\AdminMarketingFacade.cs" />
+    <Compile Include="Facade\AuditLogFacade.cs" />
+    <Compile Include="Facade\BaseFacade.cs" />
+    <Compile Include="Facade\BillDocumentExportFacade.cs" />
+    <Compile Include="Facade\BillDocumentExportLogFacade.cs" />
+    <Compile Include="Facade\BillDocumentExportTechnicalFacade.cs" />
+    <Compile Include="Facade\BillDocumentExportTechnicalLogFacade.cs" />
+    <Compile Include="Facade\BillDocumentImportFacade.cs" />
+    <Compile Include="Facade\BillDocumentImportLogFacade.cs" />
+    <Compile Include="Facade\BillDocumentImportTechnicalFacade.cs" />
+    <Compile Include="Facade\BillDocumentImportTechnicalLogFacade.cs" />
+    <Compile Include="Facade\BillExportAcountantDetailFacade.cs" />
+    <Compile Include="Facade\BillExportAcountantFacade.cs" />
+    <Compile Include="Facade\BillExportDetailFacade.cs" />
+    <Compile Include="Facade\BillExportDetailSerialNumberFacade.cs" />
+    <Compile Include="Facade\BillExportDetailTechnicalFacade.cs" />
+    <Compile Include="Facade\BillExportDocumentFacade.cs" />
+    <Compile Include="Facade\BillExportFacade.cs" />
+    <Compile Include="Facade\BillExportLogFacade.cs" />
+    <Compile Include="Facade\BillExportTechDetailSerialFacade.cs" />
+    <Compile Include="Facade\BillExportTechnicalFacade.cs" />
+    <Compile Include="Facade\BillExportTechnicalLogFacade.cs" />
+    <Compile Include="Facade\BillFilmDetailFacade.cs" />
+    <Compile Include="Facade\BillFilmFacade.cs" />
+    <Compile Include="Facade\BillImportDetailFacade.cs" />
+    <Compile Include="Facade\BillImportDetailSerialNumberFacade.cs" />
+    <Compile Include="Facade\BillImportDetailTechnicalFacade.cs" />
+    <Compile Include="Facade\BillImportDocumentFacade.cs" />
+    <Compile Include="Facade\BillImportFacade.cs" />
+    <Compile Include="Facade\BillImportLogFacade.cs" />
+    <Compile Include="Facade\BillImportTechDetailSerialFacade.cs" />
+    <Compile Include="Facade\BillImportTechnicalFacade.cs" />
+    <Compile Include="Facade\BillImportTechnicalLogFacade.cs" />
+    <Compile Include="Facade\BonusRuleFacade.cs" />
+    <Compile Include="Facade\BonusRuleIndexFacade.cs" />
+    <Compile Include="Facade\BookingRoomFacade.cs" />
+    <Compile Include="Facade\BusinessFieldFacade.cs" />
+    <Compile Include="Facade\BusinessFieldLinkFacade.cs" />
+    <Compile Include="Facade\CameraFacade.cs" />
+    <Compile Include="Facade\CompanyFacade.cs" />
+    <Compile Include="Facade\ConfigPriceFacade.cs" />
+    <Compile Include="Facade\ConfigSystemFacade.cs" />
+    <Compile Include="Facade\CourseAnswersFacade.cs" />
+    <Compile Include="Facade\CourseCatalogFacade.cs" />
+    <Compile Include="Facade\CourseExamEvaluateFacade.cs" />
+    <Compile Include="Facade\CourseExamFacade.cs" />
+    <Compile Include="Facade\CourseExamPracticeFacade.cs" />
+    <Compile Include="Facade\CourseExamResultDetailFacade.cs" />
+    <Compile Include="Facade\CourseExamResultFacade.cs" />
+    <Compile Include="Facade\CourseFacade.cs" />
+    <Compile Include="Facade\CourseFileFacade.cs" />
+    <Compile Include="Facade\CourseLessonFacade.cs" />
+    <Compile Include="Facade\CourseQuestionFacade.cs" />
+    <Compile Include="Facade\CourseRightAnswersFacade.cs" />
+    <Compile Include="Facade\CurrencyFacade.cs" />
+    <Compile Include="Facade\CustomerBaseContactFacade.cs" />
+    <Compile Include="Facade\CustomerBaseFacade.cs" />
+    <Compile Include="Facade\CustomerContactFacade.cs" />
+    <Compile Include="Facade\CustomerEmployeeFacade.cs" />
+    <Compile Include="Facade\CustomerFacade.cs" />
+    <Compile Include="Facade\CustomerPartFacade.cs" />
+    <Compile Include="Facade\CustomerSpecializationFacade.cs" />
+    <Compile Include="Facade\DailyReportHRFacade.cs" />
+    <Compile Include="Facade\DailyReportSaleAdminFacade.cs" />
+    <Compile Include="Facade\DailyReportSaleFacade.cs" />
+    <Compile Include="Facade\DailyReportTechnicalFacade.cs" />
+    <Compile Include="Facade\DepartmentFacade.cs" />
+    <Compile Include="Facade\DocumentExportFacade.cs" />
+    <Compile Include="Facade\DocumentFacade.cs" />
+    <Compile Include="Facade\DocumentFileFacade.cs" />
+    <Compile Include="Facade\DocumentImportFacade.cs" />
+    <Compile Include="Facade\DocumentImportPONCCFacade.cs" />
+    <Compile Include="Facade\DocumentSaleFacade.cs" />
+    <Compile Include="Facade\DocumentTypeFacade.cs" />
+    <Compile Include="Facade\EmployeeApproveFacade.cs" />
+    <Compile Include="Facade\EmployeeAttendanceFacade.cs" />
+    <Compile Include="Facade\EmployeeBussinessFacade.cs" />
+    <Compile Include="Facade\EmployeeBussinessVehicleFacade.cs" />
+    <Compile Include="Facade\EmployeeChamCongDetailFacade.cs" />
+    <Compile Include="Facade\EmployeeChamCongMasterFacade.cs" />
+    <Compile Include="Facade\EmployeeChucVuFacade.cs" />
+    <Compile Include="Facade\EmployeeChucVuHDFacade.cs" />
+    <Compile Include="Facade\EmployeeCollectMoneyFacade.cs" />
+    <Compile Include="Facade\EmployeeCompensatoryLeaveFacade.cs" />
+    <Compile Include="Facade\EmployeeContractFacade.cs" />
+    <Compile Include="Facade\EmployeeCurricularFacade.cs" />
+    <Compile Include="Facade\EmployeeEarlyLateFacade.cs" />
+    <Compile Include="Facade\EmployeeErrorFacade.cs" />
+    <Compile Include="Facade\EmployeeFacade.cs" />
+    <Compile Include="Facade\EmployeeFingerprintFacade.cs" />
+    <Compile Include="Facade\EmployeeFingerprintMasterFacade.cs" />
+    <Compile Include="Facade\EmployeeFoodOrderFacade.cs" />
+    <Compile Include="Facade\EmployeeLoaiHDLDFacade.cs" />
+    <Compile Include="Facade\EmployeeNighShiftFacade.cs" />
+    <Compile Include="Facade\EmployeeNoFingerprintFacade.cs" />
+    <Compile Include="Facade\EmployeeOnLeaveFacade.cs" />
+    <Compile Include="Facade\EmployeeOnLeaveMasterFacade.cs" />
+    <Compile Include="Facade\EmployeeOvertimeFacade.cs" />
+    <Compile Include="Facade\EmployeePayrollBonusDeuctionFacade.cs" />
+    <Compile Include="Facade\EmployeePayrollDetailFacade.cs" />
+    <Compile Include="Facade\EmployeePayrollFacade.cs" />
+    <Compile Include="Facade\EmployeePOContactFacade.cs" />
+    <Compile Include="Facade\EmployeeRegisterWorkFacade.cs" />
+    <Compile Include="Facade\EmployeeSalaryAdvanceFacade.cs" />
+    <Compile Include="Facade\EmployeeScheduleWorkFacade.cs" />
+    <Compile Include="Facade\EmployeeSendEmailFacade.cs" />
+    <Compile Include="Facade\EmployeeStatusFacade.cs" />
+    <Compile Include="Facade\EmployeeTinhTrangHonNhanFacade.cs" />
+    <Compile Include="Facade\EmployeeTypeBussinessFacade.cs" />
+    <Compile Include="Facade\EmployeeTypeOvertimeFacade.cs" />
+    <Compile Include="Facade\EmployeeVehicleBussinessFacade.cs" />
+    <Compile Include="Facade\EmployeeWFHFacade.cs" />
+    <Compile Include="Facade\EmployeeWorkingProcessFacade.cs" />
+    <Compile Include="Facade\EventsLogErrorFacade.cs" />
+    <Compile Include="Facade\EventsLogFacade.cs" />
+    <Compile Include="Facade\ExamCategoryFacade.cs" />
+    <Compile Include="Facade\ExamListTestFacade.cs" />
+    <Compile Include="Facade\ExamQuestionBankFacade.cs" />
+    <Compile Include="Facade\ExamQuestionFacade.cs" />
+    <Compile Include="Facade\ExamQuestionGroupFacade.cs" />
+    <Compile Include="Facade\ExamQuestionListTestFacade.cs" />
+    <Compile Include="Facade\ExamQuestionTypeFacade.cs" />
+    <Compile Include="Facade\ExamResultAnswerDetailFacade.cs" />
+    <Compile Include="Facade\ExamResultDetailFacade.cs" />
+    <Compile Include="Facade\ExamResultFacade.cs" />
+    <Compile Include="Facade\ExamTestResultFacade.cs" />
+    <Compile Include="Facade\ExamTypeTestFacade.cs" />
+    <Compile Include="Facade\FilmManagementDetailFacade.cs" />
+    <Compile Include="Facade\FilmManagementFacade.cs" />
+    <Compile Include="Facade\FirmBaseFacade.cs" />
+    <Compile Include="Facade\FirmFacade.cs" />
+    <Compile Include="Facade\FollowProjectBaseDetailFacade.cs" />
+    <Compile Include="Facade\FollowProjectBaseFacade.cs" />
+    <Compile Include="Facade\FollowProjectDetailFacade.cs" />
+    <Compile Include="Facade\FollowProjectFacade.cs" />
+    <Compile Include="Facade\FormAndFunctionFacade.cs" />
+    <Compile Include="Facade\FormAndFunctionGroupFacade.cs" />
+    <Compile Include="Facade\GoalFacade.cs" />
+    <Compile Include="Facade\GroupFileFacade.cs" />
+    <Compile Include="Facade\GroupProductSaleFacade.cs" />
+    <Compile Include="Facade\GroupSalesFacade.cs" />
+    <Compile Include="Facade\GroupSalesUserFacade.cs" />
+    <Compile Include="Facade\HistoryDeleteBillFacade.cs" />
+    <Compile Include="Facade\HistoryErrorFacade.cs" />
+    <Compile Include="Facade\HistoryKPISaleFacade.cs" />
+    <Compile Include="Facade\HistoryMoneyPOFacade.cs" />
+    <Compile Include="Facade\HistoryProductRTCFacade.cs" />
+    <Compile Include="Facade\HistoryProductRTCLogFacade.cs" />
+    <Compile Include="Facade\HolidayFacade.cs" />
+    <Compile Include="Facade\InventoryDemoFacade.cs" />
+    <Compile Include="Facade\InventoryFacade.cs" />
+    <Compile Include="Facade\InventoryStockFacade.cs" />
+    <Compile Include="Facade\InvoiceFacade.cs" />
+    <Compile Include="Facade\InvoiceLinkFacade.cs" />
+    <Compile Include="Facade\JobRequirementApprovedFacade.cs" />
+    <Compile Include="Facade\JobRequirementDetailFacade.cs" />
+    <Compile Include="Facade\JobRequirementFacade.cs" />
+    <Compile Include="Facade\JobRequirementFileFacade.cs" />
+    <Compile Include="Facade\KPIDetailFacade.cs" />
+    <Compile Include="Facade\KPIDetailUserFacade.cs" />
+    <Compile Include="Facade\ListCostFacade.cs" />
+    <Compile Include="Facade\LocationFacade.cs" />
+    <Compile Include="Facade\MainIndexFacade.cs" />
+    <Compile Include="Facade\ManufacturerFacade.cs" />
+    <Compile Include="Facade\OfficeSupplyFacade.cs" />
+    <Compile Include="Facade\OfficeSupplyRequestFacade.cs" />
+    <Compile Include="Facade\OfficeSupplyUnitFacade.cs" />
+    <Compile Include="Facade\PartFacade.cs" />
+    <Compile Include="Facade\PartGroupFacade.cs" />
+    <Compile Include="Facade\PartSummaryDetailFacade.cs" />
+    <Compile Include="Facade\PaymentOrderDetailFacade.cs" />
+    <Compile Include="Facade\PaymentOrderFacade.cs" />
+    <Compile Include="Facade\PaymentOrderFileFacade.cs" />
+    <Compile Include="Facade\PaymentOrderLogFacade.cs" />
+    <Compile Include="Facade\PaymentOrderTypeFacade.cs" />
+    <Compile Include="Facade\PercentMainIndexUserFacade.cs" />
+    <Compile Include="Facade\PODetailFacade.cs" />
+    <Compile Include="Facade\POFacade.cs" />
+    <Compile Include="Facade\POKHDetailFacade.cs" />
+    <Compile Include="Facade\POKHDetailMoneyFacade.cs" />
+    <Compile Include="Facade\POKHFacade.cs" />
+    <Compile Include="Facade\POKHFileFacade.cs" />
+    <Compile Include="Facade\PONCCDetailFacade.cs" />
+    <Compile Include="Facade\PONCCDetailLogFacade.cs" />
+    <Compile Include="Facade\PONCCFacade.cs" />
+    <Compile Include="Facade\PONCCHistoryFacade.cs" />
+    <Compile Include="Facade\PONCCRulePayFacade.cs" />
+    <Compile Include="Facade\PriceCheckFacade.cs" />
+    <Compile Include="Facade\ProductFilmFacade.cs" />
+    <Compile Include="Facade\ProductGroupFacade.cs" />
+    <Compile Include="Facade\ProductGroupRTCFacade.cs" />
+    <Compile Include="Facade\ProductGroupSALEFacade.cs" />
+    <Compile Include="Facade\ProductGroupWarehouseFacade.cs" />
+    <Compile Include="Facade\ProductKhachHangFacade.cs" />
+    <Compile Include="Facade\ProductLocationFacade.cs" />
+    <Compile Include="Facade\ProductRTCFacade.cs" />
+    <Compile Include="Facade\ProductRTCQRCodeFacade.cs" />
+    <Compile Include="Facade\ProductSaleFacade.cs" />
+    <Compile Include="Facade\ProjectCostFacade.cs" />
+    <Compile Include="Facade\ProjectDetailFacade.cs" />
+    <Compile Include="Facade\ProjectEmployeeFacade.cs" />
+    <Compile Include="Facade\ProjectFacade.cs" />
+    <Compile Include="Facade\ProjectFileFacade.cs" />
+    <Compile Include="Facade\ProjectHistoryProblemDetailFacade.cs" />
+    <Compile Include="Facade\ProjectHistoryProblemFacade.cs" />
+    <Compile Include="Facade\ProjectItemDetailFacade.cs" />
+    <Compile Include="Facade\ProjectItemFacade.cs" />
+    <Compile Include="Facade\ProjectItemLogFacade.cs" />
+    <Compile Include="Facade\ProjectItemProblemFacade.cs" />
+    <Compile Include="Facade\ProjectPartListFacade.cs" />
+    <Compile Include="Facade\ProjectPartlistPriceRequestFacade.cs" />
+    <Compile Include="Facade\ProjectPartlistPriceRequestHistoryFacade.cs" />
+    <Compile Include="Facade\ProjectPartlistPurchaseRequestFacade.cs" />
+    <Compile Include="Facade\ProjectPartListTypeFacade.cs" />
+    <Compile Include="Facade\ProjectPartListVersionFacade.cs" />
+    <Compile Include="Facade\ProjectPersonalPriotityFacade.cs" />
+    <Compile Include="Facade\ProjectPriorityFacade.cs" />
+    <Compile Include="Facade\ProjectPriorityLinkFacade.cs" />
+    <Compile Include="Facade\ProjectRequestFacade.cs" />
+    <Compile Include="Facade\ProjectRequestFileFacade.cs" />
+    <Compile Include="Facade\ProjectSolutionFacade.cs" />
+    <Compile Include="Facade\ProjectSolutionFileFacade.cs" />
+    <Compile Include="Facade\ProjectStatusBaseFacade.cs" />
+    <Compile Include="Facade\ProjectStatusDetailFacade.cs" />
+    <Compile Include="Facade\ProjectStatusFacade.cs" />
+    <Compile Include="Facade\ProjectTreeFolderFacade.cs" />
+    <Compile Include="Facade\ProjectTypeAssignFacade.cs" />
+    <Compile Include="Facade\ProjectTypeBaseFacade.cs" />
+    <Compile Include="Facade\ProjectTypeFacade.cs" />
+    <Compile Include="Facade\ProjectTypeLinkFacade.cs" />
+    <Compile Include="Facade\ProjectUserFacade.cs" />
+    <Compile Include="Facade\ProjectWorkerFacade.cs" />
+    <Compile Include="Facade\ProjectWorkerTypeFacade.cs" />
+    <Compile Include="Facade\ProjectWorkerVersionFacade.cs" />
+    <Compile Include="Facade\PurchaseOrderDetailFacade.cs" />
+    <Compile Include="Facade\PurchaseOrderFacade.cs" />
+    <Compile Include="Facade\QuotationDetailFacade.cs" />
+    <Compile Include="Facade\QuotationFacade.cs" />
+    <Compile Include="Facade\QuotationKHDetailFacade.cs" />
+    <Compile Include="Facade\QuotationKHFacade.cs" />
+    <Compile Include="Facade\QuotationNCCDetailFacade.cs" />
+    <Compile Include="Facade\QuotationNCCFacade.cs" />
+    <Compile Include="Facade\QuotationTermLinkFacade.cs" />
+    <Compile Include="Facade\QuoteNCCDetailFacade.cs" />
+    <Compile Include="Facade\QuoteNCCFacade.cs" />
+    <Compile Include="Facade\ReaderFacade.cs" />
+    <Compile Include="Facade\RegisterIdeaDetailFacade.cs" />
+    <Compile Include="Facade\RegisterIdeaFacade.cs" />
+    <Compile Include="Facade\RegisterIdeaFileFacade.cs" />
+    <Compile Include="Facade\RegisterIdeaScoreFacade.cs" />
+    <Compile Include="Facade\ReportIndexFacade.cs" />
+    <Compile Include="Facade\ReportPurchaseFacade.cs" />
+    <Compile Include="Facade\ReportTypeFacade.cs" />
+    <Compile Include="Facade\RequestBuyDetailFacade.cs" />
+    <Compile Include="Facade\RequestBuyFacade.cs" />
+    <Compile Include="Facade\RequestBuyRTCFacade.cs" />
+    <Compile Include="Facade\RequestBuyRTCTTDHFacade.cs" />
+    <Compile Include="Facade\RequestBuySaleDetailFacade.cs" />
+    <Compile Include="Facade\RequestBuySaleFacade.cs" />
+    <Compile Include="Facade\RequestExportDetailFacade.cs" />
+    <Compile Include="Facade\RequestExportFacade.cs" />
+    <Compile Include="Facade\RequestImportDetailFacade.cs" />
+    <Compile Include="Facade\RequestImportFacade.cs" />
+    <Compile Include="Facade\RequestPaidPOFacade.cs" />
+    <Compile Include="Facade\RequestPriceDetailFacade.cs" />
+    <Compile Include="Facade\RequestPriceFacade.cs" />
+    <Compile Include="Facade\RequestPriceNotifyFacade.cs" />
+    <Compile Include="Facade\RulePayFacade.cs" />
+    <Compile Include="Facade\SALEFacade.cs" />
+    <Compile Include="Facade\SalesPerformanceRankingFacade.cs" />
+    <Compile Include="Facade\SaleUserTypeFacade.cs" />
+    <Compile Include="Facade\ShiftFacade.cs" />
+    <Compile Include="Facade\ShorcutKeyFacade.cs" />
+    <Compile Include="Facade\StockFacade.cs" />
+    <Compile Include="Facade\StockLocationFacade.cs" />
+    <Compile Include="Facade\SupplierContactFacade.cs" />
+    <Compile Include="Facade\SupplierFacade.cs" />
+    <Compile Include="Facade\SupplierSaleContactFacade.cs" />
+    <Compile Include="Facade\SupplierSaleFacade.cs" />
+    <Compile Include="Facade\TaxCompanyFacade.cs" />
+    <Compile Include="Facade\TaxDepartmentFacade.cs" />
+    <Compile Include="Facade\TaxEmployeeContractFacade.cs" />
+    <Compile Include="Facade\TaxEmployeeFacade.cs" />
+    <Compile Include="Facade\TaxEmployeePositionFacade.cs" />
+    <Compile Include="Facade\TermConditionFacade.cs" />
+    <Compile Include="Facade\TradePriceDetailFacade.cs" />
+    <Compile Include="Facade\TradePriceFacade.cs" />
+    <Compile Include="Facade\TSAllocationEvictionAssetFacade.cs" />
+    <Compile Include="Facade\TSAssetAllocationDetailFacade.cs" />
+    <Compile Include="Facade\TSAssetAllocationFacade.cs" />
+    <Compile Include="Facade\TSAssetFacade.cs" />
+    <Compile Include="Facade\TSAssetManagementFacade.cs" />
+    <Compile Include="Facade\TSAssetManagementHistoryFacade.cs" />
+    <Compile Include="Facade\TSAssetManagementHistoryLogFacade.cs" />
+    <Compile Include="Facade\TSAssetRecoveryDetailFacade.cs" />
+    <Compile Include="Facade\TSAssetRecoveryFacade.cs" />
+    <Compile Include="Facade\TSCalendarPeriodAssetFacade.cs" />
+    <Compile Include="Facade\TSLiQuidationAssetFacade.cs" />
+    <Compile Include="Facade\TSLostReportAssetFacade.cs" />
+    <Compile Include="Facade\TSPeriodAssetFacade.cs" />
+    <Compile Include="Facade\TSRepairAssetFacade.cs" />
+    <Compile Include="Facade\TSReportBrokenAssetFacade.cs" />
+    <Compile Include="Facade\TSSourceAssetFacade.cs" />
+    <Compile Include="Facade\TSStatusAssetFacade.cs" />
+    <Compile Include="Facade\TSTranferAssetDetailFacade.cs" />
+    <Compile Include="Facade\TSTranferAssetFacade.cs" />
+    <Compile Include="Facade\UnitCountFacade.cs" />
+    <Compile Include="Facade\UnitCountKTFacade.cs" />
+    <Compile Include="Facade\UserGroupFacade.cs" />
+    <Compile Include="Facade\UserGroupLinkFacade.cs" />
+    <Compile Include="Facade\UserGroupRightDistributionFacade.cs" />
+    <Compile Include="Facade\UserRightDistributionFacade.cs" />
+    <Compile Include="Facade\UsersFacade.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Facade\SessionFacade.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Facade\UserTeamFacade.cs" />
+    <Compile Include="Facade\UserTeamLinkFacade.cs" />
+    <Compile Include="Facade\VehicleBookingFileFacade.cs" />
+    <Compile Include="Facade\VehicleBookingManagementFacade.cs" />
+    <Compile Include="Facade\VehicleManagementFacade.cs" />
+    <Compile Include="Facade\vUserGroupLinkFacade.cs" />
+    <Compile Include="Facade\WarehouseFacade.cs" />
+    <Compile Include="Facade\WeekPlanFacade.cs" />
+    <Compile Include="Facade\WorkPlanDetailFacade.cs" />
+    <Compile Include="Facade\WorkPlanFacade.cs" />
+    <Compile Include="Model\AccountingBillApprovedModel.cs" />
+    <Compile Include="Model\AccountingBillModel.cs" />
+    <Compile Include="Model\AccountingContractFileModel.cs" />
+    <Compile Include="Model\AccountingContractLogModel.cs" />
+    <Compile Include="Model\AccountingContractModel.cs" />
+    <Compile Include="Model\AccountingContractTypeModel.cs" />
+    <Compile Include="Model\ActivityLogModel.cs" />
+    <Compile Include="Model\ActivityLogsModel.cs" />
+    <Compile Include="Model\AddressStockModel.cs" />
+    <Compile Include="Model\AdminMarketingDetailModel.cs" />
+    <Compile Include="Model\AdminMarketingModel.cs" />
+    <Compile Include="Model\AuditLogModel.cs" />
+    <Compile Include="Model\BaseModel.cs" />
+    <Compile Include="Model\BillDocumentExportLogModel.cs" />
+    <Compile Include="Model\BillDocumentExportModel.cs" />
+    <Compile Include="Model\BillDocumentExportTechnicalLogModel.cs" />
+    <Compile Include="Model\BillDocumentExportTechnicalModel.cs" />
+    <Compile Include="Model\BillDocumentImportLogModel.cs" />
+    <Compile Include="Model\BillDocumentImportModel.cs" />
+    <Compile Include="Model\BillDocumentImportTechnicalLogModel.cs" />
+    <Compile Include="Model\BillDocumentImportTechnicalModel.cs" />
+    <Compile Include="Model\BillExportAcountantDetailModel.cs" />
+    <Compile Include="Model\BillExportAcountantModel.cs" />
+    <Compile Include="Model\BillExportDetailModel.cs" />
+    <Compile Include="Model\BillExportDetailSerialNumberModel.cs" />
+    <Compile Include="Model\BillExportDetailSerialNumberModulaLocationModel.cs" />
+    <Compile Include="Model\BillExportDetailTechnicalModel.cs" />
+    <Compile Include="Model\BillExportDocumentModel.cs" />
+    <Compile Include="Model\BillExportLogModel.cs" />
+    <Compile Include="Model\BillExportModel.cs" />
+    <Compile Include="Model\BillExportTechDetailSerialModel.cs" />
+    <Compile Include="Model\BillExportTechnicalLogModel.cs" />
+    <Compile Include="Model\BillExportTechnicalModel.cs" />
+    <Compile Include="Model\BillFilmDetailModel.cs" />
+    <Compile Include="Model\BillFilmModel.cs" />
+    <Compile Include="Model\BillImportDetailModel.cs" />
+    <Compile Include="Model\BillImportDetailSerialNumberModel.cs" />
+    <Compile Include="Model\BillImportDetailSerialNumberModulaLocationModel.cs" />
+    <Compile Include="Model\BillImportDetailTechnicalModel.cs" />
+    <Compile Include="Model\BillImportDocumentModel.cs" />
+    <Compile Include="Model\BillImportLogModel.cs" />
+    <Compile Include="Model\BillImportModel.cs" />
+    <Compile Include="Model\BillImportQCDetailFilesModel.cs" />
+    <Compile Include="Model\BillImportQCDetailModel.cs" />
+    <Compile Include="Model\BillImportQCModel.cs" />
+    <Compile Include="Model\BillImportTechDetailSerialModel.cs" />
+    <Compile Include="Model\BillImportTechnicalLogModel.cs" />
+    <Compile Include="Model\BillImportTechnicalModel.cs" />
+    <Compile Include="Model\BonusRuleIndexModel.cs" />
+    <Compile Include="Model\BonusRuleModel.cs" />
+    <Compile Include="Model\BookingRoomLogModel.cs" />
+    <Compile Include="Model\BookingRoomModel.cs" />
+    <Compile Include="Model\BusinessFieldLinkModel.cs" />
+    <Compile Include="Model\BusinessFieldModel.cs" />
+    <Compile Include="Model\CameraModel.cs" />
+    <Compile Include="Model\CompanyModel.cs" />
+    <Compile Include="Model\ConfigPriceModel.cs" />
+    <Compile Include="Model\ConfigSystemModel.cs" />
+    <Compile Include="Model\CourseAnswersModel.cs" />
+    <Compile Include="Model\CourseCatalogModel.cs" />
+    <Compile Include="Model\CourseCatalogProjectTypeModel.cs" />
+    <Compile Include="Model\CourseExamEvaluateModel.cs" />
+    <Compile Include="Model\CourseExamModel.cs" />
+    <Compile Include="Model\CourseExamPracticeModel.cs" />
+    <Compile Include="Model\CourseExamResultDetailModel.cs" />
+    <Compile Include="Model\CourseExamResultModel.cs" />
+    <Compile Include="Model\CourseFileModel.cs" />
+    <Compile Include="Model\CourseLessonLogModel.cs" />
+    <Compile Include="Model\CourseLessonModel.cs" />
+    <Compile Include="Model\CourseModel.cs" />
+    <Compile Include="Model\CourseQuestionModel.cs" />
+    <Compile Include="Model\CourseRightAnswersModel.cs" />
+    <Compile Include="Model\CourseSpecializationLinkModel.cs" />
+    <Compile Include="Model\CourseTypeModel.cs" />
+    <Compile Include="Model\CurrencyModel.cs" />
+    <Compile Include="Model\CustomerBaseContactModel.cs" />
+    <Compile Include="Model\CustomerBaseModel.cs" />
+    <Compile Include="Model\CustomerContactModel.cs" />
+    <Compile Include="Model\CustomerEmployeeModel.cs" />
+    <Compile Include="Model\CustomerModel.cs" />
+    <Compile Include="Model\CustomerPartModel.cs" />
+    <Compile Include="Model\CustomerSpecializationModel.cs" />
+    <Compile Include="Model\DailyReportHRModel.cs" />
+    <Compile Include="Model\DailyReportSaleAdminModel.cs" />
+    <Compile Include="Model\DailyReportSaleModel.cs" />
+    <Compile Include="Model\DailyReportTechnicalModel.cs" />
+    <Compile Include="Model\DepartmentModel.cs" />
+    <Compile Include="Model\DocumentExportModel.cs" />
+    <Compile Include="Model\DocumentFileModel.cs" />
+    <Compile Include="Model\DocumentImportModel.cs" />
+    <Compile Include="Model\DocumentImportPONCCModel.cs" />
+    <Compile Include="Model\DocumentModel.cs" />
+    <Compile Include="Model\DocumentSaleModel.cs" />
+    <Compile Include="Model\DocumentTypeModel.cs" />
+    <Compile Include="Model\EmployeeApproveModel.cs" />
+    <Compile Include="Model\EmployeeAttendanceModel.cs" />
+    <Compile Include="Model\EmployeeBussinessFileModel.cs" />
+    <Compile Include="Model\EmployeeBussinessModel.cs" />
+    <Compile Include="Model\EmployeeBussinessVehicleModel.cs" />
+    <Compile Include="Model\EmployeeChamCongDetailModel.cs" />
+    <Compile Include="Model\EmployeeChamCongMasterModel.cs" />
+    <Compile Include="Model\EmployeeChucVuHDModel.cs" />
+    <Compile Include="Model\EmployeeChucVuModel.cs" />
+    <Compile Include="Model\EmployeeCollectMoneyModel.cs" />
+    <Compile Include="Model\EmployeeCompensatoryLeaveModel.cs" />
+    <Compile Include="Model\EmployeeContractModel.cs" />
+    <Compile Include="Model\EmployeeCurricularModel.cs" />
+    <Compile Include="Model\EmployeeEarlyLateModel.cs" />
+    <Compile Include="Model\EmployeeEducationLevelModel.cs" />
+    <Compile Include="Model\EmployeeErrorModel.cs" />
+    <Compile Include="Model\EmployeeFingerprintMasterModel.cs" />
+    <Compile Include="Model\EmployeeFingerprintModel.cs" />
+    <Compile Include="Model\EmployeeFoodOrderModel.cs" />
+    <Compile Include="Model\EmployeeLoaiHDLDModel.cs" />
+    <Compile Include="Model\EmployeeModel.cs" />
+    <Compile Include="Model\EmployeeNighShiftModel.cs" />
+    <Compile Include="Model\EmployeeNoFingerprintModel.cs" />
+    <Compile Include="Model\EmployeeOnLeaveMasterModel.cs" />
+    <Compile Include="Model\EmployeeOnLeaveModel.cs" />
+    <Compile Include="Model\EmployeeOvertimeFileModel.cs" />
+    <Compile Include="Model\EmployeeOvertimeModel.cs" />
+    <Compile Include="Model\EmployeePayrollBonusDeuctionModel.cs" />
+    <Compile Include="Model\EmployeePayrollDetailModel.cs" />
+    <Compile Include="Model\EmployeePayrollModel.cs" />
+    <Compile Include="Model\EmployeePOContactModel.cs" />
+    <Compile Include="Model\EmployeeProjectTypeModel.cs" />
+    <Compile Include="Model\EmployeePurchaseModel.cs" />
+    <Compile Include="Model\EmployeeRegisterWorkModel.cs" />
+    <Compile Include="Model\EmployeeSalaryAdvanceModel.cs" />
+    <Compile Include="Model\EmployeeScheduleWorkModel.cs" />
+    <Compile Include="Model\EmployeeSendEmailModel.cs" />
+    <Compile Include="Model\EmployeeStatusModel.cs" />
+    <Compile Include="Model\EmployeeTeamModel.cs" />
+    <Compile Include="Model\EmployeeTeamSaleLinkModel.cs" />
+    <Compile Include="Model\EmployeeTeamSaleModel.cs" />
+    <Compile Include="Model\EmployeeTinhTrangHonNhanModel.cs" />
+    <Compile Include="Model\EmployeeTypeBussinessModel.cs" />
+    <Compile Include="Model\EmployeeTypeOvertimeModel.cs" />
+    <Compile Include="Model\EmployeeVehicleBussinessModel.cs" />
+    <Compile Include="Model\EmployeeWFHModel.cs" />
+    <Compile Include="Model\EmployeeWorkingProcessModel.cs" />
+    <Compile Include="Model\EventsLogErrorModel.cs" />
+    <Compile Include="Model\EventsLogModel.cs" />
+    <Compile Include="Model\ExamCategoryModel.cs" />
+    <Compile Include="Model\ExamListTestModel.cs" />
+    <Compile Include="Model\ExamQuestionBankModel.cs" />
+    <Compile Include="Model\ExamQuestionGroupModel.cs" />
+    <Compile Include="Model\ExamQuestionListTestModel.cs" />
+    <Compile Include="Model\ExamQuestionModel.cs" />
+    <Compile Include="Model\ExamQuestionTypeModel.cs" />
+    <Compile Include="Model\ExamResultAnswerDetailModel.cs" />
+    <Compile Include="Model\ExamResultDetailModel.cs" />
+    <Compile Include="Model\ExamResultModel.cs" />
+    <Compile Include="Model\ExamTestResultModel.cs" />
+    <Compile Include="Model\ExamTypeTestModel.cs" />
+    <Compile Include="Model\FilmManagementDetailModel.cs" />
+    <Compile Include="Model\FilmManagementModel.cs" />
+    <Compile Include="Model\FirmBaseModel.cs" />
+    <Compile Include="Model\FirmModel.cs" />
+    <Compile Include="Model\FollowProjectBaseDetailModel.cs" />
+    <Compile Include="Model\FollowProjectBaseModel.cs" />
+    <Compile Include="Model\FollowProjectDetailModel.cs" />
+    <Compile Include="Model\FollowProjectModel.cs" />
+    <Compile Include="Model\FormAndFunctionGroupModel.cs" />
+    <Compile Include="Model\FormAndFunctionModel.cs" />
+    <Compile Include="Model\GoalModel.cs" />
+    <Compile Include="Model\GroupFileModel.cs" />
+    <Compile Include="Model\GroupProductSaleModel.cs" />
+    <Compile Include="Model\GroupSalesModel.cs" />
+    <Compile Include="Model\GroupSalesUserModel.cs" />
+    <Compile Include="Model\HandoverMinutesDetailModel.cs" />
+    <Compile Include="Model\HandoverMinutesModel.cs" />
+    <Compile Include="Model\HistoryDeleteBillModel.cs" />
+    <Compile Include="Model\HistoryErrorModel.cs" />
+    <Compile Include="Model\HistoryKPISaleModel.cs" />
+    <Compile Include="Model\HistoryMoneyPOModel.cs" />
+    <Compile Include="Model\HistoryProductRTCLogModel.cs" />
+    <Compile Include="Model\HistoryProductRTCModel.cs" />
+    <Compile Include="Model\HolidayModel.cs" />
+    <Compile Include="Model\InventoryDemoModel.cs" />
+    <Compile Include="Model\InventoryModel.cs" />
+    <Compile Include="Model\InventoryProjectExportModel.cs" />
+    <Compile Include="Model\InventoryProjectModel.cs" />
+    <Compile Include="Model\InventoryProjectProductSaleLinkModel.cs" />
+    <Compile Include="Model\InventoryStockModel.cs" />
+    <Compile Include="Model\InvoiceLinkModel.cs" />
+    <Compile Include="Model\InvoiceModel.cs" />
+    <Compile Include="Model\JobRequirementApprovedModel.cs" />
+    <Compile Include="Model\JobRequirementCheckPriceDetailModel.cs" />
+    <Compile Include="Model\JobRequirementCheckPriceModel.cs" />
+    <Compile Include="Model\JobRequirementCommentModel.cs" />
+    <Compile Include="Model\JobRequirementDetailModel.cs" />
+    <Compile Include="Model\JobRequirementFileModel.cs" />
+    <Compile Include="Model\JobRequirementLogModel.cs" />
+    <Compile Include="Model\JobRequirementModel.cs" />
+    <Compile Include="Model\KPICriteriaDetailModel.cs" />
+    <Compile Include="Model\KPICriteriaModel.cs" />
+    <Compile Include="Model\KPIDetailModel.cs" />
+    <Compile Include="Model\KPIDetailUserModel.cs" />
+    <Compile Include="Model\KPIEmployeePointDetailModel.cs" />
+    <Compile Include="Model\KPIEmployeePointModel.cs" />
+    <Compile Include="Model\KPIEmployeePointYearModel.cs" />
+    <Compile Include="Model\KPIEmployeeTeamLinkModel.cs" />
+    <Compile Include="Model\KPIEmployeeTeamModel.cs" />
+    <Compile Include="Model\KPIErrorEmployeeFileModel.cs" />
+    <Compile Include="Model\KPIErrorEmployeeModel.cs" />
+    <Compile Include="Model\KPIErrorFineAmountModel.cs" />
+    <Compile Include="Model\KPIErrorModel.cs" />
+    <Compile Include="Model\KPIErrorTypeModel.cs" />
+    <Compile Include="Model\KPIEvaluationErrorModel.cs" />
+    <Compile Include="Model\KPIEvaluationFactorsModel.cs" />
+    <Compile Include="Model\KPIEvaluationModel.cs" />
+    <Compile Include="Model\KPIEvaluationPointModel.cs" />
+    <Compile Include="Model\KPIEvaluationRuleDetailModel.cs" />
+    <Compile Include="Model\KPIEvaluationRuleModel.cs" />
+    <Compile Include="Model\KPIExamModel.cs" />
+    <Compile Include="Model\KPIExamPositionModel.cs" />
+    <Compile Include="Model\KPIPositionEmployeeModel.cs" />
+    <Compile Include="Model\KPIPositionModel.cs" />
+    <Compile Include="Model\KPIPositionTypeModel.cs" />
+    <Compile Include="Model\KPISessionModel.cs" />
+    <Compile Include="Model\KPISpecializationTypeModel.cs" />
+    <Compile Include="Model\KPISumarizeModel.cs" />
+    <Compile Include="Model\KPISumaryEvaluationModel.cs" />
+    <Compile Include="Model\ListCostModel.cs" />
+    <Compile Include="Model\LocationModel.cs" />
+    <Compile Include="Model\MainIndexModel.cs" />
+    <Compile Include="Model\MakerModel.cs" />
+    <Compile Include="Model\ManufacturerModel.cs" />
+    <Compile Include="Model\MeetingMinutesAttendanceModel.cs" />
+    <Compile Include="Model\MeetingMinutesDetailsModel.cs" />
+    <Compile Include="Model\MeetingMinutesFileModel.cs" />
+    <Compile Include="Model\MeetingMinutesModel.cs" />
+    <Compile Include="Model\MeetingTypeModel.cs" />
+    <Compile Include="Model\ModulaLocationDetailModel.cs" />
+    <Compile Include="Model\ModulaLocationModel.cs" />
+    <Compile Include="Model\NotifyModel.cs" />
+    <Compile Include="Model\OfficeSupplyModel.cs" />
+    <Compile Include="Model\OfficeSupplyRequestModel.cs" />
+    <Compile Include="Model\OfficeSupplyRequestsDetailModel.cs" />
+    <Compile Include="Model\OfficeSupplyRequestsModel.cs" />
+    <Compile Include="Model\OfficeSupplyUnitModel.cs" />
+    <Compile Include="Model\OrganizationalChartDetailModel.cs" />
+    <Compile Include="Model\OrganizationalChartModel.cs" />
+    <Compile Include="Model\PartGroupModel.cs" />
+    <Compile Include="Model\PartModel.cs" />
+    <Compile Include="Model\PartSummaryDetailModel.cs" />
+    <Compile Include="Model\PaymentOrderCustomerModel.cs" />
+    <Compile Include="Model\PaymentOrderDetailModel.cs" />
+    <Compile Include="Model\PaymentOrderDetailUserTeamSaleModel.cs" />
+    <Compile Include="Model\PaymentOrderFileBankSlipModel.cs" />
+    <Compile Include="Model\PaymentOrderFileModel.cs" />
+    <Compile Include="Model\PaymentOrderLogModel.cs" />
+    <Compile Include="Model\PaymentOrderModel.cs" />
+    <Compile Include="Model\PaymentOrderOrderTypeModel.cs" />
+    <Compile Include="Model\PaymentOrderTypeDocumentModel.cs" />
+    <Compile Include="Model\PaymentOrderTypeModel.cs" />
+    <Compile Include="Model\PaymentOrderTypeOrderModel.cs" />
+    <Compile Include="Model\PercentMainIndexUserModel.cs" />
+    <Compile Include="Model\PODetailModel.cs" />
+    <Compile Include="Model\POKHDetailModel.cs" />
+    <Compile Include="Model\POKHDetailMoneyModel.cs" />
+    <Compile Include="Model\POKHFileModel.cs" />
+    <Compile Include="Model\POKHHistoryModel.cs" />
+    <Compile Include="Model\POKHModel.cs" />
+    <Compile Include="Model\POModel.cs" />
+    <Compile Include="Model\PONCCDetailLogModel.cs" />
+    <Compile Include="Model\PONCCDetailModel.cs" />
+    <Compile Include="Model\PONCCDetailRequestBuyModel.cs" />
+    <Compile Include="Model\PONCCHistoryModel.cs" />
+    <Compile Include="Model\PONCCModel.cs" />
+    <Compile Include="Model\PONCCRulePayModel.cs" />
+    <Compile Include="Model\PriceCheckModel.cs" />
+    <Compile Include="Model\ProductFilmModel.cs" />
+    <Compile Include="Model\ProductGroupModel.cs" />
+    <Compile Include="Model\ProductGroupRTCModel.cs" />
+    <Compile Include="Model\ProductGroupSALEModel.cs" />
+    <Compile Include="Model\ProductGroupWarehouseModel.cs" />
+    <Compile Include="Model\ProductKhachHangModel.cs" />
+    <Compile Include="Model\ProductLocationModel.cs" />
+    <Compile Include="Model\ProductRTCModel.cs" />
+    <Compile Include="Model\ProductRTCQRCodeModel.cs" />
+    <Compile Include="Model\ProductSaleModel.cs" />
+    <Compile Include="Model\ProductTypeModel.cs" />
+    <Compile Include="Model\ProjectCostModel.cs" />
+    <Compile Include="Model\ProjectCurrentSituationModel.cs" />
+    <Compile Include="Model\ProjectDetailModel.cs" />
+    <Compile Include="Model\ProjectEmployeeModel.cs" />
+    <Compile Include="Model\ProjectFileModel.cs" />
+    <Compile Include="Model\ProjectHistoryProblemDetailModel.cs" />
+    <Compile Include="Model\ProjectHistoryProblemModel.cs" />
+    <Compile Include="Model\ProjectItemDetailModel.cs" />
+    <Compile Include="Model\ProjectItemFilesModel.cs" />
+    <Compile Include="Model\ProjectItemLogModel.cs" />
+    <Compile Include="Model\ProjectItemModel.cs" />
+    <Compile Include="Model\ProjectItemProblemModel.cs" />
+    <Compile Include="Model\ProjectMachinePriceDetailModel.cs" />
+    <Compile Include="Model\ProjectMachinePriceModel.cs" />
+    <Compile Include="Model\ProjectModel.cs" />
+    <Compile Include="Model\ProjectPartListModel.cs" />
+    <Compile Include="Model\ProjectPartlistPriceRequestHistoryModel.cs" />
+    <Compile Include="Model\ProjectPartlistPriceRequestModel.cs" />
+    <Compile Include="Model\ProjectPartlistPriceRequestNoteModel.cs" />
+    <Compile Include="Model\ProjectPartlistPriceRequestTypeModel.cs" />
+    <Compile Include="Model\ProjectPartlistPurchaseRequestModel.cs" />
+    <Compile Include="Model\ProjectPartlistPurchaseRequestNoteModel.cs" />
+    <Compile Include="Model\ProjectPartlistPurchaseRequestTypeModel.cs" />
+    <Compile Include="Model\ProjectPartListTypeModel.cs" />
+    <Compile Include="Model\ProjectPartListVersionModel.cs" />
+    <Compile Include="Model\ProjectPersonalPriotityModel.cs" />
+    <Compile Include="Model\ProjectPriorityLinkModel.cs" />
+    <Compile Include="Model\ProjectPriorityModel.cs" />
+    <Compile Include="Model\ProjectRequestFileModel.cs" />
+    <Compile Include="Model\ProjectRequestModel.cs" />
+    <Compile Include="Model\ProjectSolutionFileModel.cs" />
+    <Compile Include="Model\ProjectSolutionModel.cs" />
+    <Compile Include="Model\ProjectStatusBaseModel.cs" />
+    <Compile Include="Model\ProjectStatusDetailModel.cs" />
+    <Compile Include="Model\ProjectStatusLogModel.cs" />
+    <Compile Include="Model\ProjectStatusModel.cs" />
+    <Compile Include="Model\ProjectSurveyDetailModel.cs" />
+    <Compile Include="Model\ProjectSurveyFileModel.cs" />
+    <Compile Include="Model\ProjectSurveyModel.cs" />
+    <Compile Include="Model\ProjectTreeFolderModel.cs" />
+    <Compile Include="Model\ProjectTypeAssignModel.cs" />
+    <Compile Include="Model\ProjectTypeBaseModel.cs" />
+    <Compile Include="Model\ProjectTypeLinkModel.cs" />
+    <Compile Include="Model\ProjectTypeModel.cs" />
+    <Compile Include="Model\ProjectUserModel.cs" />
+    <Compile Include="Model\ProjectWorkerModel.cs" />
+    <Compile Include="Model\ProjectWorkerTypeModel.cs" />
+    <Compile Include="Model\ProjectWorkerVersionModel.cs" />
+    <Compile Include="Model\PurchaseOrderDetailModel.cs" />
+    <Compile Include="Model\PurchaseOrderModel.cs" />
+    <Compile Include="Model\QuotationDetailModel.cs" />
+    <Compile Include="Model\QuotationKHDetailModel.cs" />
+    <Compile Include="Model\QuotationKHModel.cs" />
+    <Compile Include="Model\QuotationModel.cs" />
+    <Compile Include="Model\QuotationNCCDetailModel.cs" />
+    <Compile Include="Model\QuotationNCCModel.cs" />
+    <Compile Include="Model\QuotationTermLinkModel.cs" />
+    <Compile Include="Model\QuoteNCCDetailModel.cs" />
+    <Compile Include="Model\QuoteNCCModel.cs" />
+    <Compile Include="Model\ReaderModel.cs" />
+    <Compile Include="Model\RegisterContractModel.cs" />
+    <Compile Include="Model\RegisterIdeaDetailModel.cs" />
+    <Compile Include="Model\RegisterIdeaFileModel.cs" />
+    <Compile Include="Model\RegisterIdeaModel.cs" />
+    <Compile Include="Model\RegisterIdeaScoreModel.cs" />
+    <Compile Include="Model\RegisterIdeaTypeModel.cs" />
+    <Compile Include="Model\RegisterOTModel.cs" />
+    <Compile Include="Model\ReportIndexModel.cs" />
+    <Compile Include="Model\ReportPurchaseModel.cs" />
+    <Compile Include="Model\ReportTypeModel.cs" />
+    <Compile Include="Model\RequestBuyDetailModel.cs" />
+    <Compile Include="Model\RequestBuyModel.cs" />
+    <Compile Include="Model\RequestBuyRTCModel.cs" />
+    <Compile Include="Model\RequestBuyRTCTTDHModel.cs" />
+    <Compile Include="Model\RequestBuySaleDetailModel.cs" />
+    <Compile Include="Model\RequestBuySaleModel.cs" />
+    <Compile Include="Model\RequestExportDetailModel.cs" />
+    <Compile Include="Model\RequestExportModel.cs" />
+    <Compile Include="Model\RequestImportDetailModel.cs" />
+    <Compile Include="Model\RequestImportModel.cs" />
+    <Compile Include="Model\RequestInvoiceDetailModel.cs" />
+    <Compile Include="Model\RequestInvoiceFileModel.cs" />
+    <Compile Include="Model\RequestInvoiceModel.cs" />
+    <Compile Include="Model\RequestInvoiceStatusLinkModel.cs" />
+    <Compile Include="Model\RequestInvoiceStatusModel.cs" />
+    <Compile Include="Model\RequestPaidPOModel.cs" />
+    <Compile Include="Model\RequestPriceDetailModel.cs" />
+    <Compile Include="Model\RequestPriceModel.cs" />
+    <Compile Include="Model\RequestPriceNotifyModel.cs" />
+    <Compile Include="Model\RulePayModel.cs" />
+    <Compile Include="Model\SALEModel.cs" />
+    <Compile Include="Model\SalesPerformanceRankingModel.cs" />
+    <Compile Include="Model\SaleUserTypeModel.cs" />
+    <Compile Include="Model\SealRegulationsModel.cs" />
+    <Compile Include="Model\ShiftModel.cs" />
+    <Compile Include="Model\ShorcutKeyModel.cs" />
+    <Compile Include="Model\StockLocationModel.cs" />
+    <Compile Include="Model\StockModel.cs" />
+    <Compile Include="Model\SupplierContactModel.cs" />
+    <Compile Include="Model\SupplierModel.cs" />
+    <Compile Include="Model\SupplierSaleContactModel.cs" />
+    <Compile Include="Model\SupplierSaleModel.cs" />
+    <Compile Include="Model\TaxCompanyModel.cs" />
+    <Compile Include="Model\TaxDepartmentModel.cs" />
+    <Compile Include="Model\TaxEmployeeContractModel.cs" />
+    <Compile Include="Model\TaxEmployeeModel.cs" />
+    <Compile Include="Model\TaxEmployeePositionModel.cs" />
+    <Compile Include="Model\TermConditionModel.cs" />
+    <Compile Include="Model\TrackingMarksFileModel.cs" />
+    <Compile Include="Model\TrackingMarksLogModel.cs" />
+    <Compile Include="Model\TrackingMarksModel.cs" />
+    <Compile Include="Model\TrackingMarksSealModel.cs" />
+    <Compile Include="Model\TrackingMarksTaxCompanyModel.cs" />
+    <Compile Include="Model\TradePriceDetailModel.cs" />
+    <Compile Include="Model\TradePriceModel.cs" />
+    <Compile Include="Model\TSAllocationEvictionAssetModel.cs" />
+    <Compile Include="Model\TSAssetAllocationDetailModel.cs" />
+    <Compile Include="Model\TSAssetAllocationModel.cs" />
+    <Compile Include="Model\TSAssetManagementHistoryLogModel.cs" />
+    <Compile Include="Model\TSAssetManagementHistoryModel.cs" />
+    <Compile Include="Model\TSAssetManagementModel.cs" />
+    <Compile Include="Model\TSAssetModel.cs" />
+    <Compile Include="Model\TSAssetRecoveryDetailModel.cs" />
+    <Compile Include="Model\TSAssetRecoveryModel.cs" />
+    <Compile Include="Model\TSCalendarPeriodAssetModel.cs" />
+    <Compile Include="Model\TSLiQuidationAssetModel.cs" />
+    <Compile Include="Model\TSLostReportAssetModel.cs" />
+    <Compile Include="Model\TSPeriodAssetModel.cs" />
+    <Compile Include="Model\TSRepairAssetModel.cs" />
+    <Compile Include="Model\TSReportBrokenAssetModel.cs" />
+    <Compile Include="Model\TSSourceAssetModel.cs" />
+    <Compile Include="Model\TSStatusAssetModel.cs" />
+    <Compile Include="Model\TSTranferAssetDetailModel.cs" />
+    <Compile Include="Model\TSTranferAssetModel.cs" />
+    <Compile Include="Model\UnitCountKTModel.cs" />
+    <Compile Include="Model\UnitCountModel.cs" />
+    <Compile Include="Model\UpdateSoftwareModel.cs" />
+    <Compile Include="Model\UserGroupLinkModel.cs" />
+    <Compile Include="Model\UserGroupModel.cs" />
+    <Compile Include="Model\UserGroupRightDistributionModel.cs" />
+    <Compile Include="Model\UserRightDistributionModel.cs" />
+    <Compile Include="Model\UsersModel.cs" />
+    <Compile Include="Model\SessionModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\UserTeamLinkModel.cs" />
+    <Compile Include="Model\UserTeamModel.cs" />
+    <Compile Include="Model\UserTeamSaleModel.cs" />
+    <Compile Include="Model\VehicleBookingFileModel.cs" />
+    <Compile Include="Model\VehicleBookingManagementModel.cs" />
+    <Compile Include="Model\VehicleCategoryModel.cs" />
+    <Compile Include="Model\VehicleManagementModel.cs" />
+    <Compile Include="Model\vUserGroupLinkModel.cs" />
+    <Compile Include="Model\WarehouseModel.cs" />
+    <Compile Include="Model\WeekPlanModel.cs" />
+    <Compile Include="Model\WorkPlanDetailModel.cs" />
+    <Compile Include="Model\WorkPlanModel.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\DefValues.cs" />
+    <Compile Include="Utils\FTPFactory.cs" />
+    <Compile Include="Utils\Global.cs" />
+    <Compile Include="_Base\FormBase\_UserControls.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="_Base\FormBase\_UserControls.Designer.cs">
+      <DependentUpon>_UserControls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="_Base\VCDateTime.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Base\FormBase\_Forms.resx">
+      <DependentUpon>_Forms.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Base\FormBase\_UserControls.resx">
+      <DependentUpon>_UserControls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Base\Popup\frmPopupBase.resx">
+      <DependentUpon>frmPopupBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Base\Popup\frmPopupSearch.resx">
+      <DependentUpon>frmPopupSearch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Base\Popup\PopupBox.resx">
+      <DependentUpon>PopupBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Base\Popup\PopupBoxPublic.resx">
+      <DependentUpon>PopupBoxPublic.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ShortcutKey.cs" />
+    <Compile Include="Utils\BetweenExpression.cs" />
+    <Compile Include="Utils\CommunicationManager.cs" />
+    <Compile Include="Utils\DataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utils\DBUtils.cs" />
+    <Compile Include="Utils\Expression.cs" />
+    <Compile Include="Utils\FTPFactory1.cs" />
+    <Compile Include="_Base\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\MD5.cs" />
+    <Compile Include="Utils\ProcessTransaction.cs" />
+    <Compile Include="Utils\PropertyUtils.cs" />
+    <Compile Include="Utils\SecUtils.cs" />
+    <Compile Include="Utils\SQLHelper.cs" />
+    <Compile Include="_Base\FormBase\_Forms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="_Base\FormBase\_Forms.Designer.cs">
+      <DependentUpon>_Forms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="_Base\NumericTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="_Base\Popup\frmPopupBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="_Base\Popup\frmPopupBase.designer.cs">
+      <DependentUpon>frmPopupBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="_Base\Popup\frmPopupSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="_Base\Popup\frmPopupSearch.designer.cs">
+      <DependentUpon>frmPopupSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="_Base\Popup\IPopup.cs" />
+    <Compile Include="_Base\Popup\PopupBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="_Base\Popup\PopupBox.designer.cs">
+      <DependentUpon>PopupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="_Base\Popup\PopupBoxPublic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="_Base\Popup\PopupBoxPublic.designer.cs">
+      <DependentUpon>PopupBoxPublic.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

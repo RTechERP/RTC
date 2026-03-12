@@ -1,0 +1,23 @@
+
+using System;
+namespace BMS.Model
+{
+	public partial class ReportPurchaseModel : BaseModel
+	{
+		public int ID {get; set;}
+		
+		public int WorkingDays {get; set;}
+		
+		public int Month {get; set;}
+		
+		public int Year {get; set;}
+		
+		public int UserID {get; set;}
+		
+		public int NoReport {get; set;}
+		
+		public int Quy {get; set;}
+		
+	}
+}
+	
