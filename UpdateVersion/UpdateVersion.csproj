@@ -165,11 +165,5 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BaseBusiness\BaseBusiness.csproj">
-      <Project>{059ae159-539c-41c2-b62b-5c246731bd48}</Project>
-      <Name>BaseBusiness</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,6 +13,8 @@ using System.Diagnostics;
 using System.Net.Http;
 using Newtonsoft.Json;
 using static Forms.Classes.cGlobVar;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace BMS
 {
@@ -195,9 +197,21 @@ namespace BMS
         {
             try
             {
-                string filePath = $@"\\192.168.1.190\Software\Config";
+                string filePath = $@"\\113.190.234.64\Software\Config";
                 //string fileConfig = Path.Combine(Application.StartupPath, "ConfigUpdateAPI.txt");
-                string fileConfig = Path.Combine(filePath, "ConfigUpdateAPI.txt");
+                string fileConfig = Path.Combine(filePath, Global.configFileName);
+
+                if (!File.Exists(fileConfig))
+                {
+                    filePath = $@"\\192.168.1.190\Software\Config";
+                    fileConfig = Path.Combine(filePath, Global.configFileName);
+
+                    if (!File.Exists(fileConfig))
+                    {
+                        MessageBox.Show($@"Vui lòng đăng nhập vào server \\192.168.1.190 hoặc \\113.190.234.64 (Nếu bạn đang truy cập online)\nNếu chưa có tài khoản vui lòng liên hệ IT để được cấp!", "Thông báo");
+                        return;
+                    }
+                }
 
                 string[] lines = File.ReadAllLines(fileConfig);
 
@@ -214,5 +228,40 @@ namespace BMS
                 Application.Exit();
             }
         }
+
+        //static async void SetValueVariableAPI()
+        //{
+        //    string message = "";
+        //    try
+        //    {
+        //        HttpClient http = new HttpClient();
+        //        string host = "https://localhost:44365/api";
+        //        host = Global.HostKPITeam;
+
+        //        string api = host + "/home/get-config-autoupdate";
+        //        var repsonse = await http.GetAsync(api);
+        //        string content = await repsonse.Content.ReadAsStringAsync();
+        //        JObject json = JObject.Parse(content);
+
+        //        var status = TextUtils.ToInt(json["status"]);
+        //        if (status == 1)
+        //        {
+        //            //var data = json["data"];
+
+        //            if (json.TryGetValue("data", out JToken data))
+        //            {
+        //                _urlFileUpdate = TextUtils.ToString(data["LinkFileUpdate"]);
+        //                _urlDownload = TextUtils.ToString(data["LinkDownload"]);
+        //                _filePathVersion = Path.Combine(Application.StartupPath, TextUtils.ToString(data["Version"]));
+        //            }
+        //        }
+        //        else message = TextUtils.ToString(json["message"]);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Update version fail!\n" + ex.Message + $"\r\n{message}", "Thông báo");
+        //        //Application.Exit();
+        //    }
+        //}
     }
 }

@@ -130,6 +130,8 @@ namespace BMS
                 new {Value = 4, Text = "Nội quy"},
                 new {Value = 5, Text = "AGV"},
                 new {Value = 6, Text = "Tester"},
+                new {Value = 7, Text = "Mobile"},
+                new {Value = 8, Text = "BA"},
             };
             cboExamType.DataSource = examType;
             cboExamType.ValueMember = "Value";

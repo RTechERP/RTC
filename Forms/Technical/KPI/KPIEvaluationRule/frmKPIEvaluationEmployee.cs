@@ -1987,7 +1987,7 @@ namespace BMS
             {
                 using (WaitDialogForm fWait = new WaitDialogForm("Vui lòng chờ trong giây lát...", ""))
                 {
-                    LoadPointRuleLastMonthNew(empPointID);
+                    LoadPointRuleLastMonthNew(empPointID, isPublic);
                 }
             }
             //LoadPointRuleNew(empPointID); //TN.Binh update 
@@ -2068,7 +2068,7 @@ namespace BMS
         #endregion
 
         #region LoadPointRuleLastMonthNew
-        private void LoadPointRuleLastMonthNew(int empPointID)
+        private void LoadPointRuleLastMonthNew(int empPointID, bool isPublic)
         {
             try
             {
@@ -2077,8 +2077,8 @@ namespace BMS
                 //                                                       new object[] { empPointID });
 
                 List<KPISumarizeDTO> lstResult = SQLHelper<KPISumarizeDTO>.ProcedureToList("spGetSumarizebyKPIEmpPointIDNew",
-                                                                       new string[] { "@KPIEmployeePointID" },
-                                                                       new object[] { empPointID });
+                                                                       new string[] { "@KPIEmployeePointID", "@IsPublic" },
+                                                                       new object[] { empPointID, isPublic });
 
                 decimal timeWork = TextUtils.ToDecimal(grvTeam.Columns["TimeWork"].SummaryItem.SummaryValue);
                 decimal fiveS = TextUtils.ToDecimal(grvTeam.Columns["FiveS"].SummaryItem.SummaryValue);

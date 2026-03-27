@@ -46,6 +46,8 @@ namespace BMS
                 (4, "NQKT","Nội quy", "Kỹ thuật" ),
                 (5, "AGV","AGV", "AGV" ),
                 (6, "T","Tester", "Kỹ thuật" ),
+                (7, "MB","Mobile", "Kỹ thuật" ),
+                (8, "BA","BA", "Kỹ thuật" ),
             };
             foreach (var d in data)
             {

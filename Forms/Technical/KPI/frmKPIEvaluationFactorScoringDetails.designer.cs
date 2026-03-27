@@ -317,7 +317,7 @@ namespace BMS
             this.mnuMenu.Location = new System.Drawing.Point(0, 0);
             this.mnuMenu.Name = "mnuMenu";
             this.mnuMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.mnuMenu.Size = new System.Drawing.Size(1407, 56);
+            this.mnuMenu.Size = new System.Drawing.Size(1974, 56);
             this.mnuMenu.TabIndex = 120;
             this.mnuMenu.Text = "toolStrip2";
             // 
@@ -413,7 +413,7 @@ namespace BMS
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl1.Location = new System.Drawing.Point(0, 56);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(1407, 33);
+            this.panelControl1.Size = new System.Drawing.Size(1974, 33);
             this.panelControl1.TabIndex = 121;
             // 
             // cboKpiExam
@@ -824,7 +824,7 @@ namespace BMS
             this.txtNumber,
             this.repositoryItemMemoEditDecimal,
             this.repositoryItemSpinEdit1});
-            this.treeData.Size = new System.Drawing.Size(1405, 582);
+            this.treeData.Size = new System.Drawing.Size(1972, 582);
             this.treeData.TabIndex = 122;
             this.treeData.TreeLevelWidth = 13;
             this.treeData.CustomColumnDisplayText += new DevExpress.XtraTreeList.CustomColumnDisplayTextEventHandler(this.treeData_CustomColumnDisplayText);
@@ -932,7 +932,7 @@ namespace BMS
             this.colEmployeePoint.Caption = "Mức tự đánh giá";
             this.colEmployeePoint.ColumnEdit = this.repositoryItemSpinEdit1;
             this.colEmployeePoint.FieldName = "EmployeePoint";
-            this.colEmployeePoint.Format.FormatString = "n0";
+            this.colEmployeePoint.Format.FormatString = "n1";
             this.colEmployeePoint.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint.Name = "colEmployeePoint";
             this.colEmployeePoint.OptionsColumn.AllowEdit = false;
@@ -949,7 +949,7 @@ namespace BMS
             this.repositoryItemSpinEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemSpinEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.repositoryItemSpinEdit1.MaskSettings.Set("mask", "n0");
+            this.repositoryItemSpinEdit1.MaskSettings.Set("mask", "n1");
             this.repositoryItemSpinEdit1.MaxValue = new decimal(new int[] {
             99999,
             0,
@@ -971,7 +971,7 @@ namespace BMS
             this.colTBPPointInput.Caption = "Điểm TBP đánh giá";
             this.colTBPPointInput.ColumnEdit = this.repositoryItemSpinEdit1;
             this.colTBPPointInput.FieldName = "TBPPointInput";
-            this.colTBPPointInput.Format.FormatString = "n0";
+            this.colTBPPointInput.Format.FormatString = "n1";
             this.colTBPPointInput.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTBPPointInput.Name = "colTBPPointInput";
             this.colTBPPointInput.OptionsColumn.AllowEdit = false;
@@ -1012,7 +1012,7 @@ namespace BMS
             this.colBGDPointInput.Caption = "Điểm BGĐ đánh giá";
             this.colBGDPointInput.ColumnEdit = this.repositoryItemSpinEdit1;
             this.colBGDPointInput.FieldName = "BGDPointInput";
-            this.colBGDPointInput.Format.FormatString = "n0";
+            this.colBGDPointInput.Format.FormatString = "n1";
             this.colBGDPointInput.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBGDPointInput.Name = "colBGDPointInput";
             this.colBGDPointInput.OptionsColumn.AllowEdit = false;
@@ -1300,7 +1300,7 @@ namespace BMS
             this.xtraTabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage1;
-            this.xtraTabControl1.Size = new System.Drawing.Size(1407, 610);
+            this.xtraTabControl1.Size = new System.Drawing.Size(1974, 610);
             this.xtraTabControl1.TabIndex = 123;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1,
@@ -1316,7 +1316,7 @@ namespace BMS
             this.xtraTabPage1.Controls.Add(this.treeData);
             this.xtraTabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(1405, 582);
+            this.xtraTabPage1.Size = new System.Drawing.Size(1972, 582);
             this.xtraTabPage1.Text = "KỸ NĂNG";
             // 
             // xtraTabPage3
@@ -1504,7 +1504,7 @@ namespace BMS
             this.colGeneralEmployeePoint.Caption = "Mức tự đánh giá";
             this.colGeneralEmployeePoint.ColumnEdit = this.repositoryItemSpinEdit3;
             this.colGeneralEmployeePoint.FieldName = "EmployeePoint";
-            this.colGeneralEmployeePoint.Format.FormatString = "n0";
+            this.colGeneralEmployeePoint.Format.FormatString = "n1";
             this.colGeneralEmployeePoint.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colGeneralEmployeePoint.Name = "colGeneralEmployeePoint";
             this.colGeneralEmployeePoint.OptionsColumn.AllowEdit = false;
@@ -1521,7 +1521,7 @@ namespace BMS
             this.repositoryItemSpinEdit3.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemSpinEdit3.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.repositoryItemSpinEdit3.MaskSettings.Set("mask", "n0");
+            this.repositoryItemSpinEdit3.MaskSettings.Set("mask", "n1");
             this.repositoryItemSpinEdit3.MaxValue = new decimal(new int[] {
             99999,
             0,
@@ -1543,7 +1543,7 @@ namespace BMS
             this.colGeneralTBPPointInput.Caption = "Điểm TBP đánh giá";
             this.colGeneralTBPPointInput.ColumnEdit = this.repositoryItemSpinEdit3;
             this.colGeneralTBPPointInput.FieldName = "TBPPointInput";
-            this.colGeneralTBPPointInput.Format.FormatString = "n0";
+            this.colGeneralTBPPointInput.Format.FormatString = "n1";
             this.colGeneralTBPPointInput.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colGeneralTBPPointInput.Name = "colGeneralTBPPointInput";
             this.colGeneralTBPPointInput.OptionsColumn.AllowEdit = false;
@@ -1583,7 +1583,7 @@ namespace BMS
             this.colGeneralBGDPointInput.Caption = "Điểm BGĐ đánh giá";
             this.colGeneralBGDPointInput.ColumnEdit = this.repositoryItemSpinEdit3;
             this.colGeneralBGDPointInput.FieldName = "BGDPointInput";
-            this.colGeneralBGDPointInput.Format.FormatString = "n0";
+            this.colGeneralBGDPointInput.Format.FormatString = "n1";
             this.colGeneralBGDPointInput.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colGeneralBGDPointInput.Name = "colGeneralBGDPointInput";
             this.colGeneralBGDPointInput.OptionsColumn.AllowEdit = false;
@@ -2035,7 +2035,7 @@ namespace BMS
             // 
             this.treeListBand32.Columns.Add(this.colTree2EmployeePoint);
             this.treeListBand32.Name = "treeListBand32";
-            this.treeListBand32.Width = 67;
+            this.treeListBand32.Width = 68;
             // 
             // colTree2EmployeePoint
             // 
@@ -2046,7 +2046,7 @@ namespace BMS
             this.colTree2EmployeePoint.Caption = "Mức tự đánh giá";
             this.colTree2EmployeePoint.ColumnEdit = this.repositoryItemSpinEdit2;
             this.colTree2EmployeePoint.FieldName = "EmployeePoint";
-            this.colTree2EmployeePoint.Format.FormatString = "n0";
+            this.colTree2EmployeePoint.Format.FormatString = "n1";
             this.colTree2EmployeePoint.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTree2EmployeePoint.MinWidth = 16;
             this.colTree2EmployeePoint.Name = "colTree2EmployeePoint";
@@ -2055,7 +2055,7 @@ namespace BMS
             this.colTree2EmployeePoint.OptionsColumn.ReadOnly = true;
             this.colTree2EmployeePoint.Visible = true;
             this.colTree2EmployeePoint.VisibleIndex = 4;
-            this.colTree2EmployeePoint.Width = 67;
+            this.colTree2EmployeePoint.Width = 68;
             // 
             // repositoryItemSpinEdit2
             // 
@@ -2064,7 +2064,7 @@ namespace BMS
             this.repositoryItemSpinEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemSpinEdit2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.repositoryItemSpinEdit2.MaskSettings.Set("mask", "n0");
+            this.repositoryItemSpinEdit2.MaskSettings.Set("mask", "n1");
             this.repositoryItemSpinEdit2.MaxValue = new decimal(new int[] {
             99999,
             0,
@@ -2086,7 +2086,7 @@ namespace BMS
             this.colTree2TBPPointInput.Caption = "Điểm TBP đánh giá";
             this.colTree2TBPPointInput.ColumnEdit = this.repositoryItemSpinEdit2;
             this.colTree2TBPPointInput.FieldName = "TBPPointInput";
-            this.colTree2TBPPointInput.Format.FormatString = "n0";
+            this.colTree2TBPPointInput.Format.FormatString = "n1";
             this.colTree2TBPPointInput.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTree2TBPPointInput.Name = "colTree2TBPPointInput";
             this.colTree2TBPPointInput.OptionsColumn.AllowEdit = false;
@@ -2128,7 +2128,7 @@ namespace BMS
             this.colTree2BGDPointInput.Caption = "Điểm BGĐ đánh giá";
             this.colTree2BGDPointInput.ColumnEdit = this.repositoryItemSpinEdit2;
             this.colTree2BGDPointInput.FieldName = "BGDPointInput";
-            this.colTree2BGDPointInput.Format.FormatString = "n0";
+            this.colTree2BGDPointInput.Format.FormatString = "n1";
             this.colTree2BGDPointInput.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTree2BGDPointInput.Name = "colTree2BGDPointInput";
             this.colTree2BGDPointInput.OptionsColumn.AllowEdit = false;
@@ -3504,7 +3504,7 @@ namespace BMS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1407, 699);
+            this.ClientSize = new System.Drawing.Size(1974, 699);
             this.Controls.Add(this.xtraTabControl1);
             this.Controls.Add(this.panelControl1);
             this.Controls.Add(this.mnuMenu);

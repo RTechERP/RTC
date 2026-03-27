@@ -1701,7 +1701,7 @@ namespace BMS
             this.colEmployeePoint.Caption = "Mức tự đánh giá";
             this.colEmployeePoint.ColumnEdit = this.repositoryItemSpinEdit2;
             this.colEmployeePoint.FieldName = "EmployeePoint";
-            this.colEmployeePoint.Format.FormatString = "n0";
+            this.colEmployeePoint.Format.FormatString = "n2";
             this.colEmployeePoint.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint.Name = "colEmployeePoint";
             this.colEmployeePoint.OptionsColumn.AllowEdit = false;
@@ -1720,7 +1720,7 @@ namespace BMS
             this.repositoryItemSpinEdit2.ExportMode = DevExpress.XtraEditors.Repository.ExportMode.DisplayText;
             this.repositoryItemSpinEdit2.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
             this.repositoryItemSpinEdit2.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
-            this.repositoryItemSpinEdit2.MaskSettings.Set("mask", "n0");
+            this.repositoryItemSpinEdit2.MaskSettings.Set("mask", "n2");
             this.repositoryItemSpinEdit2.MaxValue = new decimal(new int[] {
             5,
             0,
@@ -2197,7 +2197,7 @@ namespace BMS
             this.colEmployeePoint2.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.colEmployeePoint2.Caption = "Mức tự đánh giá";
             this.colEmployeePoint2.FieldName = "EmployeePoint";
-            this.colEmployeePoint2.Format.FormatString = "n0";
+            this.colEmployeePoint2.Format.FormatString = "n2";
             this.colEmployeePoint2.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint2.Name = "colEmployeePoint2";
             this.colEmployeePoint2.OptionsColumn.AllowEdit = false;
@@ -2656,7 +2656,7 @@ namespace BMS
             this.colEmployeePoint1.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.colEmployeePoint1.Caption = "Mức tự đánh giá";
             this.colEmployeePoint1.FieldName = "EmployeePoint";
-            this.colEmployeePoint1.Format.FormatString = "n0";
+            this.colEmployeePoint1.Format.FormatString = "n2";
             this.colEmployeePoint1.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint1.Name = "colEmployeePoint1";
             this.colEmployeePoint1.OptionsColumn.AllowEdit = false;

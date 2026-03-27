@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using UpdateVersion;
 
@@ -23,6 +25,7 @@ namespace BMS.UP
         public frmUpdateVersion()
         {
             InitializeComponent();
+
         }
 
         void TurnOffApp(string appName)
@@ -104,6 +107,7 @@ namespace BMS.UP
         {
             try
             {
+
                 //Get version mới nhất trên API
                 HttpClient client = new HttpClient();
                 var result = client.GetAsync(_urlFileUpdate);
@@ -164,9 +168,22 @@ namespace BMS.UP
         {
             try
             {
-                string filePath = $@"\\192.168.1.190\Software\Config";
+                string configFileName = "ConfigUpdateAPI.txt";
+                string filePath = $@"\\113.190.234.64\Software\Config";
                 //string fileConfig = Path.Combine(Application.StartupPath, "ConfigUpdateAPI.txt");
-                string fileConfig = Path.Combine(filePath, "ConfigUpdateAPI.txt");
+                string fileConfig = Path.Combine(filePath, configFileName);
+
+                if (!File.Exists(fileConfig))
+                {
+                    filePath = $@"\\192.168.1.190\Software\Config";
+                    fileConfig = Path.Combine(filePath, configFileName);
+
+                    if (!File.Exists(fileConfig))
+                    {
+                        MessageBox.Show($@"Vui lòng đăng nhập vào server \\192.168.1.190 hoặc \\113.190.234.64 (Nếu bạn đang truy cập online)\nNếu chưa có tài khoản vui lòng liên hệ IT để được cấp!", "Thông báo");
+                        return;
+                    }
+                }
 
                 string[] lines = File.ReadAllLines(fileConfig);
 
@@ -180,12 +197,50 @@ namespace BMS.UP
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Update version fail!\n" + ex.Message, "Thông báo");
+                MessageBox.Show("Update version fail!\n" + ex.Message + "\r\n" + ex.ToString(), "Thông báo");
                 Application.Exit();
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        //async Task SetValueVariableAPI()
+        //{
+        //    string message = "";
+        //    try
+        //    {
+        //        HttpClient http = new HttpClient();
+        //        string host = "https://erp.rtc.edu.vn/api/api";
+        //        //host = Global.HostKPITeam;
+
+        //        string api = host + "/home/get-config-autoupdate";
+        //        var repsonse = await http.GetAsync(api);
+        //        string content = await repsonse.Content.ReadAsStringAsync();
+        //        JObject json = JObject.Parse(content);
+
+        //        var status = TextUtils.ToInt(json["status"]);
+        //        if (status == 1)
+        //        {
+        //            //var data = json["data"];
+
+        //            if (json.TryGetValue("data", out JToken data))
+        //            {
+
+        //                _appName = TextUtils.ToString(data["AppName"]);
+        //                _folderUpdate = TextUtils.ToString(data["FolderFileUpdate"]);
+        //                _urlFileUpdate = TextUtils.ToString(data["LinkFileUpdate"]);
+        //                _urlDownload = TextUtils.ToString(data["LinkDownload"]);
+        //                _filePathVersion = Path.Combine(Application.StartupPath, TextUtils.ToString(data["Version"]));
+        //            }
+        //        }
+        //        else message = TextUtils.ToString(json["message"]);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Update version fail!\n" + ex.Message + $"\r\n{message}", "Thông báo");
+        //        Application.Exit();
+        //    }
+        //}
+
+        private  void Form1_Load(object sender, EventArgs e)
         {
             //string[] arrSv = File.ReadAllLines(Path.Combine(Application.StartupPath, "ftpServer.txt"));
             //if (arrSv.Length < 3) MessageBox.Show("Lỗi file ftpServer.txt. Hãy kiểm tra lại! ");
@@ -200,7 +255,9 @@ namespace BMS.UP
             //_pathFileVersion = Path.Combine(Application.StartupPath, arr[3].Trim());
 
             //setValueVariable();
-            SetValueVariableAPI();
+            //SetValueVariableAPI();
+
+             SetValueVariableAPI();
 
             if (backgroundWorker1.IsBusy)
             {
@@ -236,11 +293,18 @@ namespace BMS.UP
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (!_isErrorExtract)
+            try
             {
-                //MessageBox.Show(Path.Combine(Application.StartupPath, _appName + ".exe"));
-                Process.Start(Path.Combine(Application.StartupPath, _appName + ".exe"));
-                Application.Exit();
+                if (!_isErrorExtract)
+                {
+                    //MessageBox.Show(Path.Combine(Application.StartupPath, _appName + ".exe"));
+                    Process.Start(Path.Combine(Application.StartupPath, _appName + ".exe"));
+                    Application.Exit();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + $"\r\n{Path.Combine(Application.StartupPath, _appName + ".exe")}" + ex.ToString(), "Thông báo");
             }
         }
     }

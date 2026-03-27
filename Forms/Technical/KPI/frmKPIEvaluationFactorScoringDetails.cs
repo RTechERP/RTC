@@ -387,7 +387,7 @@ namespace BMS
             TreeListNode currentNode = e.Node;
             if (currentNode == null) return;
 
-            int employeePoint = TextUtils.ToInt(currentNode.GetValue("EmployeePoint"));
+            decimal employeePoint = TextUtils.ToDecimal(currentNode.GetValue("EmployeePoint"));
             decimal coefficient = TextUtils.ToDecimal(currentNode.GetValue("Coefficient"));
 
             // Gán lại giá trị colEmployeeCoefficient = colEmployeePoint * colCoefficient
@@ -581,7 +581,7 @@ namespace BMS
                                 MessageBox.Show($"Bạn không thể đánh giá KPI của người khác!", TextUtils.Caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 return false;
                             }
-                            model.EmployeePoint = TextUtils.ToInt(treeData.GetRowCellValue(item, colEmployeePoint));
+                            model.EmployeePoint = TextUtils.ToDecimal(treeData.GetRowCellValue(item, colEmployeePoint));
                             model.EmployeeEvaluation = TextUtils.ToDecimal(treeData.GetRowCellValue(item, colEmployeeEvaluation));
                             model.Status = 0;
                         }
@@ -625,22 +625,22 @@ namespace BMS
                         model.EmployeeID = employeeID;
                         if (typePoint == 1)
                         {
-                            model.EmployeeEvaluation = TextUtils.ToInt(treeData2.GetRowCellValue(item, colTree2EmployeeEvaluation));
-                            model.EmployeePoint = TextUtils.ToInt(treeData2.GetRowCellValue(item, colTree2EmployeePoint));
+                            model.EmployeeEvaluation = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2EmployeeEvaluation));
+                            model.EmployeePoint = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2EmployeePoint));
                             model.Status = 0;
                         }
                         else if (typePoint == 2)
                         {
                             model.TBPPoint = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2TBPPoint));
                             model.TBPID = Global.EmployeeID;
-                            model.TBPEvaluation = TextUtils.ToInt(treeData2.GetRowCellValue(item, colTree2TBPEvaluation));
+                            model.TBPEvaluation = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2TBPEvaluation));
                             if (_departmentID == departmentCoKhi) model.BGDEvaluation = TextUtils.ToDecimal(treeData.GetRowCellValue(item, colTBPEvaluation));
                         }
                         else if (typePoint == 3)
                         {
                             model.BGDPoint = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2BGDPoint));
                             model.BGDID = Global.EmployeeID;
-                            model.BGDEvaluation = TextUtils.ToInt(treeData2.GetRowCellValue(item, colTree2BGDEvaluation));
+                            model.BGDEvaluation = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2BGDEvaluation));
                         }
                         model.EmployeeCoefficient = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2EmployeeCoefficient));
                         model.TBPCoefficient = TextUtils.ToDecimal(treeData2.GetRowCellValue(item, colTree2TBPCoefficient));
@@ -656,8 +656,6 @@ namespace BMS
                         else model.ID = SQLHelper<KPIEvaluationPointModel>.Insert(model).ID;
                     }
 
-
-
                     foreach (TreeListNode item in treeData3.GetNodeList())
                     {
                         int Id = TextUtils.ToInt(treeData3.GetRowCellValue(item, colGeneralKPIEvaluationPointID));
@@ -668,21 +666,21 @@ namespace BMS
                         model.EmployeeID = employeeID;
                         if (typePoint == 1)
                         {
-                            model.EmployeeEvaluation = TextUtils.ToInt(treeData3.GetRowCellValue(item, colGeneralEmployeeEvaluation));
-                            model.EmployeePoint = TextUtils.ToInt(treeData3.GetRowCellValue(item, colGeneralEmployeePoint));
+                            model.EmployeeEvaluation = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralEmployeeEvaluation));
+                            model.EmployeePoint = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralEmployeePoint));
                             model.Status = 0;
                         }
                         else if (typePoint == 2)
                         {
                             model.TBPPoint = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralTBPPoint));
                             model.TBPID = Global.EmployeeID;
-                            model.TBPEvaluation = TextUtils.ToInt(treeData3.GetRowCellValue(item, colGeneralTBPEvaluation));
+                            model.TBPEvaluation = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralTBPEvaluation));
                         }
                         else if (typePoint == 3)
                         {
                             model.BGDPoint = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralBGDPoint));
                             model.BGDID = Global.EmployeeID;
-                            model.BGDEvaluation = TextUtils.ToInt(treeData3.GetRowCellValue(item, colGeneralBGDEvaluation));
+                            model.BGDEvaluation = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralBGDEvaluation));
                         }
                         model.EmployeeCoefficient = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralEmployeeCoefficient));
                         model.TBPCoefficient = TextUtils.ToDecimal(treeData3.GetRowCellValue(item, colGeneralTBPCoefficient));
@@ -953,7 +951,7 @@ namespace BMS
             }
             if (ruleID <= 0 && _departmentID != departmentCoKhi)
             {
-                MessageBox.Show($"Không tìm thấy ID của rule đánh giá! Vui lòng kiểm tra lại", "Thông báo");
+                //MessageBox.Show($"Không tìm thấy ID của rule đánh giá! Vui lòng kiểm tra lại", "Thông báo");
                 return -1;
             }
             Expression ex1 = new Expression("EmployeeID", empID);

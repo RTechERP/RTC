@@ -25,6 +25,7 @@ namespace BMS
         //public static string kpiFolderTechnical = @"D:\LeTheAnh\RTC\KPI";
         public static string kpiFolderTechnical = @"\\192.168.1.190\Technical\23.KPI";
         //public static string kpiFolderTechnical = @"\\192.168.1.190\Software\Test";
+        public static string configFileName = "ConfigUpdateAPI.txt";
 
         //static string _ConnectionString = @"Server=DESKTOP-40H717B\SQLEXPRESS;Initial Catalog=RTC;User ID=sa;Password=123456a@"; //server Local
         //static string _ConnectionString = @"Server=192.168.1.3,9000;Initial Catalog=RTC;User ID=sa;Password=1"; //server test
@@ -72,7 +73,7 @@ namespace BMS
             get
             {
                 string url = "http://10.20.29.65:8088/rerpapi/api";
-                if (string.IsNullOrWhiteSpace(_ConnectionString)) url = "http://113.190.234.64:9090/api/api";
+                if (string.IsNullOrWhiteSpace(_ConnectionString)) url = "https://erp.rtc.edu.vn/api/api";
                 return url;
             }
         }

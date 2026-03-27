@@ -1138,7 +1138,7 @@ namespace BMS
             this.colEmployeePoint.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.colEmployeePoint.Caption = "Mức tự đánh giá";
             this.colEmployeePoint.FieldName = "EmployeePoint";
-            this.colEmployeePoint.Format.FormatString = "n0";
+            this.colEmployeePoint.Format.FormatString = "n2";
             this.colEmployeePoint.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint.Name = "colEmployeePoint";
             this.colEmployeePoint.OptionsColumn.AllowEdit = false;
@@ -1610,7 +1610,7 @@ namespace BMS
             this.colEmployeePoint2.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.colEmployeePoint2.Caption = "Mức tự đánh giá";
             this.colEmployeePoint2.FieldName = "EmployeePoint";
-            this.colEmployeePoint2.Format.FormatString = "n0";
+            this.colEmployeePoint2.Format.FormatString = "n2";
             this.colEmployeePoint2.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint2.Name = "colEmployeePoint2";
             this.colEmployeePoint2.OptionsColumn.AllowEdit = false;
@@ -2111,7 +2111,7 @@ namespace BMS
             this.colEmployeePoint1.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.colEmployeePoint1.Caption = "Mức tự đánh giá";
             this.colEmployeePoint1.FieldName = "EmployeePoint";
-            this.colEmployeePoint1.Format.FormatString = "n0";
+            this.colEmployeePoint1.Format.FormatString = "n2";
             this.colEmployeePoint1.Format.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colEmployeePoint1.Name = "colEmployeePoint1";
             this.colEmployeePoint1.OptionsColumn.AllowEdit = false;
@@ -2765,7 +2765,7 @@ namespace BMS
             this.treeListBand17.Columns.Add(this.colRuleContent);
             this.treeListBand17.Fixed = DevExpress.XtraTreeList.Columns.FixedStyle.Left;
             this.treeListBand17.Name = "treeListBand17";
-            this.treeListBand17.Width = 498;
+            this.treeListBand17.Width = 493;
             // 
             // treeListColumn1
             // 
@@ -2790,7 +2790,7 @@ namespace BMS
             this.colRuleContent.OptionsColumn.ReadOnly = true;
             this.colRuleContent.Visible = true;
             this.colRuleContent.VisibleIndex = 1;
-            this.colRuleContent.Width = 460;
+            this.colRuleContent.Width = 455;
             // 
             // repositoryItemMemoEdit10
             // 
@@ -2811,7 +2811,7 @@ namespace BMS
             this.treeListBand18.Columns.Add(this.colThirdMonth);
             this.treeListBand18.Columns.Add(this.colTotalError);
             this.treeListBand18.Name = "treeListBand18";
-            this.treeListBand18.Width = 169;
+            this.treeListBand18.Width = 219;
             // 
             // colFirstMonth
             // 
@@ -2879,7 +2879,7 @@ namespace BMS
             this.treeListBand19.Columns.Add(this.colPercentBonus);
             this.treeListBand19.Columns.Add(this.colPercentRemaining);
             this.treeListBand19.Name = "treeListBand19";
-            this.treeListBand19.Width = 425;
+            this.treeListBand19.Width = 535;
             // 
             // colMaxPercent
             // 
