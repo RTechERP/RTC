@@ -1323,7 +1323,7 @@ namespace BMS
             // 
             this.xtraTabPage3.Controls.Add(this.treeData3);
             this.xtraTabPage3.Name = "xtraTabPage3";
-            this.xtraTabPage3.Size = new System.Drawing.Size(1405, 582);
+            this.xtraTabPage3.Size = new System.Drawing.Size(1972, 582);
             this.xtraTabPage3.Text = "ĐÁNH GIÁ CHUNG";
             // 
             // treeData3
@@ -1397,7 +1397,7 @@ namespace BMS
             this.repositoryItemMemoEdit7,
             this.repositoryItemMemoEdit6,
             this.repositoryItemSpinEdit3});
-            this.treeData3.Size = new System.Drawing.Size(1405, 582);
+            this.treeData3.Size = new System.Drawing.Size(1972, 582);
             this.treeData3.TabIndex = 124;
             this.treeData3.TreeLevelWidth = 13;
             this.treeData3.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.treeData3_FocusedNodeChanged_1);
@@ -1862,7 +1862,7 @@ namespace BMS
             this.xtraTabPage2.Controls.Add(this.treeData2);
             this.xtraTabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(1405, 582);
+            this.xtraTabPage2.Size = new System.Drawing.Size(1972, 582);
             this.xtraTabPage2.Text = "CHUYÊN MÔN";
             // 
             // treeData2
@@ -1936,7 +1936,7 @@ namespace BMS
             this.repositoryItemMemoEdit4,
             this.repositoryItemMemoEdit3,
             this.repositoryItemSpinEdit2});
-            this.treeData2.Size = new System.Drawing.Size(1405, 582);
+            this.treeData2.Size = new System.Drawing.Size(1972, 582);
             this.treeData2.TabIndex = 123;
             this.treeData2.TreeLevelWidth = 13;
             this.treeData2.CustomColumnDisplayText += new DevExpress.XtraTreeList.CustomColumnDisplayTextEventHandler(this.treeData2_CustomColumnDisplayText);
@@ -2420,7 +2420,7 @@ namespace BMS
             // 
             this.xtraTabPage6.Controls.Add(this.grdMaster);
             this.xtraTabPage6.Name = "xtraTabPage6";
-            this.xtraTabPage6.Size = new System.Drawing.Size(1405, 582);
+            this.xtraTabPage6.Size = new System.Drawing.Size(1972, 582);
             this.xtraTabPage6.Text = "TỔNG HỢP ĐÁNH GIÁ";
             // 
             // grdMaster
@@ -2431,7 +2431,7 @@ namespace BMS
             this.grdMaster.Name = "grdMaster";
             this.grdMaster.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemMemoEdit9});
-            this.grdMaster.Size = new System.Drawing.Size(1405, 582);
+            this.grdMaster.Size = new System.Drawing.Size(1972, 582);
             this.grdMaster.TabIndex = 1;
             this.grdMaster.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.grvMaster});
@@ -2673,7 +2673,7 @@ namespace BMS
             // 
             this.xtraTabPage4.Controls.Add(this.treeDataRule);
             this.xtraTabPage4.Name = "xtraTabPage4";
-            this.xtraTabPage4.Size = new System.Drawing.Size(1405, 582);
+            this.xtraTabPage4.Size = new System.Drawing.Size(1972, 582);
             this.xtraTabPage4.Text = "KPI RULE";
             // 
             // treeDataRule
@@ -2769,7 +2769,7 @@ namespace BMS
             this.treeDataRule.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemMemoEdit8,
             this.repositoryItemTextEdit1});
-            this.treeDataRule.Size = new System.Drawing.Size(1405, 582);
+            this.treeDataRule.Size = new System.Drawing.Size(1972, 582);
             this.treeDataRule.TabIndex = 134;
             this.treeDataRule.GetCustomSummaryValue += new DevExpress.XtraTreeList.GetCustomSummaryValueEventHandler(this.treeDataRule_GetCustomSummaryValue);
             this.treeDataRule.CustomColumnDisplayText += new DevExpress.XtraTreeList.CustomColumnDisplayTextEventHandler(this.treeDataRule_CustomColumnDisplayText);
@@ -2793,7 +2793,7 @@ namespace BMS
             this.treeListBand21.Columns.Add(this.colRuleContent);
             this.treeListBand21.Fixed = DevExpress.XtraTreeList.Columns.FixedStyle.Left;
             this.treeListBand21.Name = "treeListBand21";
-            this.treeListBand21.Width = 920;
+            this.treeListBand21.Width = 738;
             // 
             // treeListColumn1
             // 
@@ -2815,6 +2815,7 @@ namespace BMS
             this.colRuleContent.Name = "colRuleContent";
             this.colRuleContent.OptionsColumn.AllowEdit = false;
             this.colRuleContent.OptionsColumn.ReadOnly = true;
+            this.colRuleContent.SummaryFooter = DevExpress.XtraTreeList.SummaryItemType.Custom;
             this.colRuleContent.Visible = true;
             this.colRuleContent.VisibleIndex = 1;
             this.colRuleContent.Width = 700;
@@ -2844,7 +2845,7 @@ namespace BMS
             this.treeListBand23.Columns.Add(this.colThirdMonth);
             this.treeListBand23.Columns.Add(this.colTotalError);
             this.treeListBand23.Name = "treeListBand23";
-            this.treeListBand23.Width = 200;
+            this.treeListBand23.Width = 196;
             // 
             // colFirstMonth
             // 
@@ -2858,7 +2859,7 @@ namespace BMS
             this.colFirstMonth.SummaryFooterStrFormat = "{0:n2}";
             this.colFirstMonth.Visible = true;
             this.colFirstMonth.VisibleIndex = 2;
-            this.colFirstMonth.Width = 50;
+            this.colFirstMonth.Width = 49;
             // 
             // repositoryItemTextEdit1
             // 
@@ -2885,7 +2886,7 @@ namespace BMS
             this.colSecondMonth.SummaryFooterStrFormat = "{0:n2}";
             this.colSecondMonth.Visible = true;
             this.colSecondMonth.VisibleIndex = 3;
-            this.colSecondMonth.Width = 50;
+            this.colSecondMonth.Width = 49;
             // 
             // colThirdMonth
             // 
@@ -2899,7 +2900,7 @@ namespace BMS
             this.colThirdMonth.SummaryFooterStrFormat = "{0:n2}";
             this.colThirdMonth.Visible = true;
             this.colThirdMonth.VisibleIndex = 4;
-            this.colThirdMonth.Width = 50;
+            this.colThirdMonth.Width = 49;
             // 
             // colTotalError
             // 
@@ -2911,7 +2912,7 @@ namespace BMS
             this.colTotalError.Name = "colTotalError";
             this.colTotalError.Visible = true;
             this.colTotalError.VisibleIndex = 5;
-            this.colTotalError.Width = 50;
+            this.colTotalError.Width = 49;
             // 
             // treeListBand24
             // 
@@ -2929,7 +2930,7 @@ namespace BMS
             this.treeListBand24.Columns.Add(this.colPercentBonus);
             this.treeListBand24.Columns.Add(this.colPercentRemaining);
             this.treeListBand24.Name = "treeListBand24";
-            this.treeListBand24.Width = 375;
+            this.treeListBand24.Width = 463;
             // 
             // colMaxPercent
             // 
@@ -3069,7 +3070,7 @@ namespace BMS
             // 
             this.xtraTabPage5.Controls.Add(this.grdTeam);
             this.xtraTabPage5.Name = "xtraTabPage5";
-            this.xtraTabPage5.Size = new System.Drawing.Size(1405, 582);
+            this.xtraTabPage5.Size = new System.Drawing.Size(1972, 582);
             this.xtraTabPage5.Text = "TEAM RULE";
             // 
             // grdTeam
@@ -3080,7 +3081,7 @@ namespace BMS
             this.grdTeam.Name = "grdTeam";
             this.grdTeam.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemMemoEdit10});
-            this.grdTeam.Size = new System.Drawing.Size(1405, 582);
+            this.grdTeam.Size = new System.Drawing.Size(1972, 582);
             this.grdTeam.TabIndex = 3;
             this.grdTeam.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.grvTeam});

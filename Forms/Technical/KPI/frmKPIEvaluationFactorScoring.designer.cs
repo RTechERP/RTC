@@ -3289,6 +3289,7 @@ namespace BMS
             this.colRuleContent.Name = "colRuleContent";
             this.colRuleContent.OptionsColumn.AllowEdit = false;
             this.colRuleContent.OptionsColumn.ReadOnly = true;
+            this.colRuleContent.SummaryFooter = DevExpress.XtraTreeList.SummaryItemType.Custom;
             this.colRuleContent.Visible = true;
             this.colRuleContent.VisibleIndex = 1;
             this.colRuleContent.Width = 460;

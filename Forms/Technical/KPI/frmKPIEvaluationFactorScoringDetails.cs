@@ -253,7 +253,7 @@ namespace BMS
                 else
                 {
                     LoadTotalAVGNew();
-                    //LoadKPIRule();
+                    LoadKPIRule();
                 }
                 //end
 
@@ -2872,6 +2872,12 @@ namespace BMS
 
         private void treeDataRule_GetCustomSummaryValue(object sender, GetCustomSummaryValueEventArgs e)
         {
+            // === PHẦN MỚI: Footer text "Tổng điểm " cho cột colRuleContent ===
+            if (e.IsSummaryFooter && e.Column == colRuleContent)
+            {
+                e.CustomValue = "Tổng điểm ";
+                return; // Không cần xử lý thêm cho cột này
+            }
             if (e.IsSummaryFooter && e.Column == colPercentBonus)
             {
                 decimal totalPercent = TextUtils.ToDecimal(treeDataRule.GetSummaryValue(colPercentRemaining));
@@ -2888,8 +2894,8 @@ namespace BMS
                 else if (totalPercent >= 100) totalPercentText = "Xếp loại: A+";
 
                 e.CustomValue = totalPercentText;
-            }
-            //TN.Binh update 13/10/2025
+            }            //TN.Binh update 13/10/2025
+
             // Lấy toàn bộ node trong TreeList
             List<TreeListNode> lst = treeDataRule.GetNodeList();
             if (lst == null || lst.Count == 0) return;
@@ -2908,13 +2914,13 @@ namespace BMS
             foreach (var r in lst.Where(r => r.Nodes.Count == 0 && IsKPI(r)))
             {
                 decimal maxPercent = TextUtils.ToDecimal(r["MaxPercent"]);
-                decimal firstMonth = Math.Round(TextUtils.ToDecimal(r["FirstMonth"]), 1);
-                decimal secondMonth = Math.Round(TextUtils.ToDecimal(r["SecondMonth"]), 1);
+                decimal firstMonth = Math.Round(TextUtils.ToDecimal(r["FirstMonth"]), 2);
+                decimal secondMonth = Math.Round(TextUtils.ToDecimal(r["SecondMonth"]), 2);
                 //decimal thirdMonth = Math.Round(TextUtils.ToDecimal(r["ThirdMonth"]), 1);
                 decimal thirdMonth = Math.Round(TextUtils.ToDecimal(r["ThirdMonth"]), 2);
-                emp += Math.Round((firstMonth * maxPercent / 5), 1);
-                tbp += Math.Round((secondMonth * maxPercent / 5), 1);
-                bgd += Math.Round((thirdMonth * maxPercent / 5), 1);
+                emp += Math.Round((firstMonth * maxPercent / 5), 2);
+                tbp += Math.Round((secondMonth * maxPercent / 5), 2);
+                bgd += Math.Round((thirdMonth * maxPercent / 5), 2);
 
             }
             if (e.IsSummaryFooter && e.Column == colFirstMonth)
@@ -2950,6 +2956,12 @@ namespace BMS
         }
         private void treeDataRule_CustomDrawFooterCell(object sender, CustomDrawFooterCellEventArgs e)
         {
+            // Chỉ áp dụng cho footer của cột colRuleContent
+            if (e.Column == colRuleContent)
+            {
+                // Tô đậm chữ "Tổng điểm "
+                e.Appearance.FontStyleDelta = FontStyle.Bold;
+            }
             int kpiSessionID = TextUtils.ToInt(cboKPISession.EditValue);
             int empID = TextUtils.ToInt(cboEmployee.EditValue);
 
